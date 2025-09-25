@@ -13,8 +13,8 @@
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            width: 390px;
-            height: 844px;
+            width: 393px;
+            height: 852px;
             background: linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 100%);
             overflow: hidden;
             position: relative;
@@ -24,145 +24,192 @@
             height: 100%;
             background: white;
             border-radius: 40px;
-            padding: 15px;
+            padding: 8px;
             box-shadow: 0 0 30px rgba(0,0,0,0.3);
             position: relative;
             display: flex;
             flex-direction: column;
         }
         .status-bar {
-            height: 30px;
+            height: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 600;
             color: #000;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
         }
         .content {
             flex: 1;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
+            overflow: hidden;
         }
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 8px;
         }
         .title {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: bold;
             color: #065F46;
-            margin-bottom: 6px;
+            margin-bottom: 2px;
         }
         .subtitle {
-            font-size: 12px;
+            font-size: 10px;
             color: #10B981;
-            margin-bottom: 12px;
+            margin-bottom: 6px;
         }
         .recipe-summary {
             background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 15px;
+            border-radius: 8px;
+            padding: 6px;
+            margin-bottom: 8px;
             border: 2px solid #10B981;
             text-align: center;
         }
         .recipe-name {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
             color: #065F46;
-            margin-bottom: 6px;
-            line-height: 1.2;
+            margin-bottom: 2px;
         }
         .nutrition-info {
-            font-size: 11px;
+            font-size: 9px;
             color: #10B981;
             font-weight: 600;
         }
         .rationale-section {
-            margin-bottom: 15px;
+            margin-bottom: 8px;
         }
         .section-title {
-            font-size: 14px;
+            font-size: 10px;
             font-weight: 600;
             color: #10B981;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 2px;
         }
         .rationale-content {
             background: #F9FAFB;
-            border-radius: 8px;
-            padding: 12px;
-            border-left: 3px solid #10B981;
-            line-height: 1.4;
-            font-size: 12px;
+            border-radius: 6px;
+            padding: 6px;
+            border-left: 2px solid #10B981;
+            line-height: 1.2;
+            font-size: 9px;
             color: #374151;
+        }
+        .nutrition-comparison {
+            background: #F0FDF4;
+            border-radius: 6px;
+            padding: 6px;
+            margin-bottom: 8px;
+            border: 1px solid #BBF7D0;
+        }
+        .nutrition-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 8px;
+        }
+        .nutrition-table th {
+            background: #10B981;
+            color: white;
+            padding: 3px;
+            text-align: left;
+            font-weight: 600;
+        }
+        .nutrition-table td {
+            padding: 3px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        .nutrition-table tr:last-child td {
+            border-bottom: none;
         }
         .mood-breakdown {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 4px;
+            margin-bottom: 8px;
         }
         .mood-item {
             background: white;
-            border-radius: 8px;
-            padding: 10px;
-            border: 2px solid #E5E7EB;
+            border-radius: 6px;
+            padding: 4px;
+            border: 1px solid #E5E7EB;
             transition: all 0.3s ease;
         }
         .mood-item:hover {
             border-color: #10B981;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.1);
+            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.1);
         }
         .mood-header {
             display: flex;
             align-items: center;
-            gap: 6px;
-            margin-bottom: 6px;
+            gap: 3px;
+            margin-bottom: 2px;
         }
         .mood-emoji {
-            font-size: 14px;
+            font-size: 10px;
         }
         .mood-name {
-            font-size: 12px;
+            font-size: 8px;
             font-weight: 600;
             color: #065F46;
             flex: 1;
         }
         .mood-intensity {
-            font-size: 9px;
+            font-size: 7px;
             color: #10B981;
             background: #F0FDF4;
-            padding: 2px 4px;
-            border-radius: 6px;
+            padding: 1px 3px;
+            border-radius: 4px;
         }
         .mood-explanation {
-            font-size: 11px;
+            font-size: 7px;
             color: #374151;
-            line-height: 1.3;
+            line-height: 1.1;
+        }
+        .journal-section {
+            background: #FFFBEB;
+            border-radius: 6px;
+            padding: 6px;
+            margin-bottom: 8px;
+            border: 1px solid #FEF3C7;
+        }
+        .journal-prompt {
+            font-size: 8px;
+            color: #92400E;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        .journal-input {
+            width: 100%;
+            padding: 4px;
+            border: 1px solid #F3E8FF;
+            border-radius: 4px;
+            font-size: 8px;
+            resize: vertical;
+            min-height: 20px;
         }
         .action-buttons {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             margin-top: auto;
-            padding-top: 12px;
+            padding-top: 8px;
         }
         .primary-button {
             flex: 1;
             background: linear-gradient(135deg, #10B981 0%, #059669 100%);
             color: white;
             border: none;
-            border-radius: 20px;
-            padding: 12px;
-            font-size: 12px;
+            border-radius: 15px;
+            padding: 6px;
+            font-size: 9px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
             transition: all 0.3s ease;
         }
         .secondary-button {
@@ -170,25 +217,25 @@
             background: white;
             color: #10B981;
             border: 2px solid #10B981;
-            border-radius: 20px;
-            padding: 12px;
-            font-size: 12px;
+            border-radius: 15px;
+            padding: 6px;
+            font-size: 9px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
         }
         .primary-button:hover, .secondary-button:hover {
-            transform: translateY(-2px);
+            transform: translateY(-1px);
         }
         .progress-indicator {
             display: flex;
             justify-content: center;
-            gap: 5px;
-            margin-top: 10px;
+            gap: 4px;
+            margin-top: 6px;
         }
         .progress-dot {
-            width: 5px;
-            height: 5px;
+            width: 4px;
+            height: 4px;
             border-radius: 50%;
             background-color: #D1FAE5;
         }
@@ -211,8 +258,8 @@
             </div>
             
             <div class="recipe-summary">
-                <div class="recipe-name">🍜 Yuzu Risotto with Tofu & Shiso</div>
-                <div class="nutrition-info">520 kcal • 18g protein • 7g fiber</div>
+                <div class="recipe-name">🍜 Citrus Blossom Risotto</div>
+                <div class="nutrition-info">540 kcal • 22g protein • 7g fiber</div>
             </div>
             
             <div class="rationale-section">
@@ -221,8 +268,41 @@
                     <span>Emotional Rationale</span>
                 </div>
                 <div class="rationale-content">
-                    This dish gently cradles your emotional state with softness, warmth, and quiet indulgence. The silky texture and floral brightness evoke a sense of floating—like mist over Kyoto. Together, this recipe offers emotional nourishment: a sensory lullaby for your dreamy longing, a quiet indulgence for your craving, and a gentle anchor for your grounded self.
+                    This dish was chosen to evoke softness and indulgence, with gentle anchoring. The citrus and floral notes awaken longing, while creamy textures soothe and center.
                 </div>
+            </div>
+            
+            <div class="nutrition-comparison">
+                <div class="section-title">
+                    <span>🧪</span>
+                    <span>Nutrition Comparison</span>
+                </div>
+                <table class="nutrition-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>This Dish</th>
+                            <th>Your Daily</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Calories</td>
+                            <td>540 kcal</td>
+                            <td>1,860 kcal</td>
+                        </tr>
+                        <tr>
+                            <td>Protein</td>
+                            <td>22 g</td>
+                            <td>84 g</td>
+                        </tr>
+                        <tr>
+                            <td>Fiber</td>
+                            <td>7 g</td>
+                            <td>24 g</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             
             <div class="mood-breakdown">
@@ -232,7 +312,7 @@
                         <div class="mood-name">Dreamy (Very)</div>
                         <div class="mood-intensity">Very</div>
                     </div>
-                    <div class="mood-explanation">The silky texture and floral brightness evoke a sense of floating—like mist over Kyoto. The yuzu zest adds a dreamy, ethereal quality.</div>
+                    <div class="mood-explanation">The silky texture and floral brightness evoke a sense of floating—like mist over Kyoto.</div>
                 </div>
                 
                 <div class="mood-item">
@@ -241,7 +321,7 @@
                         <div class="mood-name">Craving (Medium)</div>
                         <div class="mood-intensity">Medium</div>
                     </div>
-                    <div class="mood-explanation">The tofu's richness and citrus brightness satisfy your desire for indulgence. The creamy risotto provides sensory satisfaction.</div>
+                    <div class="mood-explanation">The coconut cream's richness and citrus brightness satisfy your desire for indulgence.</div>
                 </div>
                 
                 <div class="mood-item">
@@ -250,13 +330,18 @@
                         <div class="mood-name">Grounded (A little)</div>
                         <div class="mood-intensity">A little</div>
                     </div>
-                    <div class="mood-explanation">The slow, meditative preparation invites presence and calm. The earthy shiso oil provides gentle grounding.</div>
+                    <div class="mood-explanation">The slow, meditative preparation invites presence and calm.</div>
                 </div>
+            </div>
+            
+            <div class="journal-section">
+                <div class="journal-prompt">📝 How did this dish make you feel?</div>
+                <textarea class="journal-input" placeholder="Share your thoughts..."></textarea>
             </div>
             
             <div class="action-buttons">
                 <button class="primary-button">🏠 Back to Home</button>
-                <button class="secondary-button">📱 Share Recipe</button>
+                <button class="secondary-button">📱 Share</button>
             </div>
             
             <div class="progress-indicator">

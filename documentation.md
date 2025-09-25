@@ -11,9 +11,9 @@
 
 ## App Overview
 
-SavorMe is an iOS app that curates recipes based on a user's emotional state, nutritional needs, and culinary preferences. It blends mood input, personality profile, and cultural context to deliver meals that comfort, excite, or indulge—each paired with poetic narration and sensory resonance.
+SavorMe is an emotionally intelligent iOS app that curates recipes based on the user's mood, nutritional needs, and culinary preferences. It blends emotional input, cultural context, and dietary goals to deliver meals that comfort, excite, or ground—each paired with poetic narration and sensorial resonance.
 
-The app empowers users to explore how they feel and what they crave through food that speaks to their emotions. It's not just about eating—it's about savoring emotion through flavor.
+The app invites users to explore how they feel and what they crave, transforming emotional states into nourishing, personalized dishes. It's not just about eating—it's about savoring emotion through flavor.
 
 ## Core Concept
 
@@ -106,9 +106,13 @@ These outputs guide the recipe query builder and LLM narration layer, with user 
 
 | Source/API | Purpose | Documentation |
 |------------|---------|---------------|
-| **HHS Nutrition API** | Estimates recommended caloric, protein, and fiber intake based on age, gender, height, and weight | [USDA FoodData Central](https://fdc.nal.usda.gov/api-guide.html) |
-| **Edamam Recipe Search API** | Retrieves recipes based on generated query, filtering for mood-aligned tags, nutrition fit, cuisine type, and exclusions | [Edamam Recipe API](https://developer.edamam.com/edamam-recipe-api) |
-| **OpenRouter AI API** | Generates poetic narration, emotional alignment notes, plating suggestions, and reflective rationale explaining emotional fit | [OpenRouter API](https://openrouter.ai/docs) |
+| **User Profile Input** | Captures age, gender, height, weight, ethnic background, allergies, dietary preferences, and cuisine preferences | Internal UI |
+| **Mood Input Layer** | Allows selection of up to 3 moods from a palette of 10, each with 3 intensity levels | Internal UI |
+| **HHS Nutrition API (US NUS)** | Estimates recommended daily intake for calories, protein, and fiber based on user profile | [USDA FoodData Central](https://fdc.nal.usda.gov/api-guide.html) |
+| **Edamam Recipe Search API** | Retrieves recipes filtered by nutrition, cuisine, mood tags, and exclusions | [Edamam Recipe API](https://developer.edamam.com/edamam-recipe-api) |
+| **OpenRouter AI API** | Generates poetic recipe descriptions, emotional rationale, plating suggestions, and image prompts | [OpenRouter API](https://openrouter.ai/docs) |
+| **Hugging Face Stable Diffusion API** | Produces simulated serving images styled to reflect mood blend and plating tone | [Hugging Face Inference API](https://huggingface.co/docs/api-inference) |
+| **Mood Meals Journal** | Stores user reflections, emotional responses, and feedback for adaptive personalization | Internal Database |
 
 ### API Requirements & Setup
 
@@ -131,9 +135,21 @@ These outputs guide the recipe query builder and LLM narration layer, with user 
 - **Use Case**: Generate emotional descriptions, plating suggestions, and reflective content
 - **Available Models**: Access to multiple LLM models (GPT-4, Claude, Llama, etc.)
 
+#### 4. Hugging Face Stable Diffusion API
+- **Endpoint**: `https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0`
+- **Authentication**: API Key required
+- **Rate Limits**: Varies by tier
+- **Use Case**: Generate simulated serving images based on mood and plating suggestions
+
+#### 5. Mood Meals Journal
+- **Storage**: Local SQLite database or cloud storage
+- **Purpose**: Store user reflections and feedback for adaptive personalization
+- **Data**: Emotional responses, recipe ratings, mood tracking over time
+
 **Example Usage**:
 ```python
 import openai
+import requests
 
 # Configure for OpenRouter
 openai.api_base = "https://openrouter.ai/api/v1"
@@ -146,6 +162,14 @@ response = openai.ChatCompletion.create(
         {"role": "system", "content": "You are a poetic food writer who explains how recipes connect to emotions."},
         {"role": "user", "content": f"Explain why this recipe matches the user's mood: {mood_combination}"}
     ]
+)
+
+# Generate serving image
+image_prompt = f"Beautiful food photography of {recipe_name}, {mood_description}, professional lighting"
+hf_response = requests.post(
+    "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0",
+    headers={"Authorization": f"Bearer {hf_token}"},
+    json={"inputs": image_prompt}
 )
 ```
 

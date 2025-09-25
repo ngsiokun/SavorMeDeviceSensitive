@@ -23,6 +23,16 @@ CANVA_ACCESS_TOKEN=your_access_token_here
 # OpenRouter AI API (for LLM functionality)
 OPENROUTER_API_KEY=your_openrouter_api_key_here
 OPENROUTER_MODEL=anthropic/claude-3.5-sonnet  # or your preferred model
+
+# Hugging Face API (for image generation)
+HUGGINGFACE_API_KEY=your_huggingface_api_key_here
+
+# Edamam Recipe API
+EDAMAM_APP_ID=your_edamam_app_id
+EDAMAM_APP_KEY=your_edamam_app_key
+
+# HHS Nutrition API
+HHS_API_KEY=your_hhs_api_key
    REDIRECT_URI=http://127.0.0.1:3001/oauth/redirect
    RETURN_URL=http://127.0.0.1:3001/return-nav
    ```
@@ -34,42 +44,37 @@ OPENROUTER_MODEL=anthropic/claude-3.5-sonnet  # or your preferred model
 
 ## Usage
 
-Run the mockup generator:
+### Generate Final Mockups:
 ```bash
-python mockup.py
+python final_mockup_generator.py
 ```
 
-This will create 4 mockup designs in your Canva account:
-1. **Mood Selection Screen** - The main mood input interface
-2. **Personality Profile Setup** - User onboarding form
-3. **Recipe Results Screen** - Display of generated recipes
-4. **Main Dashboard** - Home screen with quick access
+### View Final Mockups:
+```bash
+python view_final_mockups.py
+```
 
-## Mockup Features
+This will create 2 final smartphone-optimized mockups:
+1. **Mood Selection Screen** - The main mood input interface with 10 mood options
+2. **Emotional Rationale Screen** - Complete recipe explanation with nutrition comparison
+
+## Final Mockup Features
 
 ### Mood Selection Screen
-- 10 mood options with color-coded themes
+- 10 mood options with color-coded themes (Dreamy, Fiery, Focused, Playful, Craving, Light, Grounded, Restorative, Charismatic, Melancholy)
 - Intensity level selection (A little, Medium, Very)
 - Generate button to trigger recipe creation
+- iPhone-optimized dimensions (393x852px)
+- Ultra-compact design that fits perfectly within screen height
 
-### Personality Profile Setup
-- Personal information fields (age, height, weight)
-- Dietary preferences and allergies
-- Cuisine preferences selection
-- Continue button for onboarding flow
-
-### Recipe Results Screen
-- Recipe title and mood alignment
+### Emotional Rationale Screen
+- Recipe summary with nutrition information
 - Emotional rationale explanation
-- Key ingredients list
-- Nutrition information
-- Action buttons (View Full Recipe, Save Recipe)
-
-### Main Dashboard
-- Welcome message
-- Quick mood selection
-- Recent recipes display
-- Profile management options
+- Nutrition comparison table (recipe vs. daily intake)
+- Mood breakdown with individual explanations
+- Mood Meals journal for user reflection
+- Action buttons (Back to Home, Share Recipe)
+- iPhone-optimized dimensions with all content visible
 
 ## API Integration Notes
 

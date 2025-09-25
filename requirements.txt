@@ -1,3 +1,6 @@
 requests>=2.31.0
 python-dotenv>=1.0.0
 openai>=1.0.0  # For OpenRouter API compatibility
+huggingface-hub>=0.16.0  # For Hugging Face Stable Diffusion API
+Pillow>=9.0.0  # For image processing
+sqlite3  # For Mood Meals journal (built-in with Python)
