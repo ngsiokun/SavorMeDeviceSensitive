@@ -152,18 +152,34 @@ async def get_recipe_recommendation(
         
         # Get raw recipe data to access full nutrients
         async with httpx.AsyncClient(timeout=30.0) as client:
-            params = {
-                "type": "public",
-                "q": search_params["query"],
-                "app_id": edamam_client.app_id,
-                "app_key": edamam_client.app_key,
-            }
+            # Build params as list of tuples to support multiple values per key
+            params = [
+                ("type", "public"),
+                ("q", search_params["query"]),
+                ("app_id", edamam_client.app_id),
+                ("app_key", edamam_client.app_key),
+            ]
+            
+            # Add cuisine types (multiple values)
             if search_params.get("cuisine_types"):
-                params["cuisineType"] = search_params["cuisine_types"]
+                for cuisine in search_params["cuisine_types"]:
+                    params.append(("cuisineType", cuisine))
+            
+            # Add diet labels (multiple values)
             if search_params.get("diet_labels"):
-                params["diet"] = search_params["diet_labels"]
+                for diet in search_params["diet_labels"]:
+                    params.append(("diet", diet))
+            
+            # Add health labels (multiple values)
             if search_params.get("health_labels"):
-                params["health"] = search_params["health_labels"]
+                for health in search_params["health_labels"]:
+                    params.append(("health", health))
+            
+            # Add other filters
+            if search_params.get("calories_range"):
+                params.append(("calories", search_params["calories_range"]))
+            if search_params.get("protein_range"):
+                params.append(("nutrients[PROCNT]", search_params["protein_range"]))
             
             response = await client.get(edamam_client.base_url, params=params)
             response.raise_for_status()
