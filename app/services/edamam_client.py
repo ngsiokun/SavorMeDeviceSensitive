@@ -203,8 +203,47 @@ class EdamamClient:
         """
         Build Edamam search parameters from mood keywords and user profile
         """
+        # Filter keywords based on dietary preferences and allergies
+        meat_keywords = ["beef", "pork", "chicken", "turkey", "lamb", "veal", "duck", 
+                        "meat", "bacon", "sausage", "ham", "lean meat", "lean beef"]
+        seafood_keywords = ["fish", "salmon", "tuna", "shrimp", "seafood", "shellfish"]
+        
+        filtered_keywords = []
+        for keyword in keywords:
+            keyword_lower = keyword.lower()
+            
+            # Skip meat for vegetarians/vegans
+            if user_profile.dietary_preference in ["vegetarian", "vegan"]:
+                if any(meat in keyword_lower for meat in meat_keywords):
+                    continue
+            
+            # Skip seafood for vegans
+            if user_profile.dietary_preference == "vegan":
+                if any(seafood in keyword_lower for seafood in seafood_keywords):
+                    continue
+                # Skip eggs and dairy
+                if any(item in keyword_lower for item in ["egg", "dairy", "milk", "cheese"]):
+                    continue
+            
+            # Skip allergies
+            skip_keyword = False
+            for allergy in user_profile.food_allergies:
+                if allergy.lower() in keyword_lower:
+                    skip_keyword = True
+                    break
+            
+            if not skip_keyword:
+                filtered_keywords.append(keyword)
+        
+        # Fallback to generic vegetarian keywords if all filtered out
+        if not filtered_keywords:
+            if user_profile.dietary_preference in ["vegetarian", "vegan"]:
+                filtered_keywords = ["vegetables", "legumes"]
+            else:
+                filtered_keywords = ["healthy", "nutritious"]
+        
         # Combine keywords into search query
-        query = " ".join(keywords[:2])  # Use top 2 keywords
+        query = " ".join(filtered_keywords[:2])  # Use top 2 keywords
         
         # Map user-friendly cuisine names to Edamam cuisine type filters
         cuisine_map = {
