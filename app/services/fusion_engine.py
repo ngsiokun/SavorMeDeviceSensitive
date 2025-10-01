@@ -86,7 +86,9 @@ class FusionEngine:
         )
         
         # Generate interpretation summary
-        mood_names = [f"{ms.mood.value} ({ms.intensity.value.replace('_', ' ')})" 
+        mood_val = lambda x: x if isinstance(x, str) else x.value
+        intensity_val = lambda x: x if isinstance(x, str) else x.value
+        mood_names = [f"{mood_val(ms.mood)} ({intensity_val(ms.intensity).replace('_', ' ')})" 
                      for ms in mood_blend.moods]
         interpretation_summary = self._generate_interpretation_summary(mood_blend, flavor_profile)
         mood_description = self._generate_mood_description(mood_blend, flavor_profile)
@@ -112,8 +114,9 @@ class FusionEngine:
         
         base = summary_templates.get(primary_mood.mood, "Seeking emotional nourishment")
         
+        mood_val = lambda x: x if isinstance(x, str) else x.value
         if len(mood_blend.moods) > 1:
-            base += f" with hints of {', '.join(m.mood.value for m in mood_blend.moods[1:])}"
+            base += f" with hints of {', '.join(mood_val(m.mood) for m in mood_blend.moods[1:])}"
         
         return base
     

@@ -3,7 +3,7 @@ SavorMe Functional Demo App
 Beautiful web interface that connects to the backend API
 """
 from flask import Flask, render_template, jsonify, request
-import httpx
+import requests
 import os
 from pathlib import Path
 
@@ -38,30 +38,44 @@ def recipe_result():
 
 
 @app.route('/api/recommend', methods=['POST'])
-async def get_recommendation():
+def get_recommendation():
     """Proxy endpoint to backend API"""
     try:
         data = request.json
+        print(f"Received request: {data}")
         
-        async with httpx.AsyncClient(timeout=30.0) as client:
-            response = await client.post(
-                f"{BACKEND_URL}/api/v1/recipes/recommend",
-                json=data
-            )
-            response.raise_for_status()
-            return jsonify(response.json())
+        # Use synchronous requests instead of async
+        import requests
+        response = requests.post(
+            f"{BACKEND_URL}/api/v1/recipes/recommend",
+            json=data,
+            timeout=30.0
+        )
+        
+        print(f"Backend status code: {response.status_code}")
+        print(f"Backend response: {response.text[:500]}")
+        
+        response.raise_for_status()
+        return jsonify(response.json())
     
+    except requests.exceptions.HTTPError as e:
+        print(f"HTTP Error: {e}")
+        print(f"Response: {e.response.text if e.response else 'No response'}")
+        return jsonify({"error": str(e), "detail": e.response.text if e.response else None}), 500
     except Exception as e:
+        print(f"General Error: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
 
 @app.route('/api/health', methods=['GET'])
-async def health_check():
+def health_check():
     """Check backend health"""
     try:
-        async with httpx.AsyncClient(timeout=10.0) as client:
-            response = await client.get(f"{BACKEND_URL}/api/v1/health")
-            return jsonify(response.json())
+        import requests
+        response = requests.get(f"{BACKEND_URL}/api/v1/health", timeout=10.0)
+        return jsonify(response.json())
     except Exception as e:
         return jsonify({"error": str(e), "backend_url": BACKEND_URL}), 503
 

@@ -70,8 +70,10 @@ class OpenRouterClient:
     
     def _build_rationale_prompt(self, recipe: Recipe, mood_interpretation: MoodInterpretation) -> str:
         """Build prompt for LLM"""
+        mood_val = lambda x: x if isinstance(x, str) else x.value
+        intensity_val = lambda x: x if isinstance(x, str) else x.value
         moods_str = ", ".join([
-            f"{m.mood.value} ({m.intensity.value.replace('_', ' ')})" 
+            f"{mood_val(m.mood)} ({intensity_val(m.intensity).replace('_', ' ')})" 
             for m in mood_interpretation.mood_blend.moods
         ])
         
@@ -102,8 +104,8 @@ OVERALL_RATIONALE:
 [your response]
 
 MOOD_BREAKDOWNS:
-{mood_interpretation.mood_blend.moods[0].mood.value}: [explanation]
-{mood_interpretation.mood_blend.moods[1].mood.value if len(mood_interpretation.mood_blend.moods) > 1 else ""}: [explanation]
+{mood_val(mood_interpretation.mood_blend.moods[0].mood)}: [explanation]
+{mood_val(mood_interpretation.mood_blend.moods[1].mood) if len(mood_interpretation.mood_blend.moods) > 1 else ""}: [explanation]
 
 PLATING_SUGGESTION:
 [your response]
@@ -169,11 +171,13 @@ JOURNALING_PROMPT:
     
     def _generate_fallback_rationale(self, recipe: Recipe, mood_interpretation: MoodInterpretation) -> EmotionalRationale:
         """Generate basic rationale when AI is unavailable"""
+        mood_val = lambda x: x if isinstance(x, str) else x.value
         mood_breakdowns = []
         for mood_sel in mood_interpretation.mood_blend.moods:
+            mood_str = mood_val(mood_sel.mood)
             mood_breakdowns.append({
-                "mood": mood_sel.mood.value,
-                "explanation": f"The {', '.join(mood_interpretation.flavor_profile.flavor_bias[:2])} flavors complement your {mood_sel.mood.value} mood."
+                "mood": mood_str,
+                "explanation": f"The {', '.join(mood_interpretation.flavor_profile.flavor_bias[:2])} flavors complement your {mood_str} mood."
             })
         
         return EmotionalRationale(

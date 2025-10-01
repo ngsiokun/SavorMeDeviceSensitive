@@ -138,7 +138,7 @@ async def get_recipe_recommendation(
         nutrition_engine = get_mood_nutrition_engine()
         
         # Extract mood IDs for nutrient scoring
-        mood_ids = [m.mood.value for m in mood_blend.moods]
+        mood_ids = [m.mood if isinstance(m.mood, str) else m.mood.value for m in mood_blend.moods]
         
         # Interpret mood (legacy emotional approach)
         mood_interpretation = fusion_engine.interpret_mood_blend(mood_blend)

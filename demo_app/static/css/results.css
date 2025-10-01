@@ -58,6 +58,85 @@
     text-transform: uppercase;
 }
 
+/* Ingredients Section */
+.ingredients-section {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #E5E7EB;
+}
+
+.ingredients-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #065F46;
+    margin-bottom: 8px;
+}
+
+.ingredients-list {
+    list-style: none;
+    padding: 0;
+    font-size: 11px;
+    color: #374151;
+}
+
+.ingredients-list li {
+    padding: 6px 0;
+    border-bottom: 1px solid #F3F4F6;
+}
+
+.ingredients-list li:last-child {
+    border-bottom: none;
+}
+
+/* Directions Section */
+.directions-section {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #E5E7EB;
+}
+
+.directions-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #065F46;
+    margin-bottom: 8px;
+}
+
+.directions-list {
+    padding-left: 20px;
+    font-size: 11px;
+    color: #374151;
+    line-height: 1.6;
+}
+
+.directions-list li {
+    padding: 6px 0;
+    margin-bottom: 8px;
+}
+
+.source-link {
+    margin-top: 12px;
+    text-align: center;
+}
+
+.source-link a {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #F0FDF4;
+    color: #065F46;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 2px solid #10B981;
+    transition: all 0.3s ease;
+}
+
+.source-link a:hover {
+    background: #10B981;
+    color: white;
+}
+
 /* Match Score */
 .match-score-section {
     background: linear-gradient(135deg, #10B981 0%, #059669 100%);

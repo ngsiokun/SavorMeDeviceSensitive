@@ -20,12 +20,34 @@ function displayRecipe(data) {
     const nutrition = data.nutrition_comparison;
     
     // Recipe Card
+    let ingredientsHTML = '';
+    if (recipe.ingredients && recipe.ingredients.length > 0) {
+        ingredientsHTML = '<div class="ingredients-section"><div class="ingredients-title">🥘 Ingredients</div><ul class="ingredients-list">';
+        recipe.ingredients.forEach(ing => {
+            ingredientsHTML += `<li>${ing.amount || ''} ${ing.name}</li>`;
+        });
+        ingredientsHTML += '</ul></div>';
+    }
+    
+    let directionsHTML = '';
+    if (recipe.cooking_directions && recipe.cooking_directions.length > 0) {
+        directionsHTML = '<div class="directions-section"><div class="directions-title">👨‍🍳 Directions</div><ol class="directions-list">';
+        recipe.cooking_directions.forEach(step => {
+            directionsHTML += `<li>${step}</li>`;
+        });
+        directionsHTML += '</ol></div>';
+    }
+    
+    if (recipe.source_url) {
+        directionsHTML += `<div class="source-link"><a href="${recipe.source_url}" target="_blank">📖 View Full Recipe</a></div>`;
+    }
+    
     document.getElementById('recipeCard').innerHTML = `
         ${recipe.image_url ? `<img src="${recipe.image_url}" class="recipe-image" alt="${recipe.name}">` : ''}
         <div class="recipe-info">
             <h2 class="recipe-name">${recipe.name}</h2>
             <div class="recipe-meta">
-                ${recipe.prep_time ? `<span>⏱️ ${recipe.prep_time + recipe.cook_time || recipe.prep_time} min</span>` : ''}
+                ${recipe.cook_time ? `<span>⏱️ ${recipe.cook_time} min</span>` : ''}
                 <span>🍽️ ${recipe.servings || 1} serving${recipe.servings !== 1 ? 's' : ''}</span>
             </div>
             <div class="nutrition-quick">
@@ -42,6 +64,8 @@ function displayRecipe(data) {
                     <div class="nutrition-quick-label">Fiber</div>
                 </div>
             </div>
+            ${ingredientsHTML}
+            ${directionsHTML}
         </div>
     `;
     
