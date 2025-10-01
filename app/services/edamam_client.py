@@ -48,31 +48,40 @@ class EdamamClient:
         if not self.app_id or not self.app_key:
             raise ValueError("Edamam API credentials not configured")
         
-        # Build query parameters
-        params = {
-            "type": "public",
-            "q": query,
-            "app_id": self.app_id,
-            "app_key": self.app_key,
-        }
+        # Build query parameters as list of tuples to support multiple values
+        params = [
+            ("type", "public"),
+            ("q", query),
+            ("app_id", self.app_id),
+            ("app_key", self.app_key),
+        ]
         
+        # Add cuisine types (multiple values supported)
         if cuisine_types:
-            params["cuisineType"] = cuisine_types
+            for cuisine in cuisine_types:
+                params.append(("cuisineType", cuisine))
         
+        # Add diet labels (multiple values supported)
         if diet_labels:
-            params["diet"] = diet_labels
+            for diet in diet_labels:
+                params.append(("diet", diet))
         
+        # Add health labels (multiple values supported)
         if health_labels:
-            params["health"] = health_labels
+            for health in health_labels:
+                params.append(("health", health))
         
+        # Add excluded ingredients (multiple values supported)
         if excluded_ingredients:
-            params["excluded"] = excluded_ingredients
+            for excluded in excluded_ingredients:
+                params.append(("excluded", excluded))
         
+        # Add calorie and protein ranges
         if calories_range:
-            params["calories"] = calories_range
+            params.append(("calories", calories_range))
         
         if protein_range:
-            params["nutrients[PROCNT]"] = protein_range
+            params.append(("nutrients[PROCNT]", protein_range))
         
         # Make API request
         async with httpx.AsyncClient(timeout=30.0) as client:
