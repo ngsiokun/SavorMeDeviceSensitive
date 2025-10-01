@@ -22,6 +22,11 @@ class Settings(BaseSettings):
     OPENROUTER_API_KEY: Optional[str] = Field(None, env="OPENROUTER_API_KEY")
     HUGGINGFACE_API_KEY: Optional[str] = Field(None, env="HUGGINGFACE_API_KEY")
     
+    # Canva API (for design generation)
+    CANVA_CLIENT_ID: Optional[str] = Field(None, env="CANVA_CLIENT_ID")
+    CANVA_CLIENT_SECRET: Optional[str] = Field(None, env="CANVA_CLIENT_SECRET")
+    CANVA_ACCESS_TOKEN: Optional[str] = Field(None, env="CANVA_ACCESS_TOKEN")
+    
     # Database
     DATABASE_URL: str = Field("sqlite:///./savorme.db", env="DATABASE_URL")
     

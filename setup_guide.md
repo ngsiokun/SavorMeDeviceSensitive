@@ -60,12 +60,14 @@ This will create 2 final smartphone-optimized mockups:
 
 ## Final Mockup Features
 
-### Mood Selection Screen
-- 10 mood options with color-coded themes (Dreamy, Fiery, Focused, Playful, Craving, Light, Grounded, Restorative, Charismatic, Melancholy)
+### Mood Selection Screen (v2.0 - Evidence-Based)
+- **4 mood options** with scientific evidence badges (Stressed, Fatigued, Low Mood, Irritable)
+- Evidence level indicators (⭐⭐⭐ to ⭐⭐⭐⭐⭐)
+- Mood aliases for better identification (e.g., "Anxious, Wired, Overwhelmed")
 - Intensity level selection (A little, Medium, Very)
 - Generate button to trigger recipe creation
 - iPhone-optimized dimensions (393x852px)
-- Ultra-compact design that fits perfectly within screen height
+- Clean 2×2 grid layout (instead of 5×2)
 
 ### Emotional Rationale Screen
 - Recipe summary with nutrition information
