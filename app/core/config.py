@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str = Field("sqlite:///./savorme.db", env="DATABASE_URL")
     
     # CORS
-    CORS_ORIGINS: list = ["*"]
+    CORS_ORIGINS: str = "*"
     
     # API Configuration
     EDAMAM_BASE_URL: str = "https://api.edamam.com/api/recipes/v2"

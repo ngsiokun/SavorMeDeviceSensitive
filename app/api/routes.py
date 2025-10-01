@@ -151,6 +151,10 @@ async def get_recipe_recommendation(
             nutrition_targets
         )
         
+        # Debug logging
+        print(f"Search keywords: {mood_interpretation.flavor_profile.search_keywords}")
+        print(f"Search params: {search_params}")
+        
         # Get raw recipe data to access full nutrients
         async with httpx.AsyncClient(timeout=30.0) as client:
             # Build params as list of tuples to support multiple values per key
@@ -182,9 +186,11 @@ async def get_recipe_recommendation(
             if search_params.get("protein_range"):
                 params.append(("nutrients[PROCNT]", search_params["protein_range"]))
             
+            print(f"Edamam API request params: {params}")
             response = await client.get(edamam_client.base_url, params=params)
             response.raise_for_status()
             search_results = response.json()
+            print(f"Edamam API response hits: {len(search_results.get('hits', []))}")
         
         if not search_results.get("hits"):
             raise HTTPException(status_code=404, detail="No recipes found matching criteria")

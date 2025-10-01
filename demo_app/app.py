@@ -10,7 +10,7 @@ from pathlib import Path
 app = Flask(__name__)
 
 # Backend API URL
-BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
+BACKEND_URL = os.getenv("BACKEND_URL", "http://127.0.0.1:8000")
 
 
 @app.route('/')
@@ -54,6 +54,14 @@ def get_recommendation():
         
         print(f"Backend status code: {response.status_code}")
         print(f"Backend response: {response.text[:500]}")
+        
+        if response.status_code == 404:
+            # Try to get more details about why no recipes were found
+            try:
+                error_detail = response.json().get("detail", "Unknown error")
+                print(f"404 Error detail: {error_detail}")
+            except:
+                print("Could not parse 404 error response")
         
         response.raise_for_status()
         return jsonify(response.json())
