@@ -1,211 +1,136 @@
 {
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "description": "Evidence-based mood-to-nutrient mapping focused on 4 moods with strongest scientific support",
+  "changelog": "v2.0.0 - Reduced from 12 moods to 4 evidence-based moods only (stressed, fatigued, low_mood, irritable)",
+  
   "moods": [
     {
-      "id": "anger",
-      "aliases": ["irritable", "snappy", "fiery"],
+      "id": "stressed",
+      "display_name": "Stressed / Anxious",
+      "aliases": ["anxious", "wired", "restless", "overwhelmed", "tense"],
+      "description": "Feeling anxious, stressed, or unable to relax",
       "targets": {
         "nutrients": [
-          {"name": "protein", "unit": "g", "min_per_meal": 20, "weight": 0.9, "note": "stabilize glycemia"},
-          {"name": "fiber", "unit": "g", "min_per_meal": 8, "weight": 0.8},
-          {"name": "added_sugar", "unit": "g", "max_per_meal": 10, "weight": 0.8},
-          {"name": "omega_3_epa_dha", "unit": "g", "min_per_meal": 0.25, "weight": 0.5}
-        ],
-        "patterns": ["mediterranean_base", "stabilize_glycemia", "low_ultra_processed", "limit_high_caffeine"]
-      },
-      "explainers": [
-        "Protein + fiber slow glucose swings that can amplify irritability.",
-        "Lower added sugar and modest omega-3 can support calmer mood."
-      ],
-      "contraindications": [],
-      "evidence": "Ultra-processed foods correlate with worse mood; glycemic stability helps reduce irritability."
-    },
-    {
-      "id": "moodiness",
-      "aliases": ["low", "blue", "melancholy"],
-      "targets": {
-        "nutrients": [
-          {"name": "fiber", "unit": "g", "min_per_meal": 10, "weight": 0.8, "note": "plant-rich, gut-friendly"},
-          {"name": "polyphenols", "unit": "g", "min_per_meal": 0.5, "weight": 0.5, "note": "berries/greens/beans"},
-          {"name": "omega_3_epa_dha", "unit": "g", "min_per_meal": 0.3, "weight": 0.6}
-        ],
-        "patterns": ["mediterranean_base", "low_ultra_processed"]
-      },
-      "explainers": [
-        "Mediterranean-leaning pattern with plants and fish is associated with improved mood (SMILES trial).",
-        "Berries, leafy greens, and legumes add polyphenols and fiber for gut-brain health."
-      ],
-      "contraindications": [],
-      "evidence": "Mediterranean diet RCTs (SMILES) showed clinically meaningful depression symptom reduction."
-    },
-    {
-      "id": "fatigue",
-      "aliases": ["tired", "brain_fog", "exhausted"],
-      "targets": {
-        "nutrients": [
-          {"name": "iron", "unit": "mg", "min_per_meal": 6, "weight": 1.0, "note": "food-first; consider vit C pairing"},
-          {"name": "vitamin_c", "unit": "mg", "min_per_meal": 30, "weight": 0.6, "note": "enhances non-heme iron"},
-          {"name": "complex_carbs", "unit": "g", "min_per_meal": 25, "weight": 0.7},
-          {"name": "fiber", "unit": "g", "min_per_meal": 8, "weight": 0.5}
-        ],
-        "patterns": ["mediterranean_base", "low_ultra_processed", "stabilize_glycemia"]
-      },
-      "explainers": [
-        "Iron-rich foods with vitamin C support energy if iron is low.",
-        "Complex carbs + fiber avoid energy crashes."
-      ],
-      "contraindications": ["hemochromatosis", "iron_overload"],
-      "evidence": "Iron deficiency (even without anemia) is tied to fatigue and poor concentration."
-    },
-    {
-      "id": "stress",
-      "aliases": ["anxious", "wired", "restless"],
-      "targets": {
-        "nutrients": [
-          {"name": "magnesium", "unit": "mg", "min_per_meal": 120, "weight": 0.9},
-          {"name": "omega_3_epa_dha", "unit": "g", "min_per_meal": 0.25, "weight": 0.6},
-          {"name": "fiber", "unit": "g", "min_per_meal": 8, "weight": 0.5}
+          {"name": "magnesium", "unit": "mg", "min_per_meal": 120, "weight": 1.0, "note": "supports nervous system and stress response"},
+          {"name": "omega_3_epa_dha", "unit": "g", "min_per_meal": 0.3, "weight": 0.9, "note": "anti-inflammatory, supports mood regulation"},
+          {"name": "fiber", "unit": "g", "min_per_meal": 8, "weight": 0.7, "note": "gut-brain axis support"},
+          {"name": "added_sugar", "unit": "g", "max_per_meal": 10, "weight": 0.6, "note": "avoid blood sugar spikes"}
         ],
         "patterns": ["mediterranean_base", "limit_high_caffeine", "low_ultra_processed"]
       },
       "explainers": [
-        "Magnesium-rich foods (legumes, nuts, greens) and omega-3 fish are a gentle, food-first lever.",
-        "Keep caffeine modest and favor slow carbs + fiber."
+        "Magnesium-rich foods (leafy greens, nuts, legumes, whole grains) are linked to calmer mood in several studies.",
+        "Omega-3 fatty acids from fish show mixed but trending positive results for anxiety reduction in meta-analyses.",
+        "Limiting caffeine and refined sugars helps prevent stress-amplifying blood sugar swings.",
+        "Mediterranean dietary pattern associated with lower stress and anxiety levels."
       ],
       "contraindications": [],
-      "evidence": "Magnesium and omega-3 show mixed but trending positive results for anxiety in meta-analyses."
+      "evidence": "Meta-analyses show magnesium and omega-3 have small-to-moderate benefits for anxiety, with variable results across studies. Mediterranean pattern shows consistent stress reduction benefits.",
+      "evidence_level": "Moderate - Mixed but trending positive",
+      "key_studies": [
+        "Magnesium and anxiety meta-analyses (PMC)",
+        "Omega-3 for anxiety (Cochrane reviews)",
+        "Mediterranean diet and mental health",
+        "Caffeine and stress response"
+      ]
     },
+    
     {
-      "id": "dreamy",
-      "aliases": ["imaginative", "poetic", "soft"],
+      "id": "fatigued",
+      "display_name": "Fatigued / Low Energy",
+      "aliases": ["tired", "exhausted", "brain_fog", "sluggish", "drained"],
+      "description": "Feeling physically or mentally exhausted, lacking energy",
       "targets": {
         "nutrients": [
-          {"name": "fiber", "unit": "g", "min_per_meal": 8, "weight": 0.6},
-          {"name": "omega_3_epa_dha", "unit": "g", "min_per_meal": 0.2, "weight": 0.4},
-          {"name": "polyphenols", "unit": "g", "min_per_meal": 0.3, "weight": 0.5}
+          {"name": "iron", "unit": "mg", "min_per_meal": 6, "weight": 1.0, "note": "critical for oxygen transport and energy"},
+          {"name": "vitamin_c", "unit": "mg", "min_per_meal": 30, "weight": 0.8, "note": "enhances non-heme iron absorption"},
+          {"name": "complex_carbs", "unit": "g", "min_per_meal": 30, "weight": 0.8, "note": "sustained energy release"},
+          {"name": "fiber", "unit": "g", "min_per_meal": 8, "weight": 0.6, "note": "prevents energy crashes"},
+          {"name": "protein", "unit": "g", "min_per_meal": 20, "weight": 0.7, "note": "sustains energy levels"}
         ],
-        "patterns": ["mediterranean_base"]
+        "patterns": ["mediterranean_base", "low_ultra_processed", "stabilize_glycemia"]
       },
       "explainers": [
-        "Gentle, plant-forward meals with omega-3s support cognitive clarity and calm creativity."
+        "Iron deficiency (even without anemia) is strongly linked to fatigue and poor concentration.",
+        "Vitamin C-rich foods (citrus, peppers, tomatoes) help your body absorb iron from plant sources.",
+        "Complex carbohydrates with fiber provide steady energy without crashes.",
+        "Protein helps maintain stable blood sugar and sustained energy throughout the day."
       ],
-      "contraindications": []
+      "contraindications": ["hemochromatosis", "iron_overload"],
+      "evidence": "Iron deficiency is a well-established cause of fatigue, even in the absence of anemia. Food-first iron intake with vitamin C co-factors is recommended by WHO and medical guidelines.",
+      "evidence_level": "Strong - Well-established clinical relationship",
+      "key_studies": [
+        "Iron deficiency and fatigue (Office of Dietary Supplements)",
+        "WHO iron guidelines",
+        "Glycemic index and energy (multiple RCTs)",
+        "Vitamin C and iron absorption"
+      ]
     },
+    
     {
-      "id": "focused",
-      "aliases": ["driven", "sharp", "minimal"],
+      "id": "low_mood",
+      "display_name": "Low Mood / Blue",
+      "aliases": ["sad", "down", "blue", "melancholy", "depressed", "unhappy"],
+      "description": "Feeling sad, down, or experiencing low mood",
       "targets": {
         "nutrients": [
-          {"name": "protein", "unit": "g", "min_per_meal": 25, "weight": 0.9},
-          {"name": "fiber", "unit": "g", "min_per_meal": 6, "weight": 0.5},
-          {"name": "iron", "unit": "mg", "min_per_meal": 4, "weight": 0.6},
-          {"name": "vitamin_c", "unit": "mg", "min_per_meal": 25, "weight": 0.4}
-        ],
-        "patterns": ["stabilize_glycemia", "low_ultra_processed"]
-      },
-      "explainers": [
-        "Protein and iron support sustained mental performance.",
-        "Stable blood sugar prevents mid-task crashes."
-      ],
-      "contraindications": []
-    },
-    {
-      "id": "playful",
-      "aliases": ["curious", "whimsical", "light"],
-      "targets": {
-        "nutrients": [
-          {"name": "fiber", "unit": "g", "min_per_meal": 7, "weight": 0.6},
-          {"name": "vitamin_c", "unit": "mg", "min_per_meal": 40, "weight": 0.5}
-        ],
-        "patterns": ["mediterranean_base"]
-      },
-      "explainers": [
-        "Colorful, varied plant-based meals align with playful energy."
-      ],
-      "contraindications": []
-    },
-    {
-      "id": "craving",
-      "aliases": ["indulgent", "sensory", "hungry"],
-      "targets": {
-        "nutrients": [
-          {"name": "protein", "unit": "g", "min_per_meal": 18, "weight": 0.7},
-          {"name": "fiber", "unit": "g", "min_per_meal": 6, "weight": 0.6},
-          {"name": "added_sugar", "unit": "g", "max_per_meal": 15, "weight": 0.5}
-        ],
-        "patterns": ["stabilize_glycemia"]
-      },
-      "explainers": [
-        "Satisfying protein and fiber help prevent overeating while allowing indulgence."
-      ],
-      "contraindications": []
-    },
-    {
-      "id": "light",
-      "aliases": ["fresh", "airy", "gentle"],
-      "targets": {
-        "nutrients": [
-          {"name": "fiber", "unit": "g", "min_per_meal": 9, "weight": 0.8},
-          {"name": "vitamin_c", "unit": "mg", "min_per_meal": 50, "weight": 0.6},
-          {"name": "added_sugar", "unit": "g", "max_per_meal": 8, "weight": 0.5}
+          {"name": "fiber", "unit": "g", "min_per_meal": 10, "weight": 1.0, "note": "gut microbiome supports mood via gut-brain axis"},
+          {"name": "omega_3_epa_dha", "unit": "g", "min_per_meal": 0.35, "weight": 0.9, "note": "anti-inflammatory, supports neurotransmitter function"},
+          {"name": "protein", "unit": "g", "min_per_meal": 20, "weight": 0.7, "note": "amino acids for neurotransmitter production"},
+          {"name": "added_sugar", "unit": "g", "max_per_meal": 12, "weight": 0.6, "note": "high sugar linked to mood swings"}
         ],
         "patterns": ["mediterranean_base", "low_ultra_processed"]
       },
       "explainers": [
-        "Plant-forward, fresh meals support feeling light and energized."
+        "Mediterranean dietary pattern showed clinically meaningful depression improvement in the SMILES randomized controlled trial.",
+        "High-fiber, plant-rich meals support beneficial gut bacteria, which influence mood through the gut-brain axis.",
+        "Omega-3 fatty acids (especially EPA from fatty fish) show small-to-moderate benefits for mood in meta-analyses.",
+        "Minimizing ultra-processed foods is associated with better mental health outcomes."
       ],
-      "contraindications": []
+      "contraindications": [],
+      "evidence": "STRONGEST - The SMILES trial demonstrated significant depression symptom reduction with Mediterranean diet intervention. Multiple meta-analyses support omega-3 and fiber benefits.",
+      "evidence_level": "Strong - RCT support (SMILES trial) + meta-analyses",
+      "key_studies": [
+        "SMILES trial (2017) - Mediterranean diet for depression",
+        "Mediterranean diet and depression meta-analyses",
+        "Omega-3 and mood (Cochrane reviews)",
+        "Gut-brain axis and mental health",
+        "Ultra-processed foods and depression"
+      ]
     },
+    
     {
-      "id": "grounded",
-      "aliases": ["stable", "calm", "earthy"],
+      "id": "irritable",
+      "display_name": "Irritable / Angry",
+      "aliases": ["angry", "snappy", "cranky", "short_tempered", "agitated", "annoyed"],
+      "description": "Feeling irritable, short-tempered, or easily annoyed",
       "targets": {
         "nutrients": [
-          {"name": "fiber", "unit": "g", "min_per_meal": 10, "weight": 0.9},
-          {"name": "protein", "unit": "g", "min_per_meal": 20, "weight": 0.7},
-          {"name": "magnesium", "unit": "mg", "min_per_meal": 100, "weight": 0.6}
+          {"name": "protein", "unit": "g", "min_per_meal": 22, "weight": 0.9, "note": "stabilizes blood sugar to prevent mood swings"},
+          {"name": "fiber", "unit": "g", "min_per_meal": 9, "weight": 0.8, "note": "slows glucose absorption"},
+          {"name": "added_sugar", "unit": "g", "max_per_meal": 8, "weight": 0.9, "note": "sugar spikes amplify irritability"},
+          {"name": "omega_3_epa_dha", "unit": "g", "min_per_meal": 0.25, "weight": 0.6, "note": "anti-inflammatory properties"}
         ],
-        "patterns": ["mediterranean_base", "stabilize_glycemia"]
+        "patterns": ["mediterranean_base", "stabilize_glycemia", "low_ultra_processed", "limit_high_caffeine"]
       },
       "explainers": [
-        "Hearty whole foods with magnesium and fiber promote stability and calm."
+        "Protein and fiber together stabilize blood sugar, preventing the mood swings and irritability that come from glucose spikes and crashes.",
+        "Reducing added sugar eliminates a major trigger for blood sugar instability.",
+        "Ultra-processed foods are associated with worse mood outcomes; whole foods support emotional balance.",
+        "Omega-3 fatty acids have anti-inflammatory properties that may help reduce agitation."
       ],
-      "contraindications": []
-    },
-    {
-      "id": "restorative",
-      "aliases": ["healing", "warm", "nurturing"],
-      "targets": {
-        "nutrients": [
-          {"name": "protein", "unit": "g", "min_per_meal": 18, "weight": 0.7},
-          {"name": "fiber", "unit": "g", "min_per_meal": 8, "weight": 0.7},
-          {"name": "magnesium", "unit": "mg", "min_per_meal": 110, "weight": 0.6},
-          {"name": "omega_3_epa_dha", "unit": "g", "min_per_meal": 0.2, "weight": 0.5}
-        ],
-        "patterns": ["mediterranean_base", "low_ultra_processed"]
-      },
-      "explainers": [
-        "Nourishing, warm meals with anti-inflammatory omega-3s support recovery and healing."
-      ],
-      "contraindications": []
-    },
-    {
-      "id": "charismatic",
-      "aliases": ["magnetic", "radiant", "confident"],
-      "targets": {
-        "nutrients": [
-          {"name": "protein", "unit": "g", "min_per_meal": 22, "weight": 0.7},
-          {"name": "iron", "unit": "mg", "min_per_meal": 5, "weight": 0.6},
-          {"name": "vitamin_c", "unit": "mg", "min_per_meal": 35, "weight": 0.5}
-        ],
-        "patterns": ["mediterranean_base"]
-      },
-      "explainers": [
-        "Nutrient-dense meals support energy and vitality."
-      ],
-      "contraindications": []
+      "contraindications": [],
+      "evidence": "Ultra-processed food consumption correlates with mood disturbances. Glycemic stability through protein and fiber helps prevent irritability associated with blood sugar swings.",
+      "evidence_level": "Moderate - Observational studies + physiological mechanisms",
+      "key_studies": [
+        "Ultra-processed foods and mental health (PMC)",
+        "Glycemic index and mood",
+        "Protein and satiety research",
+        "Blood sugar variability and mood"
+      ]
     }
   ],
+  
   "patterns": {
     "mediterranean_base": {
       "emphasize_groups": ["vegetables", "fruits", "legumes", "nuts", "whole_grains", "olive_oil", "fish"],
@@ -226,22 +151,26 @@
       "description": "Protein and fiber slow glucose absorption, preventing mood-disrupting blood sugar swings"
     }
   },
+  
   "nutrient_aliases": {
-    "iron": ["iron", "iron_fe", "Iron, Fe"],
-    "magnesium": ["magnesium", "Magnesium, Mg"],
-    "fiber": ["fiber", "dietary_fiber", "Fiber, total dietary"],
-    "protein": ["protein", "Protein"],
-    "added_sugar": ["added_sugars", "Sugars, added"],
-    "vitamin_c": ["vitamin_c", "ascorbic_acid", "Vitamin C, total ascorbic acid"],
-    "complex_carbs": ["carbohydrate_by_difference", "Carbohydrate, by difference"],
+    "iron": ["iron", "iron_fe", "Iron, Fe", "FE"],
+    "magnesium": ["magnesium", "Magnesium, Mg", "MG"],
+    "fiber": ["fiber", "dietary_fiber", "Fiber, total dietary", "FIBTG"],
+    "protein": ["protein", "Protein", "PROCNT"],
+    "added_sugar": ["added_sugars", "Sugars, added", "SUGAR.added"],
+    "vitamin_c": ["vitamin_c", "ascorbic_acid", "Vitamin C, total ascorbic acid", "VITC"],
+    "complex_carbs": ["carbohydrate_by_difference", "Carbohydrate, by difference", "CHOCDF"],
     "omega_3_epa_dha": ["epa", "dha", "omega_3_total", "EPA", "DHA", "20:5 n-3 (EPA)", "22:6 n-3 (DHA)"],
     "polyphenols": ["polyphenols_estimated", "Total polyphenols"]
   },
+  
   "disclaimers": {
     "general": "This app provides food suggestions based on mood and nutritional science. It is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.",
     "iron": "If you experience persistent fatigue, consider getting tested for iron deficiency before significantly increasing iron intake. People with hemochromatosis or iron overload should avoid high-iron recommendations.",
     "supplements": "This app recommends food-first approaches. Consult a healthcare provider before taking supplements.",
-    "persistent_symptoms": "If mood symptoms persist or worsen, please consult a mental health professional."
-  }
+    "persistent_symptoms": "If mood symptoms persist or worsen, please consult a mental health professional.",
+    "evidence_disclaimer": "The strength of evidence varies by mood. While some recommendations (like Mediterranean diet for low mood) have strong RCT support, others (like magnesium for stress) show mixed results. Individual responses vary."
+  },
+  
+  "removed_moods_note": "Version 2.0.0 removed 8 moods (dreamy, focused, playful, craving, light, grounded, restorative, charismatic) due to insufficient scientific evidence linking these emotional states to specific nutrient needs. Focus is now exclusively on evidence-based recommendations."
 }
-

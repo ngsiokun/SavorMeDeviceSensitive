@@ -7,17 +7,11 @@ from pydantic import BaseModel, Field, validator
 
 
 class MoodType(str, Enum):
-    """Available mood types"""
-    DREAMY = "dreamy"
-    FIERY = "fiery"
-    FOCUSED = "focused"
-    PLAYFUL = "playful"
-    CRAVING = "craving"
-    LIGHT = "light"
-    GROUNDED = "grounded"
-    RESTORATIVE = "restorative"
-    CHARISMATIC = "charismatic"
-    MELANCHOLY = "melancholy"
+    """Available mood types - Evidence-based only (v2.0.0)"""
+    STRESSED = "stressed"
+    FATIGUED = "fatigued"
+    LOW_MOOD = "low_mood"
+    IRRITABLE = "irritable"
 
 
 class IntensityLevel(str, Enum):
