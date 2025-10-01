@@ -57,7 +57,12 @@ class FusionEngine:
             ["turkey", "green beans"],
             ["eggs", "avocado"],
             ["almonds", "quinoa"],
-            ["black beans", "brown rice"]
+            ["black beans", "brown rice"],
+            ["mackerel", "kale"],
+            ["walnuts", "spinach"],
+            ["chia seeds", "banana"],
+            ["pumpkin seeds", "oats"],
+            ["sardines", "broccoli"]
         ],
         MoodType.FATIGUED: [
             # High iron + vitamin C options
@@ -70,7 +75,12 @@ class FusionEngine:
             ["eggs", "kale"],
             ["tofu", "citrus"],
             ["beans", "cabbage"],
-            ["lean meat", "apple"]
+            ["lean meat", "apple"],
+            ["lamb", "bell peppers"],
+            ["duck", "tomatoes"],
+            ["venison", "orange"],
+            ["bison", "lemon"],
+            ["rabbit", "strawberries"]
         ],
         MoodType.LOW_MOOD: [
             # High fiber + omega-3 options  
@@ -83,7 +93,12 @@ class FusionEngine:
             ["chickpeas", "spinach"],
             ["tofu", "broccoli"],
             ["eggs", "avocado"],
-            ["tuna", "salad"]
+            ["tuna", "salad"],
+            ["mackerel", "quinoa"],
+            ["walnuts", "oats"],
+            ["chia seeds", "berries"],
+            ["hemp seeds", "banana"],
+            ["sardines", "brown rice"]
         ],
         MoodType.IRRITABLE: [
             # High protein + fiber, low sugar options
@@ -96,7 +111,12 @@ class FusionEngine:
             ["eggs", "spinach"],
             ["shrimp", "zucchini"],
             ["chicken", "chickpeas"],
-            ["lean meat", "green beans"]
+            ["lean meat", "green beans"],
+            ["lamb", "vegetables"],
+            ["duck", "beans"],
+            ["venison", "quinoa"],
+            ["bison", "broccoli"],
+            ["rabbit", "lentils"]
         ],
     }
     
