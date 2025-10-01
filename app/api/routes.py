@@ -13,7 +13,6 @@ from app.services.fusion_engine import fusion_engine
 from app.services.edamam_client import edamam_client
 from app.services.openrouter_client import openrouter_client
 from app.services.mood_nutrition_engine import get_mood_nutrition_engine
-from app.services.fdc_client import fdc_client
 
 
 router = APIRouter()
