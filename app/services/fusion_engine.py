@@ -2,6 +2,7 @@
 Mood Fusion Engine - Converts mood combinations into recipe search parameters
 """
 from typing import Dict, List
+import random
 from app.models.mood import MoodBlend, MoodType, IntensityLevel, FlavorProfile, MoodInterpretation
 
 
@@ -42,11 +43,36 @@ class FusionEngine:
     }
     
     # Mood to recipe search keywords (Updated for 4 evidence-based moods)
+    # Multiple variations to ensure variety
     MOOD_SEARCH_KEYWORDS: Dict[MoodType, List[str]] = {
-        MoodType.STRESSED: ["salmon", "spinach", "nuts", "leafy greens", "whole grains"],
-        MoodType.FATIGUED: ["lean meat", "lentils", "spinach", "citrus", "quinoa"],
-        MoodType.LOW_MOOD: ["fish", "beans", "berries", "leafy greens", "whole grains"],
-        MoodType.IRRITABLE: ["chicken", "beans", "vegetables", "whole grains", "lean protein"],
+        MoodType.STRESSED: [
+            ["salmon", "leafy greens"],
+            ["nuts", "whole grains"],
+            ["avocado", "spinach"],
+            ["dark chocolate", "berries"],
+            ["legumes", "seeds"]
+        ],
+        MoodType.FATIGUED: [
+            ["lean beef", "spinach"],
+            ["lentils", "citrus"],
+            ["quinoa", "beans"],
+            ["eggs", "vegetables"],
+            ["tofu", "greens"]
+        ],
+        MoodType.LOW_MOOD: [
+            ["fish", "berries"],
+            ["beans", "whole grains"],
+            ["nuts", "leafy greens"],
+            ["yogurt", "fruit"],
+            ["oats", "seeds"]
+        ],
+        MoodType.IRRITABLE: [
+            ["chicken", "vegetables"],
+            ["beans", "whole grains"],
+            ["turkey", "quinoa"],
+            ["tofu", "brown rice"],
+            ["lean protein", "fiber"]
+        ],
     }
     
     def interpret_mood_blend(self, mood_blend: MoodBlend) -> MoodInterpretation:
@@ -69,7 +95,11 @@ class FusionEngine:
             flavors.extend(self.MOOD_FLAVOR_MAP[mood][:num_items])
             textures.extend(self.MOOD_TEXTURE_MAP[mood][:num_items])
             tones.extend(self.MOOD_TONE_MAP[mood][:num_items])
-            keywords.extend(self.MOOD_SEARCH_KEYWORDS[mood][:num_items])
+            
+            # Randomly select from keyword variations for variety
+            keyword_options = self.MOOD_SEARCH_KEYWORDS[mood]
+            selected_keywords = random.choice(keyword_options) if isinstance(keyword_options[0], list) else keyword_options
+            keywords.extend(selected_keywords[:num_items])
         
         # Remove duplicates while preserving order
         flavors = list(dict.fromkeys(flavors))
