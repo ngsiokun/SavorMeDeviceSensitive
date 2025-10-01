@@ -207,6 +207,18 @@ async def get_recipe_recommendation(
         best = scored_recipes[0]
         recipe = edamam_client._parse_recipe(best["recipe_data"])
         
+        # Generate cooking directions if not available or just a link
+        if (not recipe.cooking_directions or 
+            len(recipe.cooking_directions) == 0 or
+            "Full instructions available" in recipe.cooking_directions[0]):
+            
+            cooking_directions = await openrouter_client.generate_cooking_directions(
+                recipe_name=recipe.name,
+                ingredients=recipe.ingredients,
+                cuisine_type=recipe.cuisine_type
+            )
+            recipe.cooking_directions = cooking_directions
+        
         # Generate emotional rationale
         emotional_rationale = await openrouter_client.generate_emotional_rationale(
             recipe, mood_interpretation

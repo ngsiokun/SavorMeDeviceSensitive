@@ -1,8 +1,9 @@
 """
-OpenRouter AI API Client for generating emotional rationale
+OpenRouter AI API Client for generating emotional rationale and cooking directions
 https://openrouter.ai/docs
 """
 import httpx
+import re
 from typing import List, Dict, Any
 from app.core.config import settings
 from app.models.recipe import Recipe, EmotionalRationale
@@ -16,6 +17,91 @@ class OpenRouterClient:
         self.base_url = f"{settings.OPENROUTER_BASE_URL}/chat/completions"
         self.api_key = settings.OPENROUTER_API_KEY
         self.default_model = "anthropic/claude-3.5-sonnet"
+    
+    async def generate_cooking_directions(
+        self,
+        recipe_name: str,
+        ingredients: List,
+        cuisine_type: List[str] = None
+    ) -> List[str]:
+        """
+        Generate step-by-step cooking directions using LLM
+        
+        Args:
+            recipe_name: Name of the recipe
+            ingredients: List of ingredients
+            cuisine_type: Type of cuisine
+        
+        Returns:
+            List of cooking direction steps
+        """
+        if not self.api_key:
+            return [f"Visit the source link for full cooking instructions."]
+        
+        # Build ingredients list
+        ingredients_text = "\n".join([f"- {ing.amount} {ing.name}" for ing in ingredients[:10]])
+        cuisine = cuisine_type[0] if cuisine_type else "general"
+        
+        prompt = f"""Generate clear, step-by-step cooking directions for this recipe:
+
+Recipe: {recipe_name}
+Cuisine: {cuisine}
+
+Ingredients:
+{ingredients_text}
+
+Please provide 5-8 concise cooking steps. Be specific and practical. Format as a numbered list.
+Focus on: preparation, cooking method, timing, and plating."""
+
+        try:
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                response = await client.post(
+                    self.base_url,
+                    headers={
+                        "Authorization": f"Bearer {self.api_key}",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "model": self.default_model,
+                        "messages": [
+                            {
+                                "role": "system",
+                                "content": "You are a professional chef providing clear, concise cooking instructions. Be specific and practical."
+                            },
+                            {
+                                "role": "user",
+                                "content": prompt
+                            }
+                        ],
+                        "temperature": 0.7,
+                        "max_tokens": 500
+                    }
+                )
+                response.raise_for_status()
+                data = response.json()
+                
+                # Parse numbered list from response
+                content = data["choices"][0]["message"]["content"]
+                steps = self._parse_cooking_steps(content)
+                return steps
+        
+        except Exception as e:
+            print(f"Error generating directions: {e}")
+            return [f"Visit the source link for full cooking instructions."]
+    
+    def _parse_cooking_steps(self, content: str) -> List[str]:
+        """Parse LLM response into list of steps"""
+        steps = []
+        for line in content.split('\n'):
+            line = line.strip()
+            if not line:
+                continue
+            # Remove numbering if present (1., 2., etc.)
+            import re
+            cleaned = re.sub(r'^\d+[\.\)]\s*', '', line)
+            if cleaned and len(cleaned) > 10:  # Skip very short lines
+                steps.append(cleaned)
+        return steps if steps else [content]
     
     async def generate_emotional_rationale(
         self,
