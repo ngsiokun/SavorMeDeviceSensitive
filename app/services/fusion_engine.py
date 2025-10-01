@@ -43,35 +43,60 @@ class FusionEngine:
     }
     
     # Mood to recipe search keywords (Updated for 4 evidence-based moods)
-    # Multiple variations to ensure variety
+    # Using common, everyday ingredients from various cuisines
+    # Randomized for variety while maintaining nutrient targets
     MOOD_SEARCH_KEYWORDS: Dict[MoodType, List[str]] = {
         MoodType.STRESSED: [
-            ["salmon", "leafy greens"],
-            ["nuts", "whole grains"],
-            ["avocado", "spinach"],
-            ["dark chocolate", "berries"],
-            ["legumes", "seeds"]
+            # High magnesium + omega-3 options
+            ["salmon", "spinach"],
+            ["chicken", "broccoli"],
+            ["beef", "kale"],
+            ["pork", "bok choy"],
+            ["tofu", "edamame"],
+            ["shrimp", "asparagus"],
+            ["turkey", "green beans"],
+            ["eggs", "avocado"],
+            ["almonds", "quinoa"],
+            ["black beans", "brown rice"]
         ],
         MoodType.FATIGUED: [
-            ["lean beef", "spinach"],
-            ["lentils", "citrus"],
-            ["quinoa", "beans"],
-            ["eggs", "vegetables"],
-            ["tofu", "greens"]
+            # High iron + vitamin C options
+            ["beef", "bell peppers"],
+            ["chicken", "tomatoes"],
+            ["pork", "orange"],
+            ["lentils", "lemon"],
+            ["spinach", "strawberries"],
+            ["turkey", "broccoli"],
+            ["eggs", "kale"],
+            ["tofu", "citrus"],
+            ["beans", "cabbage"],
+            ["lean meat", "apple"]
         ],
         MoodType.LOW_MOOD: [
-            ["fish", "berries"],
-            ["beans", "whole grains"],
-            ["nuts", "leafy greens"],
-            ["yogurt", "fruit"],
-            ["oats", "seeds"]
+            # High fiber + omega-3 options  
+            ["salmon", "quinoa"],
+            ["chicken", "brown rice"],
+            ["fish", "whole grains"],
+            ["turkey", "oats"],
+            ["beans", "vegetables"],
+            ["lentils", "greens"],
+            ["chickpeas", "spinach"],
+            ["tofu", "broccoli"],
+            ["eggs", "avocado"],
+            ["tuna", "salad"]
         ],
         MoodType.IRRITABLE: [
-            ["chicken", "vegetables"],
-            ["beans", "whole grains"],
-            ["turkey", "quinoa"],
+            # High protein + fiber, low sugar options
+            ["chicken breast", "vegetables"],
+            ["turkey", "beans"],
+            ["lean beef", "quinoa"],
+            ["pork tenderloin", "broccoli"],
+            ["fish", "lentils"],
             ["tofu", "brown rice"],
-            ["lean protein", "fiber"]
+            ["eggs", "spinach"],
+            ["shrimp", "zucchini"],
+            ["chicken", "chickpeas"],
+            ["lean meat", "green beans"]
         ],
     }
     
