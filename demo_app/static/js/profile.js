@@ -16,11 +16,9 @@ function loadProfileData(profile) {
     document.getElementById('weight_kg').value = profile.weight_kg || 60;
     document.getElementById('dietary_preference').value = profile.dietary_preference || 'none';
     
-    // Load cuisines
-    if (profile.cuisine_preferences) {
-        document.querySelectorAll('input[name="cuisines"]').forEach(checkbox => {
-            checkbox.checked = profile.cuisine_preferences.includes(checkbox.value);
-        });
+    // Load cuisine (single selection)
+    if (profile.cuisine_preferences && profile.cuisine_preferences.length > 0) {
+        document.getElementById('cuisine').value = profile.cuisine_preferences[0];
     }
     
     // Load allergies
@@ -39,11 +37,9 @@ function saveProfile(event) {
     const weight_kg = parseFloat(document.getElementById('weight_kg').value);
     const dietary_preference = document.getElementById('dietary_preference').value;
     
-    // Collect selected cuisines
-    const cuisines = [];
-    document.querySelectorAll('input[name="cuisines"]:checked').forEach(checkbox => {
-        cuisines.push(checkbox.value);
-    });
+    // Get selected cuisine (single selection)
+    const cuisine = document.getElementById('cuisine').value;
+    const cuisines = cuisine === "Surprise Me" ? [] : [cuisine];
     
     // Parse allergies
     const allergiesText = document.getElementById('allergies').value.trim();

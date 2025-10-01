@@ -74,33 +74,15 @@
                         </div>
                         
                         <div class="form-group">
-                            <label>Favorite Cuisines (select multiple)</label>
-                            <div class="cuisine-grid">
-                                <label class="cuisine-option">
-                                    <input type="checkbox" name="cuisines" value="Mediterranean" checked>
-                                    <span>🫒 Mediterranean</span>
-                                </label>
-                                <label class="cuisine-option">
-                                    <input type="checkbox" name="cuisines" value="Italian" checked>
-                                    <span>🍝 Italian</span>
-                                </label>
-                                <label class="cuisine-option">
-                                    <input type="checkbox" name="cuisines" value="Asian">
-                                    <span>🍜 Asian</span>
-                                </label>
-                                <label class="cuisine-option">
-                                    <input type="checkbox" name="cuisines" value="Chinese">
-                                    <span>🥢 Chinese</span>
-                                </label>
-                                <label class="cuisine-option">
-                                    <input type="checkbox" name="cuisines" value="Mexican">
-                                    <span>🌮 Mexican</span>
-                                </label>
-                                <label class="cuisine-option">
-                                    <input type="checkbox" name="cuisines" value="Surprise Me">
-                                    <span>🎲 Surprise Me</span>
-                                </label>
-                            </div>
+                            <label>Preferred Cuisine (select one)</label>
+                            <select id="cuisine" name="cuisine" required>
+                                <option value="Mediterranean" selected>🫒 Mediterranean</option>
+                                <option value="Italian">🍝 Italian</option>
+                                <option value="Asian">🍜 Asian</option>
+                                <option value="Chinese">🥢 Chinese</option>
+                                <option value="Mexican">🌮 Mexican</option>
+                                <option value="Surprise Me">🎲 Surprise Me</option>
+                            </select>
                         </div>
                         
                         <div class="form-group">
