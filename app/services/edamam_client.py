@@ -1,0 +1,211 @@
+"""
+Edamam Recipe Search API Client
+https://developer.edamam.com/edamam-recipe-api
+"""
+import httpx
+from typing import List, Optional, Dict, Any
+from app.core.config import settings
+from app.models.recipe import Recipe, Ingredient, NutritionInfo
+from app.models.user import UserProfile, NutritionTargets
+
+
+class EdamamClient:
+    """Client for Edamam Recipe Search API"""
+    
+    def __init__(self):
+        self.base_url = settings.EDAMAM_BASE_URL
+        self.app_id = settings.EDAMAM_APP_ID
+        self.app_key = settings.EDAMAM_APP_KEY
+    
+    async def search_recipes(
+        self,
+        query: str,
+        cuisine_types: Optional[List[str]] = None,
+        diet_labels: Optional[List[str]] = None,
+        health_labels: Optional[List[str]] = None,
+        excluded_ingredients: Optional[List[str]] = None,
+        calories_range: Optional[str] = None,  # e.g., "400-600"
+        protein_range: Optional[str] = None,   # e.g., "20-40"
+        max_results: int = 10
+    ) -> List[Recipe]:
+        """
+        Search for recipes using Edamam API
+        
+        Args:
+            query: Search keywords (from fusion engine)
+            cuisine_types: List of cuisine types (e.g., ["Japanese", "Italian"])
+            diet_labels: Dietary preferences (e.g., ["vegetarian", "vegan"])
+            health_labels: Health restrictions (e.g., ["peanut-free", "gluten-free"])
+            excluded_ingredients: Ingredients to exclude
+            calories_range: Calorie range filter
+            protein_range: Protein range filter
+            max_results: Maximum number of results
+        
+        Returns:
+            List of Recipe objects
+        """
+        if not self.app_id or not self.app_key:
+            raise ValueError("Edamam API credentials not configured")
+        
+        # Build query parameters
+        params = {
+            "type": "public",
+            "q": query,
+            "app_id": self.app_id,
+            "app_key": self.app_key,
+        }
+        
+        if cuisine_types:
+            params["cuisineType"] = cuisine_types
+        
+        if diet_labels:
+            params["diet"] = diet_labels
+        
+        if health_labels:
+            params["health"] = health_labels
+        
+        if excluded_ingredients:
+            params["excluded"] = excluded_ingredients
+        
+        if calories_range:
+            params["calories"] = calories_range
+        
+        if protein_range:
+            params["nutrients[PROCNT]"] = protein_range
+        
+        # Make API request
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            response = await client.get(self.base_url, params=params)
+            response.raise_for_status()
+            data = response.json()
+        
+        # Parse recipes
+        recipes = []
+        for hit in data.get("hits", [])[:max_results]:
+            recipe_data = hit.get("recipe", {})
+            recipe = self._parse_recipe(recipe_data)
+            recipes.append(recipe)
+        
+        return recipes
+    
+    def _parse_recipe(self, recipe_data: Dict[str, Any]) -> Recipe:
+        """Parse Edamam recipe response into Recipe model"""
+        
+        # Parse ingredients
+        ingredients = []
+        for ing_data in recipe_data.get("ingredients", []):
+            ingredient = Ingredient(
+                name=ing_data.get("food", ""),
+                amount=ing_data.get("text", ""),
+                unit=ing_data.get("measure", "")
+            )
+            ingredients.append(ingredient)
+        
+        # Parse nutrition
+        nutrients = recipe_data.get("totalNutrients", {})
+        nutrition = NutritionInfo(
+            calories=nutrients.get("ENERC_KCAL", {}).get("quantity", 0),
+            protein_g=nutrients.get("PROCNT", {}).get("quantity", 0),
+            fiber_g=nutrients.get("FIBTG", {}).get("quantity", 0),
+            carbs_g=nutrients.get("CHOCDF", {}).get("quantity", 0),
+            fat_g=nutrients.get("FAT", {}).get("quantity", 0),
+            sodium_mg=nutrients.get("NA", {}).get("quantity", 0)
+        )
+        
+        # Note: Edamam doesn't always provide cooking directions
+        # We'll use the source URL for full instructions
+        cooking_directions = []
+        if recipe_data.get("url"):
+            cooking_directions = [
+                f"Full instructions available at: {recipe_data.get('url')}"
+            ]
+        
+        recipe = Recipe(
+            recipe_id=recipe_data.get("uri", "").split("#")[-1],
+            name=recipe_data.get("label", "Untitled Recipe"),
+            image_url=recipe_data.get("image"),
+            ingredients=ingredients,
+            cooking_directions=cooking_directions,
+            prep_time=None,  # Not provided by Edamam
+            cook_time=recipe_data.get("totalTime"),
+            servings=int(recipe_data.get("yield", 1)),
+            nutrition=nutrition,
+            source_url=recipe_data.get("url"),
+            source_name=recipe_data.get("source"),
+            cuisine_type=recipe_data.get("cuisineType", []),
+            meal_type=recipe_data.get("mealType", []),
+            dish_type=recipe_data.get("dishType", [])
+        )
+        
+        return recipe
+    
+    def build_search_query_from_mood(
+        self,
+        keywords: List[str],
+        user_profile: UserProfile,
+        nutrition_targets: NutritionTargets
+    ) -> Dict[str, Any]:
+        """
+        Build Edamam search parameters from mood keywords and user profile
+        """
+        # Combine keywords into search query
+        query = " ".join(keywords[:2])  # Use top 2 keywords
+        
+        # Map dietary preferences to Edamam diet labels
+        diet_label_map = {
+            "vegetarian": "vegetarian",
+            "vegan": "vegan",
+            "pescatarian": "pescatarian",
+            "paleo": "paleo-gluten-free",
+            "keto": "low-carb"
+        }
+        
+        diet_labels = []
+        if user_profile.dietary_preference in diet_label_map:
+            diet_labels.append(diet_label_map[user_profile.dietary_preference])
+        
+        # Map allergies to health labels
+        health_labels = []
+        allergy_map = {
+            "peanuts": "peanut-free",
+            "tree nuts": "tree-nut-free",
+            "dairy": "dairy-free",
+            "gluten": "gluten-free",
+            "soy": "soy-free",
+            "eggs": "egg-free",
+            "fish": "fish-free",
+            "shellfish": "shellfish-free"
+        }
+        
+        for allergy in user_profile.food_allergies:
+            allergy_lower = allergy.lower()
+            for key, label in allergy_map.items():
+                if key in allergy_lower:
+                    health_labels.append(label)
+                    break
+        
+        # Calculate calorie range (target ± 20%)
+        cal_min = int(nutrition_targets.calories * 0.25)  # About 25% for one meal
+        cal_max = int(nutrition_targets.calories * 0.40)  # About 40% for main meal
+        calories_range = f"{cal_min}-{cal_max}"
+        
+        # Protein range (target ± 20%)
+        protein_min = int(nutrition_targets.protein_g * 0.20)
+        protein_max = int(nutrition_targets.protein_g * 0.40)
+        protein_range = f"{protein_min}-{protein_max}"
+        
+        return {
+            "query": query,
+            "cuisine_types": user_profile.cuisine_preferences[:3] if user_profile.cuisine_preferences else None,
+            "diet_labels": diet_labels if diet_labels else None,
+            "health_labels": health_labels if health_labels else None,
+            "excluded_ingredients": user_profile.food_allergies if user_profile.food_allergies else None,
+            "calories_range": calories_range,
+            "protein_range": protein_range,
+            "max_results": 5
+        }
+
+
+# Singleton instance
+edamam_client = EdamamClient()
+
