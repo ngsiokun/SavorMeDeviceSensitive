@@ -197,6 +197,23 @@ class EdamamClient:
         # Combine keywords into search query
         query = " ".join(keywords[:2])  # Use top 2 keywords
         
+        # Map user-friendly cuisine names to Edamam cuisine type filters
+        cuisine_map = {
+            "Mediterranean": ["Mediterranean"],
+            "Asian": ["Asian", "Chinese", "Japanese", "South East Asian"],
+            "Mexican": ["Mexican"],
+            "Italian": ["Italian"],
+            "American": ["American"],
+            "Other Western": ["British", "French", "Nordic", "Central Europe", "Eastern Europe"],
+            "Surprise Me": None  # No filter = all cuisines
+        }
+        
+        # Get cuisine types from user preferences
+        cuisine_types = None
+        if user_profile.cuisine_preferences:
+            user_cuisine = user_profile.cuisine_preferences[0]  # Take first preference
+            cuisine_types = cuisine_map.get(user_cuisine, None)
+        
         # Map dietary preferences to Edamam diet labels
         diet_label_map = {
             "vegetarian": "vegetarian",
@@ -242,7 +259,7 @@ class EdamamClient:
         
         return {
             "query": query,
-            "cuisine_types": user_profile.cuisine_preferences[:3] if user_profile.cuisine_preferences else None,
+            "cuisine_types": cuisine_types,
             "diet_labels": diet_labels if diet_labels else None,
             "health_labels": health_labels if health_labels else None,
             "excluded_ingredients": user_profile.food_allergies if user_profile.food_allergies else None,
