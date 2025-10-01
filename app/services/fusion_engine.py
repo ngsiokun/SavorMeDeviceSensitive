@@ -100,9 +100,10 @@ class FusionEngine:
         ],
     }
     
-    def interpret_mood_blend(self, mood_blend: MoodBlend) -> MoodInterpretation:
+    def interpret_mood_blend(self, mood_blend: MoodBlend, cuisine_preference: str = None) -> MoodInterpretation:
         """
         Convert mood blend into flavor profile and search parameters
+        Now with cuisine-aware keyword selection for better personalization!
         """
         flavors = []
         textures = []
@@ -121,8 +122,16 @@ class FusionEngine:
             textures.extend(self.MOOD_TEXTURE_MAP[mood][:num_items])
             tones.extend(self.MOOD_TONE_MAP[mood][:num_items])
             
-            # Randomly select from keyword variations for variety
+            # Cuisine-aware keyword selection for better personalization
             keyword_options = self.MOOD_SEARCH_KEYWORDS[mood]
+            
+            # Filter keywords by cuisine preference if provided
+            if cuisine_preference:
+                cuisine_filtered = self._filter_keywords_by_cuisine(keyword_options, cuisine_preference)
+                if cuisine_filtered:  # Use filtered if we found matches
+                    keyword_options = cuisine_filtered
+            
+            # Randomly select from (possibly filtered) keyword variations
             selected_keywords = random.choice(keyword_options) if isinstance(keyword_options[0], list) else keyword_options
             keywords.extend(selected_keywords[:num_items])
         
@@ -154,6 +163,36 @@ class FusionEngine:
             interpretation_summary=interpretation_summary,
             mood_description=mood_description
         )
+    
+    def _filter_keywords_by_cuisine(self, keyword_options: List[List[str]], cuisine: str) -> List[List[str]]:
+        """
+        Filter keyword options to prefer cuisine-appropriate ingredients
+        Increases likelihood of culturally relevant recipes!
+        """
+        # Define cuisine-specific ingredient preferences
+        cuisine_ingredients = {
+            "Mediterranean": ["salmon", "olive", "chickpeas", "lentils", "lamb", "fish", "feta", "yogurt", "hummus"],
+            "Asian": ["pork", "tofu", "bok choy", "edamame", "rice", "noodles", "soy", "ginger", "sesame"],
+            "Mexican": ["beans", "corn", "peppers", "tomatoes", "avocado", "chicken", "beef", "cilantro", "lime"],
+            "Italian": ["pasta", "tomatoes", "chicken", "cheese", "basil", "olive", "pine nuts", "fish", "risotto"],
+            "American": ["beef", "chicken", "turkey", "bacon", "potatoes", "corn", "beans", "apple", "burger"],
+            "Other Western": ["beef", "pork", "potatoes", "cheese", "cream", "butter", "chicken", "vegetables"],
+        }
+        
+        # Get preferred ingredients for this cuisine
+        preferred_ingredients = cuisine_ingredients.get(cuisine, [])
+        if not preferred_ingredients:
+            return []  # Return empty to use all keywords
+        
+        # Filter keyword pairs that contain at least one preferred ingredient
+        filtered = []
+        for keyword_pair in keyword_options:
+            for keyword in keyword_pair:
+                if any(pref in keyword.lower() for pref in preferred_ingredients):
+                    filtered.append(keyword_pair)
+                    break  # Found a match, add this pair
+        
+        return filtered if filtered else []  # Return empty if no matches (fallback to all)
     
     def _generate_interpretation_summary(self, mood_blend: MoodBlend, 
                                         flavor_profile: FlavorProfile) -> str:

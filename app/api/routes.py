@@ -81,8 +81,9 @@ async def search_recipes(
                 user_profile, activity_level
             )
         
-        # Interpret mood into flavor profile
-        mood_interpretation = fusion_engine.interpret_mood_blend(mood_blend)
+        # Interpret mood into flavor profile (with cuisine preference for better keyword selection)
+        cuisine_pref = user_profile.cuisine_preferences[0] if user_profile.cuisine_preferences else None
+        mood_interpretation = fusion_engine.interpret_mood_blend(mood_blend, cuisine_pref)
         
         # Build search parameters
         search_params = edamam_client.build_search_query_from_mood(
@@ -139,8 +140,9 @@ async def get_recipe_recommendation(
         # Extract mood IDs for nutrient scoring
         mood_ids = [m.mood if isinstance(m.mood, str) else m.mood.value for m in mood_blend.moods]
         
-        # Interpret mood (legacy emotional approach)
-        mood_interpretation = fusion_engine.interpret_mood_blend(mood_blend)
+        # Interpret mood with cuisine preference for better keyword selection
+        cuisine_pref = user_profile.cuisine_preferences[0] if user_profile.cuisine_preferences else None
+        mood_interpretation = fusion_engine.interpret_mood_blend(mood_blend, cuisine_pref)
         
         # Search recipes
         search_params = edamam_client.build_search_query_from_mood(
