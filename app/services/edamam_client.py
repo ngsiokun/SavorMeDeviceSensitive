@@ -7,6 +7,7 @@ from typing import List, Optional, Dict, Any
 from app.core.config import settings
 from app.models.recipe import Recipe, Ingredient, NutritionInfo
 from app.models.user import UserProfile, NutritionTargets
+from typing import Dict, Any
 
 
 class EdamamClient:
@@ -101,15 +102,18 @@ class EdamamClient:
             )
             ingredients.append(ingredient)
         
-        # Parse nutrition
+        # Parse nutrition (totalNutrients contains total amounts for entire recipe)
         nutrients = recipe_data.get("totalNutrients", {})
+        servings = float(recipe_data.get("yield", 1))
+        
+        # Calculate per-serving values
         nutrition = NutritionInfo(
-            calories=nutrients.get("ENERC_KCAL", {}).get("quantity", 0),
-            protein_g=nutrients.get("PROCNT", {}).get("quantity", 0),
-            fiber_g=nutrients.get("FIBTG", {}).get("quantity", 0),
-            carbs_g=nutrients.get("CHOCDF", {}).get("quantity", 0),
-            fat_g=nutrients.get("FAT", {}).get("quantity", 0),
-            sodium_mg=nutrients.get("NA", {}).get("quantity", 0)
+            calories=nutrients.get("ENERC_KCAL", {}).get("quantity", 0) / servings,
+            protein_g=nutrients.get("PROCNT", {}).get("quantity", 0) / servings,
+            fiber_g=nutrients.get("FIBTG", {}).get("quantity", 0) / servings,
+            carbs_g=nutrients.get("CHOCDF", {}).get("quantity", 0) / servings,
+            fat_g=nutrients.get("FAT", {}).get("quantity", 0) / servings,
+            sodium_mg=nutrients.get("NA", {}).get("quantity", 0) / servings
         )
         
         # Note: Edamam doesn't always provide cooking directions
@@ -138,6 +142,48 @@ class EdamamClient:
         )
         
         return recipe
+    
+    def extract_full_nutrients_per_serving(self, recipe_data: Dict[str, Any]) -> Dict[str, float]:
+        """
+        Extract comprehensive nutrients from Edamam recipe for nutrition scoring
+        
+        Returns nutrients per serving in raw format (to be canonicalized by nutrition engine)
+        """
+        nutrients_raw = {}
+        total_nutrients = recipe_data.get("totalNutrients", {})
+        servings = float(recipe_data.get("yield", 1))
+        
+        # Edamam nutrient code mapping
+        nutrient_map = {
+            "ENERC_KCAL": "calories",
+            "PROCNT": "protein",
+            "CHOCDF": "carbohydrate_by_difference",
+            "FIBTG": "fiber",
+            "FAT": "total_fat",
+            "SUGAR": "sugars_total",
+            "SUGAR.added": "added_sugars",
+            "FE": "iron",
+            "MG": "magnesium",
+            "VITC": "vitamin_c",
+            "VITD": "vitamin_d",
+            "CA": "calcium",
+            "K": "potassium",
+            "NA": "sodium",
+            "ZN": "zinc"
+        }
+        
+        for edamam_code, canonical_name in nutrient_map.items():
+            if edamam_code in total_nutrients:
+                quantity = total_nutrients[edamam_code].get("quantity", 0)
+                nutrients_raw[canonical_name] = quantity / servings
+        
+        # Calculate EPA+DHA if available
+        epa = total_nutrients.get("EPA", {}).get("quantity", 0) / servings
+        dha = total_nutrients.get("DHA", {}).get("quantity", 0) / servings
+        if epa > 0 or dha > 0:
+            nutrients_raw["omega_3_epa_dha"] = (epa + dha) / 1000.0  # Convert mg to g
+        
+        return nutrients_raw
     
     def build_search_query_from_mood(
         self,
