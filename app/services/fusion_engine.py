@@ -10,46 +10,28 @@ class FusionEngine:
     Translates emotional states into culinary parameters
     """
     
-    # Mood to flavor mapping
+    # Mood to flavor mapping (Updated for 4 evidence-based moods)
     MOOD_FLAVOR_MAP: Dict[MoodType, List[str]] = {
-        MoodType.DREAMY: ["floral", "citrus", "vanilla", "aromatic", "delicate"],
-        MoodType.FIERY: ["spicy", "bold", "peppery", "smoky", "intense"],
-        MoodType.FOCUSED: ["clean", "herbal", "sharp", "citrus", "minimal"],
-        MoodType.PLAYFUL: ["fruity", "tangy", "colorful", "bright", "sweet"],
-        MoodType.CRAVING: ["rich", "creamy", "umami", "indulgent", "savory"],
-        MoodType.LIGHT: ["fresh", "crisp", "airy", "light", "refreshing"],
-        MoodType.GROUNDED: ["earthy", "nutty", "roasted", "wholesome", "hearty"],
-        MoodType.RESTORATIVE: ["warm", "comforting", "healing", "nourishing", "gentle"],
-        MoodType.CHARISMATIC: ["vibrant", "exotic", "magnetic", "sophisticated", "bold"],
-        MoodType.MELANCHOLY: ["tender", "slow", "subtle", "contemplative", "soft"],
+        MoodType.STRESSED: ["calming", "herbal", "omega-3-rich", "magnesium-rich", "gentle"],
+        MoodType.FATIGUED: ["energizing", "iron-rich", "vitamin-c", "complex-carbs", "sustaining"],
+        MoodType.LOW_MOOD: ["comforting", "omega-3", "fiber-rich", "wholesome", "nourishing"],
+        MoodType.IRRITABLE: ["stabilizing", "protein-rich", "fiber", "low-sugar", "grounding"],
     }
     
     # Mood to texture mapping
     MOOD_TEXTURE_MAP: Dict[MoodType, List[str]] = {
-        MoodType.DREAMY: ["silky", "smooth", "velvety", "cloud-like"],
-        MoodType.FIERY: ["crispy", "crunchy", "charred", "bold"],
-        MoodType.FOCUSED: ["lean", "precise", "clean", "minimal"],
-        MoodType.PLAYFUL: ["bouncy", "varied", "fun", "layered"],
-        MoodType.CRAVING: ["creamy", "rich", "luscious", "decadent"],
-        MoodType.LIGHT: ["airy", "crisp", "delicate", "fluffy"],
-        MoodType.GROUNDED: ["dense", "hearty", "substantial", "rustic"],
-        MoodType.RESTORATIVE: ["soft", "brothy", "gentle", "warm"],
-        MoodType.CHARISMATIC: ["dynamic", "textured", "complex", "layered"],
-        MoodType.MELANCHOLY: ["slow-cooked", "tender", "soft", "melt-in-mouth"],
+        MoodType.STRESSED: ["soft", "smooth", "gentle", "calming"],
+        MoodType.FATIGUED: ["substantial", "energizing", "hearty", "sustaining"],
+        MoodType.LOW_MOOD: ["comforting", "warm", "nourishing", "wholesome"],
+        MoodType.IRRITABLE: ["balanced", "stable", "grounding", "satisfying"],
     }
     
     # Mood to culinary tone mapping
     MOOD_TONE_MAP: Dict[MoodType, List[str]] = {
-        MoodType.DREAMY: ["poetic", "artistic", "slow-paced", "meditative"],
-        MoodType.FIERY: ["bold", "dramatic", "intense", "passionate"],
-        MoodType.FOCUSED: ["minimal", "efficient", "precise", "intentional"],
-        MoodType.PLAYFUL: ["whimsical", "creative", "fun", "experimental"],
-        MoodType.CRAVING: ["indulgent", "sensory", "luxurious", "satisfying"],
-        MoodType.LIGHT: ["fresh", "bright", "elegant", "simple"],
-        MoodType.GROUNDED: ["traditional", "honest", "comforting", "rustic"],
-        MoodType.RESTORATIVE: ["nurturing", "healing", "gentle", "soothing"],
-        MoodType.CHARISMATIC: ["flirty", "sophisticated", "impressive", "magnetic"],
-        MoodType.MELANCHOLY: ["introspective", "gentle", "tender", "reflective"],
+        MoodType.STRESSED: ["calming", "gentle", "soothing", "peaceful"],
+        MoodType.FATIGUED: ["energizing", "revitalizing", "sustaining", "strengthening"],
+        MoodType.LOW_MOOD: ["nurturing", "comforting", "uplifting", "healing"],
+        MoodType.IRRITABLE: ["balancing", "grounding", "stabilizing", "calming"],
     }
     
     # Intensity multipliers
@@ -59,18 +41,12 @@ class FusionEngine:
         IntensityLevel.VERY: 1.0,
     }
     
-    # Mood to recipe search keywords
+    # Mood to recipe search keywords (Updated for 4 evidence-based moods)
     MOOD_SEARCH_KEYWORDS: Dict[MoodType, List[str]] = {
-        MoodType.DREAMY: ["risotto", "soufflé", "mousse", "delicate pasta", "floral"],
-        MoodType.FIERY: ["curry", "spicy", "grilled", "chili", "peppers"],
-        MoodType.FOCUSED: ["bowl", "salad", "grain bowl", "simple", "clean"],
-        MoodType.PLAYFUL: ["colorful", "fusion", "creative", "mixed"],
-        MoodType.CRAVING: ["pasta", "creamy", "cheese", "chocolate", "comfort"],
-        MoodType.LIGHT: ["salad", "steamed", "fresh", "raw", "light"],
-        MoodType.GROUNDED: ["roasted", "stew", "beans", "root vegetables", "hearty soup"],
-        MoodType.RESTORATIVE: ["soup", "broth", "porridge", "warm bowl", "healing"],
-        MoodType.CHARISMATIC: ["plated", "elegant", "presentation", "gourmet"],
-        MoodType.MELANCHOLY: ["slow-cooked", "braised", "comfort", "nostalgic"],
+        MoodType.STRESSED: ["salmon", "spinach", "nuts", "leafy greens", "whole grains"],
+        MoodType.FATIGUED: ["lean meat", "lentils", "spinach", "citrus", "quinoa"],
+        MoodType.LOW_MOOD: ["fish", "beans", "berries", "leafy greens", "whole grains"],
+        MoodType.IRRITABLE: ["chicken", "beans", "vegetables", "whole grains", "lean protein"],
     }
     
     def interpret_mood_blend(self, mood_blend: MoodBlend) -> MoodInterpretation:
@@ -128,16 +104,10 @@ class FusionEngine:
         primary_mood = mood_blend.moods[0]
         
         summary_templates = {
-            MoodType.DREAMY: "Seeking softness and poetic indulgence",
-            MoodType.FIERY: "Craving bold intensity and passion",
-            MoodType.FOCUSED: "Desiring clarity and precision",
-            MoodType.PLAYFUL: "Looking for whimsy and curiosity",
-            MoodType.CRAVING: "Longing for sensory indulgence",
-            MoodType.LIGHT: "Wanting freshness and airiness",
-            MoodType.GROUNDED: "Needing stability and comfort",
-            MoodType.RESTORATIVE: "Seeking healing and warmth",
-            MoodType.CHARISMATIC: "Desiring radiance and magnetism",
-            MoodType.MELANCHOLY: "Embracing tenderness and introspection",
+            MoodType.STRESSED: "Seeking calm and stress relief",
+            MoodType.FATIGUED: "Needing energy and vitality",
+            MoodType.LOW_MOOD: "Looking for mood support and comfort",
+            MoodType.IRRITABLE: "Wanting balance and emotional stability",
         }
         
         base = summary_templates.get(primary_mood.mood, "Seeking emotional nourishment")
