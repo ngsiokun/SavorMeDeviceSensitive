@@ -29,6 +29,7 @@ class MoodDefinition:
     explainers: List[str]
     contraindications: List[str]
     evidence: Optional[str] = None
+    evidence_level: Optional[str] = None
 
 
 @dataclass
@@ -86,7 +87,8 @@ class MoodNutritionEngine:
                 patterns=mood_data["targets"].get("patterns", []),
                 explainers=mood_data.get("explainers", []),
                 contraindications=mood_data.get("contraindications", []),
-                evidence=mood_data.get("evidence")
+                evidence=mood_data.get("evidence"),
+                evidence_level=mood_data.get("evidence_level")
             )
             
             self.moods[mood_data["id"]] = mood_def

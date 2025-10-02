@@ -42,8 +42,25 @@ function displayRecipe(data) {
         directionsHTML += `<div class="source-link"><a href="${recipe.source_url}" target="_blank">📖 View Full Recipe</a></div>`;
     }
     
+    // Create image HTML with fallback
+    let imageHTML = '';
+    if (recipe.image_url) {
+        imageHTML = `<img src="${recipe.image_url}" class="recipe-image" alt="${recipe.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                     <div class="recipe-image-placeholder" style="display: none;">
+                         <div class="placeholder-icon">🥘</div>
+                         <div class="placeholder-text">${recipe.name}</div>
+                         <div class="placeholder-subtitle">Delicious Recipe</div>
+                     </div>`;
+    } else {
+        imageHTML = `<div class="recipe-image-placeholder">
+                         <div class="placeholder-icon">🥘</div>
+                         <div class="placeholder-text">${recipe.name}</div>
+                         <div class="placeholder-subtitle">Delicious Recipe</div>
+                     </div>`;
+    }
+    
     document.getElementById('recipeCard').innerHTML = `
-        ${recipe.image_url ? `<img src="${recipe.image_url}" class="recipe-image" alt="${recipe.name}">` : ''}
+        ${imageHTML}
         <div class="recipe-info">
             <h2 class="recipe-name">${recipe.name}</h2>
             <div class="recipe-meta">

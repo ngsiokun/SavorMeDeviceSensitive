@@ -7,7 +7,50 @@ window.addEventListener('DOMContentLoaded', () => {
         const profile = JSON.parse(savedProfile);
         loadProfileData(profile);
     }
+    
+    // Set up calorie preference event listeners
+    setupCaloriePreferenceHandlers();
 });
+
+function setupCaloriePreferenceHandlers() {
+    const calorieAuto = document.getElementById('calorie_auto');
+    const calorieCustom = document.getElementById('calorie_custom');
+    const customCalorieGroup = document.getElementById('customCalorieGroup');
+    
+    calorieAuto.addEventListener('change', () => {
+        customCalorieGroup.style.display = 'none';
+    });
+    
+    calorieCustom.addEventListener('change', () => {
+        customCalorieGroup.style.display = 'block';
+    });
+    
+    // Add validation for custom calories
+    const customCaloriesInput = document.getElementById('custom_calories');
+    customCaloriesInput.addEventListener('input', validateCalories);
+}
+
+function validateCalories() {
+    const input = document.getElementById('custom_calories');
+    const value = parseInt(input.value);
+    
+    // Remove existing warning
+    const existingWarning = document.querySelector('.calorie-warning');
+    if (existingWarning) {
+        existingWarning.remove();
+    }
+    
+    if (value && value < 800) {
+        // Create warning message
+        const warning = document.createElement('div');
+        warning.className = 'calorie-warning';
+        warning.innerHTML = '⚠️ Very low calorie targets should be discussed with a healthcare provider for safety.';
+        warning.style.cssText = 'color: #F59E0B; font-size: 11px; margin-top: 4px; padding: 6px; background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 6px;';
+        
+        // Insert after the input field
+        input.parentNode.insertBefore(warning, input.nextSibling);
+    }
+}
 
 function loadProfileData(profile) {
     document.getElementById('age').value = profile.age || 32;
@@ -24,6 +67,15 @@ function loadProfileData(profile) {
     // Load allergies
     if (profile.food_allergies && profile.food_allergies.length > 0) {
         document.getElementById('allergies').value = profile.food_allergies.join(', ');
+    }
+    
+    // Load calorie preferences
+    if (profile.calorie_preference) {
+        document.querySelector(`input[name="calorie_preference"][value="${profile.calorie_preference}"]`).checked = true;
+        if (profile.calorie_preference === 'custom' && profile.custom_calories) {
+            document.getElementById('custom_calories').value = profile.custom_calories;
+            document.getElementById('customCalorieGroup').style.display = 'block';
+        }
     }
 }
 
@@ -47,6 +99,11 @@ function saveProfile(event) {
         allergiesText.split(',').map(a => a.trim()).filter(a => a) : 
         [];
     
+    // Get calorie preference
+    const caloriePreference = document.querySelector('input[name="calorie_preference"]:checked').value;
+    const customCalories = caloriePreference === 'custom' ? 
+        parseInt(document.getElementById('custom_calories').value) : null;
+    
     // Build profile object
     const profile = {
         age,
@@ -55,7 +112,9 @@ function saveProfile(event) {
         weight_kg,
         cuisine_preferences: cuisines,
         food_allergies: allergies,
-        dietary_preference
+        dietary_preference,
+        calorie_preference: caloriePreference,
+        custom_calories: customCalories
     };
     
     // Save to sessionStorage

@@ -101,6 +101,9 @@ class EdamamClient:
     def _parse_recipe(self, recipe_data: Dict[str, Any]) -> Recipe:
         """Parse Edamam recipe response into Recipe model"""
         
+        # Validate and potentially filter image URL
+        image_url = self._validate_recipe_image(recipe_data.get("image"), recipe_data.get("label", ""))
+        
         # Parse ingredients
         ingredients = []
         for ing_data in recipe_data.get("ingredients", []):
@@ -136,7 +139,7 @@ class EdamamClient:
         recipe = Recipe(
             recipe_id=recipe_data.get("uri", "").split("#")[-1],
             name=recipe_data.get("label", "Untitled Recipe"),
-            image_url=recipe_data.get("image"),
+            image_url=image_url,
             ingredients=ingredients,
             cooking_directions=cooking_directions,
             prep_time=None,  # Not provided by Edamam
@@ -151,6 +154,48 @@ class EdamamClient:
         )
         
         return recipe
+    
+    def _validate_recipe_image(self, image_url: str, recipe_name: str) -> str:
+        """
+        Validate recipe image URL and provide fallback if image appears generic/abstract
+        
+        Args:
+            image_url: Original image URL from Edamam
+            recipe_name: Recipe name for context
+            
+        Returns:
+            Validated image URL or None if image appears generic
+        """
+        if not image_url:
+            return None
+        
+        # Only filter out obvious non-food images
+        generic_patterns = [
+            "placeholder",
+            "default",
+            "abstract",
+            "heart",  # Like the heart shape you saw
+            "metallic",
+            "decorative",
+            "ornament",
+            "artistic"
+        ]
+        
+        # Check URL and recipe name for generic indicators
+        image_url_lower = image_url.lower()
+        recipe_name_lower = recipe_name.lower()
+        
+        # Skip if URL contains generic patterns
+        for pattern in generic_patterns:
+            if pattern in image_url_lower:
+                return None
+        
+        # Skip if recipe name suggests the image might be generic
+        # (This is a heuristic - in practice, you might want to be more specific)
+        
+        # Be more permissive with Edamam images - they usually have food photos
+        # Only filter out the most obvious non-food patterns
+        return image_url
     
     def extract_full_nutrients_per_serving(self, recipe_data: Dict[str, Any]) -> Dict[str, float]:
         """

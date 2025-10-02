@@ -48,7 +48,7 @@ class FusionEngine:
     MOOD_SEARCH_KEYWORDS: Dict[MoodType, List[str]] = {
         MoodType.STRESSED: [
             # High magnesium + omega-3 options
-            ["salmon", "spinach"],
+            ["mackerel", "spinach"],
             ["chicken", "broccoli"],
             ["beef", "kale"],
             ["pork", "bok choy"],
@@ -58,11 +58,11 @@ class FusionEngine:
             ["eggs", "avocado"],
             ["almonds", "quinoa"],
             ["black beans", "brown rice"],
-            ["mackerel", "kale"],
+            ["sardines", "kale"],
             ["walnuts", "spinach"],
             ["chia seeds", "banana"],
             ["pumpkin seeds", "oats"],
-            ["sardines", "broccoli"],
+            ["tuna", "broccoli"],
             ["salmon", "brussels sprouts"],
             ["almonds", "artichoke"],
             ["tofu", "cauliflower"],
@@ -94,7 +94,7 @@ class FusionEngine:
         ],
         MoodType.LOW_MOOD: [
             # High fiber + omega-3 options  
-            ["salmon", "quinoa"],
+            ["mackerel", "quinoa"],
             ["chicken", "brown rice"],
             ["fish", "whole grains"],
             ["turkey", "oats"],
@@ -104,11 +104,11 @@ class FusionEngine:
             ["tofu", "broccoli"],
             ["eggs", "avocado"],
             ["tuna", "salad"],
-            ["mackerel", "quinoa"],
+            ["sardines", "quinoa"],
             ["walnuts", "oats"],
             ["chia seeds", "berries"],
             ["hemp seeds", "banana"],
-            ["sardines", "brown rice"],
+            ["trout", "brown rice"],
             ["salmon", "brussels sprouts"],
             ["chicken", "artichoke"],
             ["tofu", "cauliflower"],
@@ -165,6 +165,9 @@ class FusionEngine:
             # Cuisine-aware keyword selection for better personalization
             keyword_options = self.MOOD_SEARCH_KEYWORDS[mood]
             
+            # Variety enhancement: avoid repeating recent keywords
+            # This will be implemented in the calling service to track session history
+            
             # Filter keywords by cuisine preference if provided
             if cuisine_preference:
                 cuisine_filtered = self._filter_keywords_by_cuisine(keyword_options, cuisine_preference)
@@ -211,7 +214,7 @@ class FusionEngine:
         """
         # Define cuisine-specific ingredient preferences
         cuisine_ingredients = {
-            "Mediterranean": ["salmon", "olive", "chickpeas", "lentils", "lamb", "fish", "feta", "yogurt", "hummus"],
+            "Mediterranean": ["mackerel", "olive", "chickpeas", "lentils", "lamb", "sardines", "feta", "yogurt", "hummus", "tuna", "anchovy"],
             "Asian": ["pork", "tofu", "bok choy", "edamame", "rice", "noodles", "soy", "ginger", "sesame"],
             "Mexican": ["beans", "corn", "peppers", "tomatoes", "avocado", "chicken", "beef", "cilantro", "lime"],
             "Italian": ["pasta", "tomatoes", "chicken", "cheese", "basil", "olive", "pine nuts", "fish", "risotto"],

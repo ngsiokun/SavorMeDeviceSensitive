@@ -101,7 +101,8 @@ async function generateRecommendation() {
                     intensity: selectedIntensity
                 }))
             },
-            user_profile: userProfile
+            user_profile: userProfile,
+            cuisine_preference: userProfile.cuisine_preference || null
         };
         
         console.log('Sending request:', payload);

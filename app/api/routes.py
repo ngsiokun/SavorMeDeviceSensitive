@@ -4,6 +4,7 @@ API Routes for SavorMe Backend
 from fastapi import APIRouter, HTTPException
 from typing import List, Optional, Dict
 import httpx
+import random
 
 from app.models.user import UserProfile, NutritionTargets
 from app.models.mood import MoodBlend, MoodInterpretation
@@ -16,6 +17,10 @@ from app.services.mood_nutrition_engine import get_mood_nutrition_engine
 
 
 router = APIRouter()
+
+# Simple in-memory variety tracking (in production, use Redis or database)
+recent_keywords = []
+recent_ingredients = []  # Track individual ingredients for better variety
 
 
 @router.post("/nutrition/calculate", response_model=NutritionTargets)
@@ -38,21 +43,88 @@ async def calculate_nutrition_targets(profile: UserProfile, activity_level: str 
 
 
 @router.post("/mood/interpret", response_model=MoodInterpretation)
-async def interpret_mood(mood_blend: MoodBlend):
+async def interpret_mood(mood_blend: MoodBlend, cuisine_preference: str = None):
     """
-    Interpret mood blend and generate flavor profile
+    Interpret mood blend and generate flavor profile with variety enhancement
     
     Args:
         mood_blend: User's selected moods with intensity levels
+        cuisine_preference: Optional cuisine preference for better personalization
     
     Returns:
         Mood interpretation with flavor profile and search keywords
     """
     try:
-        interpretation = fusion_engine.interpret_mood_blend(mood_blend)
+        interpretation = fusion_engine.interpret_mood_blend(mood_blend, cuisine_preference)
+        
+        # Variety enhancement: avoid repeating recent keywords and ingredients
+        global recent_keywords, recent_ingredients
+        
+        # Extract ingredients from keywords for ingredient-level tracking
+        current_ingredients = []
+        for keyword in interpretation.search_keywords:
+            # Split compound keywords and extract individual ingredients
+            if " " in keyword:
+                current_ingredients.extend(keyword.split())
+            else:
+                current_ingredients.append(keyword)
+        
+        # Filter out recently used ingredients (more aggressive variety)
+        if recent_ingredients:
+            filtered_keywords = []
+            for keyword in interpretation.search_keywords:
+                keyword_ingredients = keyword.split() if " " in keyword else [keyword]
+                # Skip if any ingredient in this keyword was recently used
+                # Also temporarily ban salmon if it's been used recently
+                if (not any(ingredient in recent_ingredients for ingredient in keyword_ingredients) and
+                    "salmon" not in keyword.lower()):
+                    filtered_keywords.append(keyword)
+            
+            # If we filtered out too many, allow some through but prioritize variety
+            if filtered_keywords:
+                interpretation.search_keywords = filtered_keywords
+            else:
+                # Fallback: allow keywords but prioritize those with fewer recent ingredients
+                interpretation.search_keywords = sorted(
+                    interpretation.search_keywords,
+                    key=lambda kw: sum(1 for ing in kw.split() if ing in recent_ingredients)
+                )
+        
+        # Track current keywords and ingredients for future requests
+        recent_keywords.extend(interpretation.search_keywords)
+        recent_keywords = recent_keywords[-10:]  # Keep only last 10 keywords
+        
+        recent_ingredients.extend(current_ingredients)
+        recent_ingredients = recent_ingredients[-15:]  # Keep only last 15 ingredients
+        
         return interpretation
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error interpreting mood: {str(e)}")
+
+
+@router.post("/variety/reset")
+async def reset_variety_tracking():
+    """
+    Reset variety tracking for testing purposes
+    """
+    global recent_keywords, recent_ingredients
+    recent_keywords = []
+    recent_ingredients = []
+    return {"message": "Variety tracking reset successfully"}
+
+
+@router.get("/variety/status")
+async def get_variety_status():
+    """
+    Get current variety tracking status for debugging
+    """
+    global recent_keywords, recent_ingredients
+    return {
+        "recent_keywords": recent_keywords,
+        "recent_ingredients": recent_ingredients,
+        "keyword_count": len(recent_keywords),
+        "ingredient_count": len(recent_ingredients)
+    }
 
 
 @router.post("/recipes/search", response_model=List[Recipe])

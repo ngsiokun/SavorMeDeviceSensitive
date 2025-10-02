@@ -27,29 +27,31 @@
                 <!-- Profile Form -->
                 <form id="profileForm" onsubmit="saveProfile(event)">
                     <!-- Basic Info Section -->
-                    <div class="form-section">
-                        <div class="section-title">📋 Basic Information</div>
+                    <div class="form-section compact-section">
+                        <div class="section-title">📋 Basic Info</div>
                         
-                        <div class="form-group">
-                            <label>Age</label>
-                            <input type="number" id="age" name="age" value="32" min="1" max="120" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Gender</label>
-                            <select id="gender" name="gender" required>
-                                <option value="female" selected>Female</option>
-                                <option value="male">Male</option>
-                            </select>
+                        <div class="form-row">
+                            <div class="form-group compact">
+                                <label>Age</label>
+                                <input type="number" id="age" name="age" value="32" min="1" max="120" required>
+                            </div>
+                            
+                            <div class="form-group compact">
+                                <label>Gender</label>
+                                <select id="gender" name="gender" required>
+                                    <option value="female" selected>Female</option>
+                                    <option value="male">Male</option>
+                                </select>
+                            </div>
                         </div>
                         
                         <div class="form-row">
-                            <div class="form-group">
+                            <div class="form-group compact">
                                 <label>Height (cm)</label>
                                 <input type="number" id="height_cm" name="height_cm" value="165" min="100" max="250" required>
                             </div>
                             
-                            <div class="form-group">
+                            <div class="form-group compact">
                                 <label>Weight (kg)</label>
                                 <input type="number" id="weight_kg" name="weight_kg" value="60" min="30" max="300" required>
                             </div>
@@ -57,39 +59,62 @@
                     </div>
                     
                     <!-- Preferences Section -->
-                    <div class="form-section">
+                    <div class="form-section compact-section">
                         <div class="section-title">🍽️ Food Preferences</div>
                         
-                        <div class="form-group">
-                            <label>Dietary Preference</label>
-                            <select id="dietary_preference" name="dietary_preference">
-                                <option value="none" selected>None</option>
-                                <option value="vegetarian">Vegetarian</option>
-                                <option value="vegan">Vegan</option>
-                                <option value="pescatarian">Pescatarian</option>
-                                <option value="gluten_free">Gluten Free</option>
-                                <option value="dairy_free">Dairy Free</option>
-                            </select>
+                        <div class="form-row">
+                            <div class="form-group compact">
+                                <label>Diet</label>
+                                <select id="dietary_preference" name="dietary_preference">
+                                    <option value="none" selected>None</option>
+                                    <option value="vegetarian">Vegetarian</option>
+                                    <option value="vegan">Vegan</option>
+                                    <option value="pescatarian">Pescatarian</option>
+                                    <option value="gluten_free">Gluten Free</option>
+                                    <option value="dairy_free">Dairy Free</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group compact">
+                                <label>Cuisine</label>
+                                <select id="cuisine" name="cuisine" required>
+                                    <option value="Surprise Me">🎲 Surprise Me</option>
+                                    <option value="Mediterranean" selected>🫒 Mediterranean</option>
+                                    <option value="Asian">🍜 Asian</option>
+                                    <option value="Mexican">🌮 Mexican</option>
+                                    <option value="Italian">🍝 Italian</option>
+                                    <option value="American">🍔 American</option>
+                                    <option value="Other Western">🍷 Other Western</option>
+                                </select>
+                            </div>
                         </div>
                         
-                        <div class="form-group">
-                            <label>Preferred Cuisine (select one)</label>
-                            <select id="cuisine" name="cuisine" required>
-                                <option value="Surprise Me">🎲 Surprise Me</option>
-                                <option value="Mediterranean" selected>🫒 Mediterranean</option>
-                                <option value="Asian">🍜 Asian</option>
-                                <option value="Mexican">🌮 Mexican</option>
-                                <option value="Italian">🍝 Italian</option>
-                                <option value="American">🍔 American</option>
-                                <option value="Other Western">🍷 Other Western</option>
-                            </select>
-                            <div class="helper-text">Choose your preferred cuisine style</div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Food Allergies (optional)</label>
+                        <div class="form-group compact">
+                            <label>Allergies (optional)</label>
                             <input type="text" id="allergies" name="allergies" placeholder="e.g., peanuts, shellfish">
-                            <div class="helper-text">Separate multiple allergies with commas</div>
+                        </div>
+                        
+                        <div class="form-group compact">
+                            <label>Calories</label>
+                            <div class="calorie-options compact-options">
+                                <div class="calorie-option compact-option">
+                                    <input type="radio" id="calorie_auto" name="calorie_preference" value="auto" checked>
+                                    <label for="calorie_auto" class="radio-label compact-label">
+                                        <span class="option-title">Auto</span>
+                                    </label>
+                                </div>
+                                
+                                <div class="calorie-option compact-option">
+                                    <input type="radio" id="calorie_custom" name="calorie_preference" value="custom">
+                                    <label for="calorie_custom" class="radio-label compact-label">
+                                        <span class="option-title">Custom</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group compact" id="customCalorieGroup" style="display: none;">
+                                <input type="number" id="custom_calories" name="custom_calories" min="400" max="4000" placeholder="Daily calories">
+                            </div>
                         </div>
                     </div>
                     
@@ -98,7 +123,7 @@
                         Continue to Mood Selection →
                     </button>
                     
-                    <div class="version-badge">v2.0 • Evidence-Based System</div>
+                    <div class="version-badge">v2.1 • Evidence-Based System</div>
                 </form>
             </div>
         </div>
