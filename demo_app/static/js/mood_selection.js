@@ -25,9 +25,9 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Toggle mood selection
-function toggleMood(element) {
-    const mood = element.dataset.mood;
+// Select mood (called from HTML onclick)
+function selectMood(mood) {
+    const element = document.querySelector(`[data-mood="${mood}"]`);
     const isSelected = element.classList.contains('selected');
     
     if (isSelected) {
@@ -48,16 +48,23 @@ function toggleMood(element) {
     updateGenerateButton();
 }
 
-// Select intensity
-function selectIntensity(element) {
+// Toggle mood selection (alternative function)
+function toggleMood(element) {
+    const mood = element.dataset.mood;
+    selectMood(mood);
+}
+
+// Select intensity (called from HTML onclick)
+function selectIntensity(intensity) {
     // Remove selected from all
     document.querySelectorAll('.intensity-btn').forEach(btn => {
         btn.classList.remove('selected');
     });
     
     // Add selected to clicked
+    const element = document.querySelector(`[data-intensity="${intensity}"]`);
     element.classList.add('selected');
-    selectedIntensity = element.dataset.intensity;
+    selectedIntensity = intensity;
 }
 
 // Update mood counter

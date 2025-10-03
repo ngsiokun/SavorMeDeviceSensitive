@@ -2,7 +2,7 @@
 API Routes for SavorMe Backend
 """
 from fastapi import APIRouter, HTTPException
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Any
 import httpx
 import random
 
@@ -14,6 +14,7 @@ from app.services.fusion_engine import fusion_engine
 from app.services.edamam_client import edamam_client
 from app.services.openrouter_client import openrouter_client
 from app.services.mood_nutrition_engine import get_mood_nutrition_engine
+from app.services.canva_client import canva_client
 
 
 router = APIRouter()
@@ -453,4 +454,159 @@ async def health_check():
         "mood_mapping_version": nutrition_engine.version,
         "available_moods": list(nutrition_engine.moods.keys())
     }
+
+
+@router.post("/design/recipe-card")
+async def create_recipe_card_design(recipe: Recipe):
+    """
+    Create a beautiful recipe card design using Canva
+    
+    Args:
+        recipe: Recipe data to design
+        
+    Returns:
+        Design URL and metadata
+    """
+    try:
+        recipe_data = {
+            "name": recipe.name,
+            "ingredients": recipe.ingredients,
+            "nutrition": {
+                "calories": recipe.nutrition.calories,
+                "protein_g": recipe.nutrition.protein_g,
+                "fiber_g": recipe.nutrition.fiber_g
+            },
+            "servings": recipe.servings
+        }
+        
+        design_url = await canva_client.create_recipe_card(recipe_data)
+        
+        if design_url:
+            return {
+                "success": True,
+                "design_url": design_url,
+                "recipe_name": recipe.name,
+                "message": "Recipe card design created successfully"
+            }
+        else:
+            return {
+                "success": False,
+                "message": "Failed to create recipe card design"
+            }
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error creating recipe card: {str(e)}")
+
+
+@router.post("/design/mood-card")
+async def create_mood_card_design(mood_data: Dict[str, Any]):
+    """
+    Create a mood selection card design
+    
+    Args:
+        mood_data: Mood information including name, description, evidence level
+        
+    Returns:
+        Design URL and metadata
+    """
+    try:
+        design_url = await canva_client.create_mood_selection_card(mood_data)
+        
+        if design_url:
+            return {
+                "success": True,
+                "design_url": design_url,
+                "mood_name": mood_data.get("name"),
+                "message": "Mood card design created successfully"
+            }
+        else:
+            return {
+                "success": False,
+                "message": "Failed to create mood card design"
+            }
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error creating mood card: {str(e)}")
+
+
+@router.post("/design/nutrition-card")
+async def create_nutrition_card_design(nutrition_data: Dict[str, Any]):
+    """
+    Create a nutrition information card design
+    
+    Args:
+        nutrition_data: Nutrition information including targets and actual values
+        
+    Returns:
+        Design URL and metadata
+    """
+    try:
+        design_url = await canva_client.create_nutrition_info_card(nutrition_data)
+        
+        if design_url:
+            return {
+                "success": True,
+                "design_url": design_url,
+                "message": "Nutrition card design created successfully"
+            }
+        else:
+            return {
+                "success": False,
+                "message": "Failed to create nutrition card design"
+            }
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error creating nutrition card: {str(e)}")
+
+
+@router.get("/design/templates")
+async def get_canva_templates():
+    """
+    Get available Canva templates
+    
+    Returns:
+        List of available templates
+    """
+    try:
+        templates = await canva_client.get_templates()
+        return {
+            "success": True,
+            "templates": templates,
+            "count": len(templates)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error getting templates: {str(e)}")
+
+
+@router.post("/design/download")
+async def download_design(design_url: str):
+    """
+    Download a design as image data
+    
+    Args:
+        design_url: URL of the design to download
+        
+    Returns:
+        Base64 encoded image data
+    """
+    try:
+        image_data = await canva_client.download_design(design_url)
+        
+        if image_data:
+            # Convert to base64 for JSON response
+            base64_data = base64.b64encode(image_data).decode('utf-8')
+            return {
+                "success": True,
+                "image_data": base64_data,
+                "format": "base64",
+                "size": len(image_data)
+            }
+        else:
+            return {
+                "success": False,
+                "message": "Failed to download design"
+            }
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error downloading design: {str(e)}")
 

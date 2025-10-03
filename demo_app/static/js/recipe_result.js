@@ -201,6 +201,10 @@ function getMoodEmoji(moodName) {
     return emojiMap[moodName.toLowerCase()] || '💭';
 }
 
+function goBack() {
+    window.location.href = '/mood-selection';
+}
+
 function shareRecipe() {
     const result = JSON.parse(sessionStorage.getItem('recipeResult'));
     const text = `Check out this recipe from SavorMe: ${result.recipe.name}!`;

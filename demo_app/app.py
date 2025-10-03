@@ -24,6 +24,11 @@ def profile():
     """User profile input page"""
     return render_template('profile.html')
 
+@app.route('/profile-enhanced')
+def profile_enhanced():
+    """Enhanced user profile input page with Canva-inspired design"""
+    return render_template('profile_enhanced.html')
+
 
 @app.route('/mood-selection')
 def mood_selection():
