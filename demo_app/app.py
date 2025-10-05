@@ -51,9 +51,18 @@ def get_recommendation():
         logger.info(f"Received recommendation request: {data}")
         
         # Use synchronous requests instead of async
+        # FastAPI expects the data as JSON with the same structure as function parameters
+        request_data = {
+            "mood_blend": data.get("mood_blend"),
+            "user_profile": data.get("user_profile"),
+            "nutrition_targets": data.get("nutrition_targets"),
+            "activity_level": data.get("activity_level", "moderate")
+        }
+        
         response = requests.post(
             f"{BACKEND_URL}/api/v1/recipes/recommend",
-            json=data,
+            json=request_data,
+            headers={"Content-Type": "application/json"},
             timeout=30.0
         )
         
@@ -67,6 +76,14 @@ def get_recommendation():
                 logger.warning(f"404 Error detail: {error_detail}")
             except:
                 logger.warning("Could not parse 404 error response")
+        elif response.status_code == 422:
+            # Handle validation errors
+            try:
+                error_detail = response.json()
+                logger.warning(f"422 Validation Error: {error_detail}")
+                return jsonify({"error": "Validation error", "detail": error_detail}), 422
+            except:
+                logger.warning("Could not parse 422 error response")
         
         response.raise_for_status()
         return jsonify(response.json())

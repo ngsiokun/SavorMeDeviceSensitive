@@ -1,220 +1,485 @@
-// SavorMe Recipe Result - Display recommendation
+// SavorMe Recipe Result - Pure JavaScript Dynamic Page Generation
+// Matching the beautiful design from the first screenshot
 
-window.addEventListener('DOMContentLoaded', () => {
+// Main function to generate the entire page
+function generatePage() {
+    const container = document.getElementById('app-container');
+    
+    // Get recipe data from session storage
     const resultData = sessionStorage.getItem('recipeResult');
     
     if (!resultData) {
-        alert('No recipe data found. Redirecting to mood selection...');
-        window.location.href = '/mood-selection';
+        container.innerHTML = generateErrorPage();
         return;
     }
     
-    const result = JSON.parse(resultData);
-    displayRecipe(result);
-});
+    try {
+        const result = JSON.parse(resultData);
+        container.innerHTML = generateRecipePage(result);
+        addEventListeners();
+    } catch (error) {
+        console.error('Error parsing recipe data:', error);
+        container.innerHTML = generateErrorPage();
+    }
+}
 
-function displayRecipe(data) {
+// Generate the complete recipe page HTML matching the first screenshot
+function generateRecipePage(data) {
     const recipe = data.recipe;
     const rationale = data.emotional_rationale;
     const alignment = data.flavor_alignment;
     const nutrition = data.nutrition_comparison;
     
-    // Recipe Card
+    // Generate ingredients HTML
     let ingredientsHTML = '';
     if (recipe.ingredients && recipe.ingredients.length > 0) {
-        ingredientsHTML = '<div class="ingredients-section"><div class="ingredients-title">🥘 Ingredients</div><ul class="ingredients-list">';
-        recipe.ingredients.forEach(ing => {
-            ingredientsHTML += `<li>${ing.amount || ''} ${ing.name}</li>`;
-        });
-        ingredientsHTML += '</ul></div>';
-    }
-    
-    let directionsHTML = '';
-    if (recipe.cooking_directions && recipe.cooking_directions.length > 0) {
-        directionsHTML = '<div class="directions-section"><div class="directions-title">👨‍🍳 Directions</div><ol class="directions-list">';
-        recipe.cooking_directions.forEach(step => {
-            directionsHTML += `<li>${step}</li>`;
-        });
-        directionsHTML += '</ol></div>';
-    }
-    
-    // Removed external link to keep users on the platform
-    
-    // Create image HTML with fallback
-    let imageHTML = '';
-    if (recipe.image_url) {
-        imageHTML = `<img src="${recipe.image_url}" class="recipe-image" alt="${recipe.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                     <div class="recipe-image-placeholder" style="display: none;">
-                         <div class="placeholder-icon">🥘</div>
-                         <div class="placeholder-text">${recipe.name}</div>
-                         <div class="placeholder-subtitle">Delicious Recipe</div>
-                     </div>`;
-    } else {
-        imageHTML = `<div class="recipe-image-placeholder">
-                         <div class="placeholder-icon">🥘</div>
-                         <div class="placeholder-text">${recipe.name}</div>
-                         <div class="placeholder-subtitle">Delicious Recipe</div>
-                     </div>`;
-    }
-    
-    document.getElementById('recipeCard').innerHTML = `
-        ${imageHTML}
-        <div class="recipe-info">
-            <h2 class="recipe-name">${recipe.name}</h2>
-            <div class="recipe-meta">
-                ${recipe.cook_time ? `<span>⏱️ ${recipe.cook_time} min</span>` : ''}
-                <span>🍽️ ${recipe.servings || 1} serving${recipe.servings !== 1 ? 's' : ''}</span>
-            </div>
-            <div class="nutrition-quick">
-                <div class="nutrition-quick-item">
-                    <div class="nutrition-quick-value">${Math.round(recipe.nutrition.calories)}</div>
-                    <div class="nutrition-quick-label">Calories</div>
-                </div>
-                <div class="nutrition-quick-item">
-                    <div class="nutrition-quick-value">${Math.round(recipe.nutrition.protein_g)}g</div>
-                    <div class="nutrition-quick-label">Protein</div>
-                </div>
-                <div class="nutrition-quick-item">
-                    <div class="nutrition-quick-value">${Math.round(recipe.nutrition.fiber_g)}g</div>
-                    <div class="nutrition-quick-label">Fiber</div>
-                </div>
-            </div>
-            ${ingredientsHTML}
-            ${directionsHTML}
-        </div>
-    `;
-    
-    // Match Score
-    const score = alignment.nutrient_match_score || 85;
-    document.getElementById('matchScore').innerHTML = `
-        <div class="match-score-title">Nutrient Match Score</div>
-        <div class="match-score-value">${Math.round(score)}%</div>
-        <div class="match-score-subtitle">Evidence-Based Recommendation</div>
-    `;
-    
-    // Emotional Rationale
-    let moodBreakdownHTML = '';
-    if (rationale.mood_breakdowns && rationale.mood_breakdowns.length > 0) {
-        moodBreakdownHTML = '<div class="mood-breakdown">';
-        rationale.mood_breakdowns.forEach(breakdown => {
-            const moodEmoji = getMoodEmoji(breakdown.mood);
-            moodBreakdownHTML += `
-                <div class="mood-breakdown-item">
-                    <div class="mood-breakdown-header">${moodEmoji} ${breakdown.mood}</div>
-                    <div class="mood-breakdown-text">${breakdown.explanation}</div>
-                </div>
-            `;
-        });
-        moodBreakdownHTML += '</div>';
-    }
-    
-    document.getElementById('rationale').innerHTML = `
-        <div class="section-header">
-            <span>💭</span>
-            <span>Why This Recipe?</span>
-        </div>
-        <div class="rationale-text">${rationale.overall_rationale}</div>
-        ${moodBreakdownHTML}
-    `;
-    
-    // Nutrition Comparison
-    document.getElementById('nutrition').innerHTML = `
-        <div class="section-header">
-            <span>📊</span>
-            <span>Nutrition Breakdown</span>
-        </div>
-        <table class="nutrition-table">
-            <thead>
-                <tr>
-                    <th>Nutrient</th>
-                    <th>This Meal</th>
-                    <th>Daily Target</th>
-                    <th>% of Day</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Calories</td>
-                    <td>${Math.round(nutrition.recipe_calories)} kcal</td>
-                    <td>${Math.round(nutrition.target_calories)} kcal</td>
-                    <td class="percentage">${nutrition.percentage_of_daily_calories}%</td>
-                </tr>
-                <tr>
-                    <td>Protein</td>
-                    <td>${Math.round(nutrition.recipe_protein)}g</td>
-                    <td>${Math.round(nutrition.target_protein)}g</td>
-                    <td class="percentage">${nutrition.percentage_of_daily_protein}%</td>
-                </tr>
-                <tr>
-                    <td>Fiber</td>
-                    <td>${Math.round(nutrition.recipe_fiber)}g</td>
-                    <td>${Math.round(nutrition.target_fiber)}g</td>
-                    <td class="percentage">${nutrition.percentage_of_daily_fiber}%</td>
-                </tr>
-            </tbody>
-        </table>
-        ${alignment.nutrient_reasons ? `
-            <div style="margin-top: 12px; font-size: 11px; color: #6B7280;">
-                <strong>Nutrient Highlights:</strong>
-                <ul style="margin: 8px 0 0 16px; line-height: 1.6;">
-                    ${alignment.nutrient_reasons.slice(0, 3).map(reason => `<li>${reason}</li>`).join('')}
+        ingredientsHTML = `
+            <div class="ingredients-section">
+                <h3 class="section-title">• Ingredients</h3>
+                <ul class="ingredients-list">
+                    ${recipe.ingredients.map(ing => `<li>${ing.amount || ''} ${ing.name}</li>`).join('')}
                 </ul>
-            </div>
-        ` : ''}
-    `;
-    
-    // Evidence Section
-    if (alignment.evidence_based) {
-        document.getElementById('evidence').innerHTML = `
-            <div class="section-header">
-                <span>🔬</span>
-                <span>Scientific Evidence</span>
-            </div>
-            <div class="evidence-level">⭐⭐⭐⭐ Evidence-Based Recommendation</div>
-            <div class="evidence-list">
-                <p><strong>This recommendation is based on:</strong></p>
-                <ul>
-                    <li>Peer-reviewed nutritional research</li>
-                    <li>Mediterranean diet studies (SMILES trial)</li>
-                    <li>Nutrient-mood correlation meta-analyses</li>
-                </ul>
-            </div>
-            <div class="disclaimer">
-                This app provides food suggestions based on mood and nutritional science. 
-                It is not a substitute for professional medical advice. Always consult your 
-                healthcare provider for persistent symptoms.
             </div>
         `;
     }
-}
-
-function getMoodEmoji(moodName) {
-    const emojiMap = {
-        'stressed': '😰',
-        'fatigued': '😴',
-        'low_mood': '😢',
-        'low mood': '😢',
-        'irritable': '😠'
-    };
-    return emojiMap[moodName.toLowerCase()] || '💭';
-}
-
-function goBack() {
-    window.location.href = '/mood-selection';
-}
-
-function shareRecipe() {
-    const result = JSON.parse(sessionStorage.getItem('recipeResult'));
-    const text = `Check out this recipe from SavorMe: ${result.recipe.name}!`;
     
-    if (navigator.share) {
-        navigator.share({
-            title: 'SavorMe Recipe',
-            text: text,
-            url: window.location.href
-        });
+    // Generate directions HTML
+    let directionsHTML = '';
+    if (recipe.cooking_directions && recipe.cooking_directions.length > 0) {
+        directionsHTML = `
+            <div class="directions-section">
+                <h3 class="section-title">Directions</h3>
+                <div class="directions-content">
+                    ${recipe.cooking_directions.map(step => `<p>${step}</p>`).join('')}
+                </div>
+            </div>
+        `;
+    }
+    
+    // Generate image HTML with fallback
+    let imageHTML = '';
+    if (recipe.image_url) {
+        imageHTML = `
+            <img src="${recipe.image_url}" class="recipe-image" alt="${recipe.name}" 
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="recipe-image-placeholder" style="display: none;">
+                <div class="placeholder-icon">🥘</div>
+                <div class="placeholder-text">${recipe.name}</div>
+                <div class="placeholder-subtitle">Delicious Recipe</div>
+            </div>
+        `;
     } else {
-        alert('Recipe saved! (Share functionality requires mobile browser)');
+        imageHTML = `
+            <div class="recipe-image-placeholder">
+                <div class="placeholder-icon">🥘</div>
+                <div class="placeholder-text">${recipe.name}</div>
+                <div class="placeholder-subtitle">Delicious Recipe</div>
+            </div>
+        `;
+    }
+    
+    return `
+        <div class="app-container">
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>🔋 100%</span>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="content-area">
+                <!-- Header -->
+                <div class="page-header">
+                    <h1 class="page-title">Your Perfect Recipe</h1>
+                    <p class="page-subtitle">Based on your mood and profile</p>
+                </div>
+
+                <!-- Recipe Image -->
+                <div class="recipe-image-container">
+                    ${imageHTML}
+                </div>
+
+                <!-- Recipe Info -->
+                <div class="recipe-info">
+                    <h2 class="recipe-name">${recipe.name}</h2>
+                    <div class="recipe-servings">${recipe.servings || 4} servings</div>
+                </div>
+
+                <!-- Nutrition Summary -->
+                <div class="nutrition-summary">
+                    <div class="nutrition-item">
+                        <span class="nutrition-value">${Math.round(recipe.nutrition?.calories || 0)}</span>
+                        <span class="nutrition-label">CALORIES</span>
+                    </div>
+                    <div class="nutrition-item">
+                        <span class="nutrition-value">${Math.round(recipe.nutrition?.protein_g || 0)}g</span>
+                        <span class="nutrition-label">PROTEIN</span>
+                    </div>
+                    <div class="nutrition-item">
+                        <span class="nutrition-value">${Math.round(recipe.nutrition?.fiber_g || 0)}g</span>
+                        <span class="nutrition-label">FIBER</span>
+                    </div>
+                </div>
+
+                ${ingredientsHTML}
+                ${directionsHTML}
+
+                <!-- Nutrient Match Score Section -->
+                <div class="nutrient-match-section">
+                    <button class="nutrient-match-btn">
+                        <span class="nutrient-match-icon">📊</span>
+                        <span class="nutrient-match-text">Nutrient Match Score</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Generate error page HTML
+function generateErrorPage() {
+    return `
+        <div class="app-container">
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>🔋 100%</span>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="content-area">
+                <!-- Header -->
+                <div class="page-header">
+                    <h1 class="page-title">Recipe Recommendation</h1>
+                    <p class="page-subtitle">Something went wrong</p>
+                </div>
+
+                <!-- Error State -->
+                <div class="error-container">
+                    <div class="error-icon">😔</div>
+                    <h3 class="error-title">Oops! Something went wrong</h3>
+                    <p class="error-message">We couldn't find the perfect recipe for you right now.</p>
+                    <button id="retry-btn" class="btn btn-primary">Try Again</button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Add event listeners
+function addEventListeners() {
+    // Nutrient Match Score button
+    const nutrientMatchBtn = document.querySelector('.nutrient-match-btn');
+    if (nutrientMatchBtn) {
+        nutrientMatchBtn.addEventListener('click', () => {
+            // Show detailed nutrition analysis
+            showNutrientAnalysis();
+        });
+    }
+    
+    // Retry button (for error state)
+    const retryBtn = document.getElementById('retry-btn');
+    if (retryBtn) {
+        retryBtn.addEventListener('click', () => {
+            window.location.href = '/mood-selection';
+        });
     }
 }
 
+// Generate new recommendations
+async function generateNewRecommendation() {
+    try {
+        // Close the modal first
+        closeNutrientModal();
+        
+        // Get mood and profile data from session storage
+        const selectedMoods = JSON.parse(sessionStorage.getItem('selectedMoods') || '[]');
+        const selectedIntensity = sessionStorage.getItem('selectedIntensity') || 'medium';
+        const userProfile = JSON.parse(sessionStorage.getItem('userProfile') || '{}');
+        
+        if (selectedMoods.length === 0) {
+            window.location.href = '/mood-selection';
+            return;
+        }
+        
+        // Show loading state
+        const container = document.getElementById('app-container');
+        container.innerHTML = `
+            <div class="app-container">
+                <div class="status-bar">
+                    <span>9:41</span>
+                    <span>🔋 100%</span>
+                </div>
+                <div class="content-area">
+                    <div class="page-header">
+                        <h1 class="page-title">Finding New Recipe</h1>
+                        <p class="page-subtitle">Please wait...</p>
+                    </div>
+                    <div class="loading-container">
+                        <div class="loading-spinner"></div>
+                        <p class="loading-text">Finding your perfect recipe...</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        const payload = {
+            mood_blend: {
+                moods: selectedMoods.map(mood => ({
+                    mood: mood,
+                    intensity: selectedIntensity
+                }))
+            },
+            user_profile: userProfile,
+            cuisine_preference: userProfile.cuisine_preference || null
+        };
+        
+        const response = await fetch('/api/recommend', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to get new recommendation');
+        }
+        
+        const result = await response.json();
+        sessionStorage.setItem('recipeResult', JSON.stringify(result));
+        
+        // Regenerate the page with new data
+        generatePage();
+        
+    } catch (error) {
+        console.error('Error getting new recommendation:', error);
+        const container = document.getElementById('app-container');
+        container.innerHTML = generateErrorPage();
+        addEventListeners();
+    }
+}
+
+// Show detailed nutrient analysis modal
+function showNutrientAnalysis() {
+    const resultData = sessionStorage.getItem('recipeResult');
+    if (!resultData) return;
+    
+    const data = JSON.parse(resultData);
+    const recipe = data.recipe;
+    const rationale = data.emotional_rationale;
+    const alignment = data.flavor_alignment;
+    const nutrition = data.nutrition_comparison;
+    
+    // Create modal HTML
+    const modalHTML = `
+        <div class="nutrient-modal-overlay" onclick="closeNutrientModal()">
+            <div class="nutrient-modal" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>Nutrient Match Score</h2>
+                    <button class="close-btn" onclick="closeNutrientModal()">×</button>
+                </div>
+                
+                <div class="modal-content">
+                    <!-- Match Score -->
+                    <div class="match-score-card">
+                        <div class="match-score-value">${Math.round(alignment?.nutrient_match_score || 105)}%</div>
+                        <div class="match-score-subtitle">Evidence-Based Recommendation</div>
+                    </div>
+                    
+                    <!-- Why This Recipe -->
+                    <div class="analysis-section">
+                        <div class="section-header">
+                            <span class="section-icon">💭</span>
+                            <h3>Why This Recipe?</h3>
+                        </div>
+                        <div class="rationale-text">${generateDetailedRationale(recipe, nutrition, rationale)}</div>
+                        
+                        ${rationale?.mood_breakdowns ? rationale.mood_breakdowns.map(breakdown => `
+                            <div class="mood-breakdown-item">
+                                <div class="mood-breakdown-header">
+                                    <span class="mood-icon">${getMoodEmoji(breakdown.mood)}</span>
+                                    <span class="mood-name">${breakdown.mood}</span>
+                                </div>
+                                <div class="mood-breakdown-text">${breakdown.explanation}</div>
+                            </div>
+                        `).join('') : ''}
+                    </div>
+                    
+                    <!-- Nutrition Breakdown -->
+                    <div class="analysis-section">
+                        <div class="section-header">
+                            <span class="section-icon">📊</span>
+                            <h3>Nutrition Breakdown</h3>
+                        </div>
+                        <div class="nutrition-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nutrient</th>
+                                        <th>This Meal</th>
+                                        <th>Daily Target</th>
+                                        <th>% of Day</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Calories</td>
+                                        <td>${Math.round(nutrition?.recipe_calories || 0)} kcal</td>
+                                        <td>${Math.round(nutrition?.target_calories || 0)} kcal</td>
+                                        <td class="percentage">${nutrition?.percentage_of_daily_calories || 0}%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Protein</td>
+                                        <td>${Math.round(nutrition?.recipe_protein || 0)}g</td>
+                                        <td>${Math.round(nutrition?.target_protein || 0)}g</td>
+                                        <td class="percentage">${nutrition?.percentage_of_daily_protein || 0}%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fiber</td>
+                                        <td>${Math.round(nutrition?.recipe_fiber || 0)}g</td>
+                                        <td>${Math.round(nutrition?.target_fiber || 0)}g</td>
+                                        <td class="percentage">${nutrition?.percentage_of_daily_fiber || 0}%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                                <div class="nutrient-highlights">
+                                    <h4>Nutrient Highlights:</h4>
+                                    <ul>
+                                        <li><strong>Magnesium:</strong> ${Math.round(recipe.nutrition?.magnesium_mg || 0)} mg (target: 120 mg) — supports nervous system and stress response.</li>
+                                        <li><strong>Omega 3 EPA DHA:</strong> ${Math.round((recipe.nutrition?.omega3_g || 0) * 10) / 10} g (target: 2.0 g) — anti-inflammatory, supports mood regulation.</li>
+                                        <li><strong>Iron:</strong> ${Math.round(recipe.nutrition?.iron_mg || 0)} mg (target: 18 mg) — prevents fatigue and supports cognitive function.</li>
+                                        <li><strong>Folate (B9):</strong> ${Math.round(recipe.nutrition?.folate_mcg || 0)} mcg (target: 400 mcg) — essential for neurotransmitter synthesis and mood stability.</li>
+                                        <li><strong>Vitamin B12:</strong> ${Math.round(recipe.nutrition?.vitamin_b12_mcg || 0)} mcg (target: 2.4 mcg) — supports brain function and prevents depression.</li>
+                                        <li><strong>Zinc:</strong> ${Math.round(recipe.nutrition?.zinc_mg || 0)} mg (target: 11 mg) — regulates stress response and immune function.</li>
+                                        <li><strong>Vitamin D:</strong> ${Math.round(recipe.nutrition?.vitamin_d_iu || 0)} IU (target: 2000 IU) — crucial for mood regulation and seasonal depression.</li>
+                                        <li><strong>Fiber:</strong> ${Math.round(recipe.nutrition?.fiber_g || 0)} g (target: 28 g) — stabilizes blood sugar and prevents energy crashes.</li>
+                                    </ul>
+                                </div>
+                    </div>
+                    
+                    <!-- Scientific Evidence -->
+                    <div class="analysis-section">
+                        <div class="section-header">
+                            <span class="section-icon">🧪</span>
+                            <h3>Scientific Evidence</h3>
+                        </div>
+                        <div class="evidence-rating">
+                            <div class="stars">★★★★★</div>
+                            <div class="evidence-text">Evidence-Based Recommendation</div>
+                        </div>
+                        <div class="evidence-details">
+                            <p>This recommendation is based on:</p>
+                            <ul>
+                                <li>Peer-reviewed nutritional research</li>
+                                <li>Mediterranean diet studies (SMILES trial)</li>
+                                <li>Nutrient-mood correlation meta-analyses</li>
+                            </ul>
+                        </div>
+                        <div class="disclaimer">
+                            <small>This app provides food suggestions based on science and is not a substitute for professional medical advice.</small>
+                        </div>
+                    </div>
+                </div>
+                
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" onclick="generateNewRecommendation()">Another Recipe Suggestion</button>
+                        </div>
+            </div>
+        </div>
+    `;
+    
+    // Add modal to page
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+// Close nutrient modal
+function closeNutrientModal() {
+    const modal = document.querySelector('.nutrient-modal-overlay');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+// Generate detailed rationale with nutritional information
+function generateDetailedRationale(recipe, nutrition, rationale) {
+    const calories = Math.round(recipe.nutrition?.calories || 0);
+    const protein = Math.round(recipe.nutrition?.protein_g || 0);
+    const fiber = Math.round(recipe.nutrition?.fiber_g || 0);
+    const magnesium = Math.round(recipe.nutrition?.magnesium_mg || 0);
+    const omega3 = Math.round((recipe.nutrition?.omega3_g || 0) * 10) / 10;
+    const iron = Math.round(recipe.nutrition?.iron_mg || 0);
+    const folate = Math.round(recipe.nutrition?.folate_mcg || 0);
+    const b12 = Math.round(recipe.nutrition?.vitamin_b12_mcg || 0);
+    const zinc = Math.round(recipe.nutrition?.zinc_mg || 0);
+    const vitaminD = Math.round(recipe.nutrition?.vitamin_d_iu || 0);
+    
+    const targetCalories = Math.round(nutrition?.target_calories || 0);
+    const targetProtein = Math.round(nutrition?.target_protein || 0);
+    const targetFiber = Math.round(nutrition?.target_fiber || 0);
+    
+    const caloriePercent = Math.round((calories / targetCalories) * 100);
+    const proteinPercent = Math.round((protein / targetProtein) * 100);
+    const fiberPercent = Math.round((fiber / targetFiber) * 100);
+    
+    let rationaleText = `This ${recipe.name} was carefully selected to provide optimal nutrition for your current needs. `;
+    
+    // Calorie information
+    rationaleText += `With ${calories} calories (${caloriePercent}% of your daily target), `;
+    
+    // Protein information
+    rationaleText += `it delivers ${protein}g of protein (${proteinPercent}% of daily needs) for sustained energy and muscle support. `;
+    
+    // Fiber information
+    rationaleText += `The ${fiber}g of fiber (${fiberPercent}% of daily target) helps maintain stable blood sugar levels and supports digestive health. `;
+    
+    // Key nutrients
+    if (magnesium > 0) {
+        rationaleText += `Rich in magnesium (${magnesium}mg), this recipe supports nervous system function and stress response. `;
+    }
+    
+    if (omega3 > 0) {
+        rationaleText += `The ${omega3}g of omega-3 fatty acids provide anti-inflammatory benefits and support mood regulation. `;
+    }
+    
+    if (iron > 0) {
+        rationaleText += `With ${iron}mg of iron, it helps maintain energy levels and cognitive function. `;
+    }
+    
+    if (folate > 0) {
+        rationaleText += `The ${folate}mcg of folate (B9) is essential for neurotransmitter synthesis and mood stability. `;
+    }
+    
+    if (b12 > 0) {
+        rationaleText += `Vitamin B12 (${b12}mcg) supports brain function and helps prevent depression. `;
+    }
+    
+    if (zinc > 0) {
+        rationaleText += `Zinc (${zinc}mg) regulates stress response and supports immune function. `;
+    }
+    
+    if (vitaminD > 0) {
+        rationaleText += `Vitamin D (${vitaminD}IU) is crucial for mood regulation and helps combat seasonal depression. `;
+    }
+    
+    // Mood-specific benefits
+    rationaleText += `This combination of nutrients works synergistically to support your emotional well-being and provide the energy your body needs.`;
+    
+    return rationaleText;
+}
+
+// Get mood emoji
+function getMoodEmoji(mood) {
+    const moodEmojis = {
+        'stressed': '😰',
+        'fatigued': '😴',
+        'low_mood': '😢',
+        'irritable': '😠'
+    };
+    return moodEmojis[mood.toLowerCase()] || '😊';
+}
+
+// Initialize the page when DOM is loaded
+document.addEventListener('DOMContentLoaded', generatePage);
