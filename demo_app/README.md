@@ -35,7 +35,7 @@ uvicorn app.main:app --reload
 
 ```bash
 # In demo_app directory
-python app.py
+py app.py
 # Demo runs at http://localhost:5000
 ```
 
@@ -58,7 +58,7 @@ The demo automatically connects to:
 To change backend URL:
 ```bash
 export BACKEND_URL=http://your-backend-url
-python app.py
+py app.py
 ```
 
 ## 📊 What It Demonstrates

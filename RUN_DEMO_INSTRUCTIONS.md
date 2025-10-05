@@ -44,7 +44,7 @@ INFO:     Application startup complete.
 ```cmd
 cd C:\Users\HP\SavorMe\SavorMe-backend\demo_app
 ..\venv\Scripts\activate.bat
-python app.py
+py app.py
 ```
 
 Wait until you see:

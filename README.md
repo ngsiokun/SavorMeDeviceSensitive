@@ -80,7 +80,7 @@ venv\Scripts\activate.bat
 
 # macOS/Linux
 python3 -m venv venv
-source venv/bin/activate
+venv\Scripts\activate.bat
 ```
 
 3. **Install dependencies**
@@ -199,7 +199,7 @@ Users can select 1-3 moods, each with an intensity level.
 
 ### Environment Variables
 
-See `.env.example` for all configuration options:
+See `.env file creation instructions` for all configuration options:
 
 ```bash
 # Required
@@ -254,7 +254,7 @@ SavorMe-backend/
 ├── documentation.md         # Detailed documentation
 ├── workflow.md             # End-to-end workflow
 ├── requirements.txt
-├── .env.example
+├── .env file creation instructions
 ├── .gitignore
 └── README.md
 ```

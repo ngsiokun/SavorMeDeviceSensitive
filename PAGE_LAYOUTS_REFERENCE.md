@@ -203,7 +203,7 @@ start_demo.bat
 
 # Or directly
 cd demo_app
-python app.py
+py app.py
 ```
 
 ## Design Specifications
