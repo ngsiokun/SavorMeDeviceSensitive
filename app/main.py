@@ -13,7 +13,7 @@ from .api.routes import router
 app = FastAPI(
     title="SavorMe Backend API",
     description="Mood-based recipe recommendation backend with emotional intelligence",
-    version="0.1.0",
+    version="2.1.0",
     docs_url="/docs",
     redoc_url="/redoc"
 )
@@ -37,7 +37,7 @@ async def root():
     """Root endpoint"""
     return {
         "message": "Welcome to SavorMe Backend API",
-        "version": "0.1.0",
+        "version": "2.1.0",
         "docs": "/docs",
         "health": "/api/v1/health"
     }
