@@ -1,0 +1,19 @@
+{
+  "mood_blend": {
+    "moods": [
+      {
+        "mood": "fatigued",
+        "intensity": "medium"
+      }
+    ]
+  },
+  "user_profile": {
+    "age": 32,
+    "gender": "female",
+    "height_cm": 165,
+    "weight_kg": 60,
+    "cuisine_preferences": ["Mediterranean"],
+    "food_allergies": [],
+    "dietary_preference": "none"
+  }
+}

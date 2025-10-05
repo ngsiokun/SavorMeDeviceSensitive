@@ -16,7 +16,7 @@ class OpenRouterClient:
     def __init__(self):
         self.base_url = f"{settings.OPENROUTER_BASE_URL}/chat/completions"
         self.api_key = settings.OPENROUTER_API_KEY
-        self.default_model = "anthropic/claude-3.5-sonnet"
+        self.default_model = "meta-llama/llama-3.1-8b-instruct:free"
     
     async def generate_cooking_directions(
         self,
@@ -35,8 +35,9 @@ class OpenRouterClient:
         Returns:
             List of cooking direction steps
         """
-        if not self.api_key:
-            return [f"Visit the source link for full cooking instructions."]
+        if not self.api_key or self.api_key == "your_openrouter_api_key":
+            # Generate basic cooking directions without API
+            return self._generate_fallback_directions(recipe_name, ingredients, cuisine_type)
         
         # Build ingredients list
         ingredients_text = "\n".join([f"- {ing.amount} {ing.name}" for ing in ingredients[:10]])
@@ -87,7 +88,8 @@ Focus on: preparation, cooking method, timing, and plating."""
         
         except Exception as e:
             print(f"Error generating directions: {e}")
-            return [f"Visit the source link for full cooking instructions."]
+            # Use fallback directions instead of just a link
+            return self._generate_fallback_directions(recipe_name, ingredients, cuisine_type)
     
     def _parse_cooking_steps(self, content: str) -> List[str]:
         """Parse LLM response into list of steps"""
@@ -102,6 +104,55 @@ Focus on: preparation, cooking method, timing, and plating."""
             if cleaned and len(cleaned) > 10:  # Skip very short lines
                 steps.append(cleaned)
         return steps if steps else [content]
+    
+    def _generate_fallback_directions(self, recipe_name: str, ingredients: List, cuisine_type: List[str] = None) -> List[str]:
+        """Generate basic cooking directions when API is not available"""
+        cuisine = cuisine_type[0] if cuisine_type else "general"
+        
+        # Basic cooking directions based on cuisine and ingredients
+        directions = []
+        
+        # Analyze ingredients to determine cooking method
+        ingredient_names = [ing.name.lower() for ing in ingredients]
+        
+        if any(meat in " ".join(ingredient_names) for meat in ["beef", "chicken", "pork", "lamb", "turkey"]):
+            directions.extend([
+                f"Preheat oven to 375°F (190°C).",
+                f"Season the meat with salt, pepper, and herbs.",
+                f"Brown the meat in a large skillet over medium-high heat.",
+                f"Add vegetables and continue cooking until tender.",
+                f"Transfer to oven-safe dish and bake for 25-30 minutes.",
+                f"Let rest for 5 minutes before serving."
+            ])
+        elif any(fish in " ".join(ingredient_names) for fish in ["salmon", "tuna", "cod", "halibut", "mackerel"]):
+            directions.extend([
+                f"Preheat oven to 400°F (200°C).",
+                f"Season the fish with salt, pepper, and lemon.",
+                f"Heat oil in an oven-safe skillet over medium heat.",
+                f"Cook fish for 3-4 minutes per side until golden.",
+                f"Transfer to oven and bake for 8-10 minutes.",
+                f"Garnish with fresh herbs and serve immediately."
+            ])
+        elif any(veg in " ".join(ingredient_names) for veg in ["bell pepper", "zucchini", "eggplant", "tomato"]):
+            directions.extend([
+                f"Preheat oven to 425°F (220°C).",
+                f"Wash and prepare all vegetables.",
+                f"Toss vegetables with olive oil, salt, and herbs.",
+                f"Arrange on baking sheet in single layer.",
+                f"Roast for 20-25 minutes until tender and golden.",
+                f"Season with additional herbs and serve warm."
+            ])
+        else:
+            directions.extend([
+                f"Prepare all ingredients according to recipe requirements.",
+                f"Heat cooking oil or butter in a large pan over medium heat.",
+                f"Add main ingredients and cook until tender.",
+                f"Season with salt, pepper, and herbs to taste.",
+                f"Simmer for 10-15 minutes to develop flavors.",
+                f"Garnish and serve hot."
+            ])
+        
+        return directions
     
     async def generate_emotional_rationale(
         self,

@@ -12,7 +12,7 @@ if %errorlevel% neq 0 (
     echo ❌ Failed to create virtual environment
     goto :eof
 )
-echo ✅ Virtual environment created
+echo [OK] Virtual environment created
 
 echo.
 echo Step 2: Activating virtual environment...
@@ -21,7 +21,7 @@ if %errorlevel% neq 0 (
     echo ❌ Failed to activate virtual environment
     goto :eof
 )
-echo ✅ Virtual environment activated
+echo [OK] Virtual environment activated
 
 echo.
 echo Step 3: Installing dependencies...
@@ -30,7 +30,7 @@ if %errorlevel% neq 0 (
     echo ❌ Failed to install dependencies
     goto :eof
 )
-echo ✅ Dependencies installed
+echo [OK] Dependencies installed
 
 echo.
 echo Step 4: Testing imports...
@@ -39,11 +39,11 @@ if %errorlevel% neq 0 (
     echo ❌ Import test failed
     goto :eof
 )
-echo ✅ All imports successful
+echo [OK] All imports successful
 
 echo.
 echo ========================================
-echo 🎉 Setup Complete!
+echo Setup Complete!
 echo ========================================
 echo.
 echo Next steps:

@@ -57,7 +57,9 @@ def run_setup_script():
             result = subprocess.run([str(setup_script)], 
                                   capture_output=True, 
                                   text=True, 
-                                  shell=True)
+                                  shell=True,
+                                  encoding='utf-8',
+                                  errors='ignore')
             if result.returncode == 0:
                 print("✅ Setup completed successfully!")
                 print("💡 Please restart the application after setup.")
@@ -86,9 +88,11 @@ app = FastAPI(
 @app.on_event("startup")
 async def startup_event():
     """
-    Run environment setup check on application startup
+    Application startup event - environment should be pre-configured
     """
-    check_and_setup_environment()
+    print("✅ SavorMe Backend API started successfully!")
+    print("📍 Backend URL: http://127.0.0.1:8000")
+    print("📚 API Docs: http://127.0.0.1:8000/docs")
 
 # Add CORS middleware
 cors_origins = settings.CORS_ORIGINS.split(",") if "," in settings.CORS_ORIGINS else [settings.CORS_ORIGINS]

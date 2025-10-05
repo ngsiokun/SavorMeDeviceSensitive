@@ -117,7 +117,9 @@ def run_setup_script():
         result = subprocess.run([str(setup_script)], 
                               capture_output=True, 
                               text=True, 
-                              shell=True)
+                              shell=True,
+                              encoding='utf-8',
+                              errors='ignore')
         
         if result.returncode == 0:
             print("✅ Setup script completed successfully!")

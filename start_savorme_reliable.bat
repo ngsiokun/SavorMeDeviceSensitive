@@ -2,12 +2,11 @@
 setlocal
 
 echo ========================================
-echo SavorMe Auto-Startup with Setup
+echo SavorMe Reliable Startup
 echo ========================================
 echo.
 
-echo 🚀 Starting SavorMe with automatic setup...
-echo.
+echo [INFO] Checking environment...
 
 REM Check if virtual environment exists
 if not exist "venv\Scripts\python.exe" (
@@ -43,12 +42,5 @@ echo.
 
 REM Start the application using virtual environment Python
 venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
-
-echo.
-echo ========================================
-echo SavorMe startup completed
-echo ========================================
-echo.
-pause
 
 endlocal
