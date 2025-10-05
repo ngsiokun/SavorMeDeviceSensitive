@@ -46,27 +46,33 @@
     }
 }
 
-@keyframes wiggle {
-    0%, 7% {
-        transform: rotateZ(0);
-    }
-    15% {
-        transform: rotateZ(-15deg);
-    }
-    20% {
-        transform: rotateZ(10deg);
+@keyframes cook {
+    0%, 100% {
+        transform: translateX(0px) rotateZ(0deg);
     }
     25% {
-        transform: rotateZ(-10deg);
+        transform: translateX(-8px) rotateZ(-5deg);
     }
-    30% {
-        transform: rotateZ(6deg);
+    50% {
+        transform: translateX(0px) rotateZ(0deg);
     }
-    35% {
-        transform: rotateZ(-4deg);
+    75% {
+        transform: translateX(8px) rotateZ(5deg);
     }
-    40%, 100% {
-        transform: rotateZ(0);
+}
+
+@keyframes panFlip {
+    0%, 100% {
+        transform: rotateZ(0deg) translateY(0px);
+    }
+    25% {
+        transform: rotateZ(-15deg) translateY(-2px);
+    }
+    50% {
+        transform: rotateZ(0deg) translateY(0px);
+    }
+    75% {
+        transform: rotateZ(15deg) translateY(-2px);
     }
 }
 
@@ -81,6 +87,21 @@
     }
 }
 
+@keyframes steam {
+    0% {
+        opacity: 0;
+        transform: translateY(0px) scale(0.8);
+    }
+    50% {
+        opacity: 0.7;
+        transform: translateY(-10px) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-20px) scale(1.2);
+    }
+}
+
 .loading-indicator {
     text-align: center;
     margin-top: 20px;
@@ -91,29 +112,34 @@
 }
 
 .loading-spinner {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 50px;
     margin: 0 auto 15px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Mario-like Chef Character */
+.loading-spinner::before {
+    content: "👨‍🍳";
+    font-size: 28px;
+    display: block;
+    animation: cook 1.2s infinite ease-in-out;
+    z-index: 2;
     position: relative;
 }
 
-/* Cute Chef Hat Spinner */
-.loading-spinner::before {
-    content: "👨‍🍳";
-    font-size: 32px;
-    display: block;
-    animation: bounce 1.5s infinite, wiggle 2s infinite;
-}
-
-/* Floating Food Icons */
+/* Frying Pan */
 .loading-spinner::after {
-    content: "🥘🍽️🍴";
+    content: "🍳";
+    font-size: 20px;
     position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 16px;
-    animation: float 2s infinite ease-in-out;
+    top: 8px;
+    right: 8px;
+    animation: panFlip 1.2s infinite ease-in-out;
+    z-index: 1;
 }
 
 .loading-indicator div:last-child {
@@ -123,21 +149,27 @@
     animation: pulse 2s infinite;
 }
 
-/* Add some sparkle effects */
-.loading-indicator::before {
-    content: "✨";
+/* Steam effects from the cooking */
+.loading-spinner .steam {
     position: absolute;
-    top: 10px;
-    left: 20px;
-    animation: sparkle 1.5s infinite;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    animation: steam 2s infinite;
+    z-index: 3;
 }
 
-.loading-indicator::after {
-    content: "⭐";
-    position: absolute;
-    top: 15px;
-    right: 25px;
-    animation: sparkle 2s infinite 0.5s;
+.loading-spinner .steam:nth-child(2) {
+    left: 45%;
+    font-size: 10px;
+    animation: steam 2.5s infinite 0.3s;
+}
+
+.loading-spinner .steam:nth-child(3) {
+    left: 55%;
+    font-size: 8px;
+    animation: steam 3s infinite 0.6s;
 }
 
 .evidence-note {
