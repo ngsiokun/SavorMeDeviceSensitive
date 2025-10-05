@@ -17,7 +17,7 @@ py --version
 start_backend.bat
 
 # Option 2: Manual command
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+py -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 ### 3. Start Frontend Server (In New Terminal)
@@ -27,7 +27,7 @@ start_demo.bat
 
 # Option 2: Manual command
 cd demo_app
-python app.py
+py app.py
 ```
 
 ### 4. Verify Both Servers Are Running
