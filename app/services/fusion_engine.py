@@ -47,27 +47,20 @@ class FusionEngine:
     # Randomized for variety while maintaining nutrient targets
     MOOD_SEARCH_KEYWORDS: Dict[MoodType, List[str]] = {
         MoodType.STRESSED: [
-            # High magnesium + omega-3 options
-            ["mackerel", "spinach"],
-            ["chicken", "broccoli"],
-            ["beef", "kale"],
-            ["pork", "bok choy"],
-            ["tofu", "edamame"],
-            ["shrimp", "asparagus"],
-            ["turkey", "green beans"],
-            ["eggs", "avocado"],
-            ["almonds", "quinoa"],
-            ["black beans", "brown rice"],
-            ["sardines", "kale"],
-            ["walnuts", "spinach"],
-            ["chia seeds", "banana"],
-            ["pumpkin seeds", "oats"],
-            ["tuna", "broccoli"],
-            ["salmon", "brussels sprouts"],
-            ["almonds", "artichoke"],
-            ["tofu", "cauliflower"],
-            ["chicken", "cabbage"],
-            ["beef", "carrots"]
+            # High magnesium + omega-3 options - Expanded variety
+            ["mackerel", "spinach"], ["chicken", "broccoli"], ["beef", "kale"], ["pork", "bok choy"],
+            ["tofu", "edamame"], ["shrimp", "asparagus"], ["turkey", "green beans"], ["eggs", "avocado"],
+            ["almonds", "quinoa"], ["black beans", "brown rice"], ["sardines", "kale"], ["walnuts", "spinach"],
+            ["chia seeds", "banana"], ["pumpkin seeds", "oats"], ["tuna", "broccoli"], ["salmon", "brussels sprouts"],
+            ["almonds", "artichoke"], ["tofu", "cauliflower"], ["chicken", "cabbage"], ["beef", "carrots"],
+            # Additional variety for stress relief
+            ["trout", "asparagus"], ["halibut", "sweet potato"], ["cod", "zucchini"], ["herring", "beets"],
+            ["cashews", "mango"], ["pecans", "papaya"], ["brazil nuts", "pineapple"], ["pistachios", "coconut"],
+            ["sunflower seeds", "apple"], ["sesame seeds", "pear"], ["flax seeds", "orange"], ["poppy seeds", "grapefruit"],
+            ["edamame", "cucumber"], ["tempeh", "radish"], ["seitan", "celery"], ["lentils", "bell pepper"],
+            ["chickpeas", "tomato"], ["black beans", "onion"], ["kidney beans", "garlic"], ["navy beans", "ginger"],
+            ["quinoa", "mushroom"], ["brown rice", "eggplant"], ["wild rice", "squash"], ["barley", "corn"],
+            ["buckwheat", "peas"], ["millet", "green beans"], ["amaranth", "carrots"], ["teff", "parsnips"]
         ],
         MoodType.FATIGUED: [
             # High iron + vitamin C options
@@ -93,27 +86,20 @@ class FusionEngine:
             ["eggs", "carrots"]
         ],
         MoodType.LOW_MOOD: [
-            # High fiber + omega-3 options  
-            ["mackerel", "quinoa"],
-            ["chicken", "brown rice"],
-            ["fish", "whole grains"],
-            ["turkey", "oats"],
-            ["beans", "vegetables"],
-            ["lentils", "greens"],
-            ["chickpeas", "spinach"],
-            ["tofu", "broccoli"],
-            ["eggs", "avocado"],
-            ["tuna", "salad"],
-            ["sardines", "quinoa"],
-            ["walnuts", "oats"],
-            ["chia seeds", "berries"],
-            ["hemp seeds", "banana"],
-            ["trout", "brown rice"],
-            ["salmon", "brussels sprouts"],
-            ["chicken", "artichoke"],
-            ["tofu", "cauliflower"],
-            ["turkey", "cabbage"],
-            ["eggs", "carrots"]
+            # High fiber + omega-3 options - Expanded variety
+            ["mackerel", "quinoa"], ["chicken", "brown rice"], ["fish", "whole grains"], ["turkey", "oats"],
+            ["beans", "vegetables"], ["lentils", "greens"], ["chickpeas", "spinach"], ["tofu", "broccoli"],
+            ["eggs", "avocado"], ["tuna", "salad"], ["sardines", "quinoa"], ["walnuts", "oats"],
+            ["chia seeds", "berries"], ["hemp seeds", "banana"], ["trout", "brown rice"], ["salmon", "brussels sprouts"],
+            ["chicken", "artichoke"], ["tofu", "cauliflower"], ["turkey", "cabbage"], ["eggs", "carrots"],
+            # Additional variety for mood support
+            ["halibut", "wild rice"], ["cod", "barley"], ["herring", "buckwheat"], ["anchovies", "millet"],
+            ["flax seeds", "blueberries"], ["walnuts", "raspberries"], ["pecans", "blackberries"], ["almonds", "strawberries"],
+            ["cashews", "cranberries"], ["brazil nuts", "goji berries"], ["pistachios", "acai"], ["sunflower seeds", "elderberries"],
+            ["edamame", "kale"], ["tempeh", "collard greens"], ["seitan", "swiss chard"], ["lentils", "arugula"],
+            ["black beans", "watercress"], ["kidney beans", "dandelion greens"], ["navy beans", "mustard greens"], ["pinto beans", "beet greens"],
+            ["quinoa", "sweet potato"], ["brown rice", "butternut squash"], ["wild rice", "acorn squash"], ["barley", "pumpkin"],
+            ["buckwheat", "beets"], ["millet", "carrots"], ["amaranth", "parsnips"], ["teff", "turnips"]
         ],
         MoodType.IRRITABLE: [
             # High protein + fiber, low sugar options

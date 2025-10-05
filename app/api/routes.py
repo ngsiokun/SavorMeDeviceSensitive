@@ -16,6 +16,7 @@ from app.services.edamam_client import edamam_client
 from app.services.openrouter_client import openrouter_client
 from app.services.mood_nutrition_engine import get_mood_nutrition_engine
 from app.services.canva_client import canva_client
+from app.services.recipe_rotation import recipe_rotation_service
 
 
 router = APIRouter()
@@ -316,9 +317,39 @@ async def get_recipe_recommendation(
         if not scored_recipes:
             raise HTTPException(status_code=404, detail="No recipes found matching criteria")
         
-        # Pick best recipe
-        best = scored_recipes[0]
+        # Apply recipe rotation for variety
+        session_id = recipe_rotation_service.get_session_id(user_profile.dict())
+        
+        # Convert to Recipe objects for rotation service
+        candidate_recipes = []
+        for scored_recipe in scored_recipes[:5]:  # Consider top 5 for variety
+            recipe_obj = edamam_client._parse_recipe(scored_recipe["recipe_data"])
+            candidate_recipes.append(recipe_obj)
+        
+        # Filter out recent recipes and apply variety boosting
+        filtered_recipes = recipe_rotation_service.filter_recent_recipes(candidate_recipes, session_id)
+        if not filtered_recipes:
+            filtered_recipes = candidate_recipes  # Fallback if all filtered out
+        
+        variety_boosted_recipes = recipe_rotation_service.get_variety_boost(filtered_recipes, session_id)
+        
+        # Pick the best recipe from variety-boosted selection
+        selected_recipe = variety_boosted_recipes[0]
+        
+        # Find the corresponding scored recipe data
+        best = None
+        for scored_recipe in scored_recipes:
+            if edamam_client._parse_recipe(scored_recipe["recipe_data"]).name == selected_recipe.name:
+                best = scored_recipe
+                break
+        
+        if not best:
+            best = scored_recipes[0]  # Fallback to highest scored
+        
         recipe = edamam_client._parse_recipe(best["recipe_data"])
+        
+        # Record this recipe as used for future rotation
+        recipe_rotation_service.record_recipe_used(recipe, session_id)
         
         # Generate cooking directions if not available or just a link
         if (not recipe.cooking_directions or 

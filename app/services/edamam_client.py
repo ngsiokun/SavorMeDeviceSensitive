@@ -7,6 +7,7 @@ from typing import List, Optional, Dict, Any
 from app.core.config import settings
 from app.models.recipe import Recipe, Ingredient, NutritionInfo
 from app.models.user import UserProfile, NutritionTargets
+from app.services.nutrient_web_lookup import nutrient_web_lookup
 from typing import Dict, Any
 
 
@@ -106,6 +107,22 @@ class EdamamClient:
         for hit in data.get("hits", [])[:max_results]:
             recipe_data = hit.get("recipe", {})
             recipe = self._parse_recipe(recipe_data)
+            
+            # Enhance nutrition data with web lookup
+            if recipe.ingredients:
+                try:
+                    web_nutrients = await nutrient_web_lookup.get_detailed_nutrients(
+                        recipe.name, recipe.ingredients
+                    )
+                    
+                    # Merge web nutrients with existing nutrition data
+                    if web_nutrients:
+                        recipe.nutrition = self._merge_nutrition_data(recipe.nutrition, web_nutrients)
+                        print(f"Enhanced {recipe.name} with web nutrients: {list(web_nutrients.keys())}")
+                        
+                except Exception as e:
+                    print(f"Error enhancing nutrients for {recipe.name}: {e}")
+            
             recipes.append(recipe)
         
         print(f"Initial search for '{query}' found {len(recipes)} recipes")
@@ -358,6 +375,65 @@ class EdamamClient:
         
         print(f"DEBUG: Final extracted nutrients: {nutrients_raw}")
         return nutrients_raw
+    
+    def _merge_nutrition_data(self, existing_nutrition: NutritionInfo, web_nutrients: Dict[str, float]) -> NutritionInfo:
+        """
+        Merge web-based nutrient data with existing nutrition information
+        
+        Args:
+            existing_nutrition: Existing nutrition data from Edamam
+            web_nutrients: Additional nutrients from web lookup
+            
+        Returns:
+            Enhanced nutrition info
+        """
+        # Create a copy of existing nutrition
+        enhanced_nutrition = NutritionInfo(
+            calories=existing_nutrition.calories,
+            protein_g=existing_nutrition.protein_g,
+            carbohydrate_g=existing_nutrition.carbohydrate_g,
+            fat_g=existing_nutrition.fat_g,
+            fiber_g=existing_nutrition.fiber_g,
+            sugar_g=existing_nutrition.sugar_g,
+            sodium_mg=existing_nutrition.sodium_mg,
+            cholesterol_mg=existing_nutrition.cholesterol_mg,
+            saturated_fat_g=existing_nutrition.saturated_fat_g,
+            trans_fat_g=existing_nutrition.trans_fat_g,
+            monounsaturated_fat_g=existing_nutrition.monounsaturated_fat_g,
+            polyunsaturated_fat_g=existing_nutrition.polyunsaturated_fat_g,
+            omega3_g=existing_nutrition.omega3_g,
+            omega6_g=existing_nutrition.omega6_g,
+            calcium_mg=existing_nutrition.calcium_mg,
+            iron_mg=existing_nutrition.iron_mg,
+            magnesium_mg=existing_nutrition.magnesium_mg,
+            phosphorus_mg=existing_nutrition.phosphorus_mg,
+            potassium_mg=existing_nutrition.potassium_mg,
+            zinc_mg=existing_nutrition.zinc_mg,
+            copper_mg=existing_nutrition.copper_mg,
+            manganese_mg=existing_nutrition.manganese_mg,
+            selenium_mcg=existing_nutrition.selenium_mcg,
+            vitamin_a_iu=existing_nutrition.vitamin_a_iu,
+            vitamin_c_mg=existing_nutrition.vitamin_c_mg,
+            vitamin_d_iu=existing_nutrition.vitamin_d_iu,
+            vitamin_e_mg=existing_nutrition.vitamin_e_mg,
+            vitamin_k_mcg=existing_nutrition.vitamin_k_mcg,
+            thiamin_mg=existing_nutrition.thiamin_mg,
+            riboflavin_mg=existing_nutrition.riboflavin_mg,
+            niacin_mg=existing_nutrition.niacin_mg,
+            vitamin_b6_mg=existing_nutrition.vitamin_b6_mg,
+            folate_mcg=existing_nutrition.folate_mcg,
+            vitamin_b12_mcg=existing_nutrition.vitamin_b12_mcg,
+            pantothenic_acid_mg=existing_nutrition.pantothenic_acid_mg,
+            biotin_mcg=existing_nutrition.biotin_mcg,
+            choline_mg=existing_nutrition.choline_mg
+        )
+        
+        # Add web nutrients (prefer web data if available)
+        for nutrient, value in web_nutrients.items():
+            if hasattr(enhanced_nutrition, nutrient):
+                setattr(enhanced_nutrition, nutrient, value)
+        
+        return enhanced_nutrition
     
     def build_search_query_from_mood(
         self,
