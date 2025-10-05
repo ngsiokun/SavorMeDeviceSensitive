@@ -74,12 +74,12 @@ cd SavorMe-backend
 
 2. **Create virtual environment**
 ```bash
-python -m venv venv
-
-# Windows
-venv\Scripts\activate
+# Windows (use py command)
+py -m venv venv
+venv\Scripts\activate.bat
 
 # macOS/Linux
+python3 -m venv venv
 source venv/bin/activate
 ```
 
@@ -90,8 +90,11 @@ pip install -r requirements.txt
 
 4. **Configure environment variables**
 ```bash
-cp .env.example .env
-# Edit .env with your API keys
+# Create .env file with your API keys
+# Required variables:
+# EDAMAM_APP_ID=your_edamam_app_id
+# EDAMAM_APP_KEY=your_edamam_app_key
+# OPENROUTER_API_KEY=your_openrouter_api_key
 ```
 
 5. **Run the server**
@@ -284,6 +287,14 @@ Contributions are welcome! Please:
 ## 📄 License
 
 This project is licensed under the MIT License.
+
+## 📚 Additional Documentation
+
+- **[STARTUP_GUIDE.md](STARTUP_GUIDE.md)** - Comprehensive startup and troubleshooting guide
+- **[QUICK_START_COMMANDS.md](QUICK_START_COMMANDS.md)** - Copy-paste commands for quick setup
+- **[FINAL_VERIFICATION_CHECKLIST.md](FINAL_VERIFICATION_CHECKLIST.md)** - Complete verification checklist
+- **[PAGE_LAYOUTS_REFERENCE.md](PAGE_LAYOUTS_REFERENCE.md)** - Complete layout and file structure reference
+- **[EVIDENCE_BASED_MOODS_v2.md](EVIDENCE_BASED_MOODS_v2.md)** - Scientific foundation and mood mapping
 
 ## 🙏 Acknowledgments
 
