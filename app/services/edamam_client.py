@@ -110,15 +110,19 @@ class EdamamClient:
         
         print(f"Initial search for '{query}' found {len(recipes)} recipes")
         
-        # If no results found and we have restrictive parameters, try a more flexible search
-        if not recipes and (calories_range or protein_range or cuisine_types):
-            print(f"No results with restrictive parameters, trying flexible search for: {query}")
-            print(f"Restrictive params - calories: {calories_range}, protein: {protein_range}, cuisine: {cuisine_types}")
+        # If no results found, try a more flexible search
+        if not recipes:
+            print(f"No results found for '{query}', trying flexible search...")
+            print(f"Original params - calories: {calories_range}, protein: {protein_range}, cuisine: {cuisine_types}")
+            
+            # Try with just the first keyword if query has multiple words
+            simple_query = query.split()[0] if query.split() else query
+            print(f"Trying simple query: '{simple_query}'")
             
             # Create a more flexible search with only basic parameters
             flexible_params = [
                 ("type", "public"),
-                ("q", query),
+                ("q", simple_query),
                 ("app_id", self.app_id),
                 ("app_key", self.app_key),
             ]
@@ -139,8 +143,43 @@ class EdamamClient:
                     recipes.append(recipe)
                     
                 print(f"Flexible search found {len(recipes)} recipes")
+                
+                # If still no results, try with generic healthy keywords
+                if not recipes:
+                    print("Trying generic healthy keywords...")
+                    generic_queries = ["healthy", "nutritious", "balanced", "protein", "vegetables"]
+                    
+                    for generic_query in generic_queries:
+                        if recipes:
+                            break
+                            
+                        generic_params = [
+                            ("type", "public"),
+                            ("q", generic_query),
+                            ("app_id", self.app_id),
+                            ("app_key", self.app_key),
+                        ]
+                        
+                        for field in ["uri", "label", "image", "ingredients", "calories", "totalNutrients"]:
+                            generic_params.append(("field", field))
+                        
+                        try:
+                            response = await client.get(self.base_url, params=generic_params)
+                            response.raise_for_status()
+                            data = response.json()
+                            
+                            for hit in data.get("hits", [])[:max_results]:
+                                recipe_data = hit.get("recipe", {})
+                                recipe = self._parse_recipe(recipe_data)
+                                recipes.append(recipe)
+                                
+                            print(f"Generic search '{generic_query}' found {len(recipes)} recipes")
+                        except Exception as e:
+                            print(f"Generic search '{generic_query}' failed: {e}")
+                            continue
+                            
             except Exception as e:
-                print(f"Flexible search also failed: {e}")
+                print(f"Flexible search failed: {e}")
         
         return recipes
     
