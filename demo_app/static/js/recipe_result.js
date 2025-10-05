@@ -14,7 +14,7 @@ function generatePage() {
     }
     
     try {
-        const result = JSON.parse(resultData);
+    const result = JSON.parse(resultData);
         container.innerHTML = generateRecipePage(result);
         addEventListeners();
     } catch (error) {
@@ -62,18 +62,18 @@ function generateRecipePage(data) {
         imageHTML = `
             <img src="${recipe.image_url}" class="recipe-image" alt="${recipe.name}" 
                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="recipe-image-placeholder" style="display: none;">
-                <div class="placeholder-icon">🥘</div>
-                <div class="placeholder-text">${recipe.name}</div>
-                <div class="placeholder-subtitle">Delicious Recipe</div>
+                     <div class="recipe-image-placeholder" style="display: none;">
+                         <div class="placeholder-icon">🥘</div>
+                         <div class="placeholder-text">${recipe.name}</div>
+                         <div class="placeholder-subtitle">Delicious Recipe</div>
             </div>
         `;
     } else {
         imageHTML = `
             <div class="recipe-image-placeholder">
-                <div class="placeholder-icon">🥘</div>
-                <div class="placeholder-text">${recipe.name}</div>
-                <div class="placeholder-subtitle">Delicious Recipe</div>
+                         <div class="placeholder-icon">🥘</div>
+                         <div class="placeholder-text">${recipe.name}</div>
+                         <div class="placeholder-subtitle">Delicious Recipe</div>
             </div>
         `;
     }
@@ -220,8 +220,8 @@ async function generateNewRecommendation() {
                         <p class="loading-text">Finding your perfect recipe...</p>
                     </div>
                 </div>
-            </div>
-        `;
+                </div>
+            `;
         
         const payload = {
             mood_blend: {
@@ -289,7 +289,7 @@ function showNutrientAnalysis() {
                     
                     <!-- Why This Recipe -->
                     <div class="analysis-section">
-                        <div class="section-header">
+        <div class="section-header">
                             <span class="section-icon">💭</span>
                             <h3>Why This Recipe?</h3>
                         </div>
@@ -304,74 +304,74 @@ function showNutrientAnalysis() {
                                 <div class="mood-breakdown-text">${breakdown.explanation}</div>
                             </div>
                         `).join('') : ''}
-                    </div>
-                    
+        </div>
+    
                     <!-- Nutrition Breakdown -->
                     <div class="analysis-section">
-                        <div class="section-header">
+        <div class="section-header">
                             <span class="section-icon">📊</span>
                             <h3>Nutrition Breakdown</h3>
-                        </div>
+        </div>
                         <div class="nutrition-table">
                             <table>
-                                <thead>
-                                    <tr>
-                                        <th>Nutrient</th>
-                                        <th>This Meal</th>
-                                        <th>Daily Target</th>
-                                        <th>% of Day</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Calories</td>
+            <thead>
+                <tr>
+                    <th>Nutrient</th>
+                    <th>This Meal</th>
+                    <th>Daily Target</th>
+                    <th>% of Day</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Calories</td>
                                         <td>${Math.round(nutrition?.recipe_calories || 0)} kcal</td>
                                         <td>${Math.round(nutrition?.target_calories || 0)} kcal</td>
                                         <td class="percentage">${nutrition?.percentage_of_daily_calories || 0}%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Protein</td>
+                </tr>
+                <tr>
+                    <td>Protein</td>
                                         <td>${Math.round(nutrition?.recipe_protein || 0)}g</td>
                                         <td>${Math.round(nutrition?.target_protein || 0)}g</td>
                                         <td class="percentage">${nutrition?.percentage_of_daily_protein || 0}%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Fiber</td>
+                </tr>
+                <tr>
+                    <td>Fiber</td>
                                         <td>${Math.round(nutrition?.recipe_fiber || 0)}g</td>
                                         <td>${Math.round(nutrition?.target_fiber || 0)}g</td>
                                         <td class="percentage">${nutrition?.percentage_of_daily_fiber || 0}%</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                </tr>
+            </tbody>
+        </table>
                         </div>
                         
                                 <div class="nutrient-highlights">
                                     <h4>Nutrient Highlights:</h4>
                                     <ul>
                                         ${generateNutrientHighlights(recipe)}
-                                    </ul>
-                                </div>
+                </ul>
+            </div>
                     </div>
-                    
+    
                     <!-- Scientific Evidence -->
                     <div class="analysis-section">
-                        <div class="section-header">
+            <div class="section-header">
                             <span class="section-icon">🧪</span>
                             <h3>Scientific Evidence</h3>
                         </div>
                         <div class="evidence-rating">
                             <div class="stars">★★★★★</div>
                             <div class="evidence-text">Evidence-Based Recommendation</div>
-                        </div>
+            </div>
                         <div class="evidence-details">
                             <p>This recommendation is based on:</p>
-                            <ul>
-                                <li>Peer-reviewed nutritional research</li>
-                                <li>Mediterranean diet studies (SMILES trial)</li>
-                                <li>Nutrient-mood correlation meta-analyses</li>
-                            </ul>
-                        </div>
-                        <div class="disclaimer">
+                <ul>
+                    <li>Peer-reviewed nutritional research</li>
+                    <li>Mediterranean diet studies (SMILES trial)</li>
+                    <li>Nutrient-mood correlation meta-analyses</li>
+                </ul>
+            </div>
+            <div class="disclaimer">
                             <small>This app provides food suggestions based on science and is not a substitute for professional medical advice.</small>
                         </div>
                     </div>
@@ -381,8 +381,8 @@ function showNutrientAnalysis() {
                             <button class="btn btn-primary" onclick="generateNewRecommendation()">Another Recipe Suggestion</button>
                         </div>
             </div>
-        </div>
-    `;
+            </div>
+        `;
     
     // Add modal to page
     document.body.insertAdjacentHTML('beforeend', modalHTML);
@@ -396,80 +396,123 @@ function closeNutrientModal() {
     }
 }
 
-// Generate nutrient highlights for only non-zero nutrients
-function generateNutrientHighlights(recipe) {
-    const nutrients = [
-        {
-            name: 'Magnesium',
-            value: Math.round(recipe.nutrition?.magnesium_mg || 0),
-            unit: 'mg',
-            target: 120,
-            benefit: 'supports nervous system and stress response'
-        },
-        {
-            name: 'Omega 3 EPA DHA',
-            value: Math.round((recipe.nutrition?.omega3_g || 0) * 10) / 10,
-            unit: 'g',
-            target: 2.0,
-            benefit: 'anti-inflammatory, supports mood regulation'
-        },
-        {
-            name: 'Iron',
-            value: Math.round(recipe.nutrition?.iron_mg || 0),
-            unit: 'mg',
-            target: 18,
-            benefit: 'prevents fatigue and supports cognitive function'
-        },
-        {
-            name: 'Folate (B9)',
-            value: Math.round(recipe.nutrition?.folate_mcg || 0),
-            unit: 'mcg',
-            target: 400,
-            benefit: 'essential for neurotransmitter synthesis and mood stability'
-        },
-        {
-            name: 'Vitamin B12',
-            value: Math.round(recipe.nutrition?.vitamin_b12_mcg || 0),
-            unit: 'mcg',
-            target: 2.4,
-            benefit: 'supports brain function and prevents depression'
-        },
-        {
-            name: 'Zinc',
-            value: Math.round(recipe.nutrition?.zinc_mg || 0),
-            unit: 'mg',
-            target: 11,
-            benefit: 'regulates stress response and immune function'
-        },
-        {
-            name: 'Vitamin D',
-            value: Math.round(recipe.nutrition?.vitamin_d_iu || 0),
-            unit: 'IU',
-            target: 2000,
-            benefit: 'crucial for mood regulation and seasonal depression'
-        },
-        {
-            name: 'Fiber',
-            value: Math.round(recipe.nutrition?.fiber_g || 0),
-            unit: 'g',
-            target: 28,
-            benefit: 'stabilizes blood sugar and prevents energy crashes'
+        // Generate nutrient highlights with fallback for limited micronutrient data
+        function generateNutrientHighlights(recipe) {
+            const nutrients = [
+                {
+                    name: 'Magnesium',
+                    value: Math.round(recipe.nutrition?.magnesium_mg || 0),
+                    unit: 'mg',
+                    target: 120,
+                    benefit: 'supports nervous system and stress response'
+                },
+                {
+                    name: 'Omega 3 EPA DHA',
+                    value: Math.round((recipe.nutrition?.omega3_g || 0) * 10) / 10,
+                    unit: 'g',
+                    target: 2.0,
+                    benefit: 'anti-inflammatory, supports mood regulation'
+                },
+                {
+                    name: 'Iron',
+                    value: Math.round(recipe.nutrition?.iron_mg || 0),
+                    unit: 'mg',
+                    target: 18,
+                    benefit: 'prevents fatigue and supports cognitive function'
+                },
+                {
+                    name: 'Folate (B9)',
+                    value: Math.round(recipe.nutrition?.folate_mcg || 0),
+                    unit: 'mcg',
+                    target: 400,
+                    benefit: 'essential for neurotransmitter synthesis and mood stability'
+                },
+                {
+                    name: 'Vitamin B12',
+                    value: Math.round(recipe.nutrition?.vitamin_b12_mcg || 0),
+                    unit: 'mcg',
+                    target: 2.4,
+                    benefit: 'supports brain function and prevents depression'
+                },
+                {
+                    name: 'Zinc',
+                    value: Math.round(recipe.nutrition?.zinc_mg || 0),
+                    unit: 'mg',
+                    target: 11,
+                    benefit: 'regulates stress response and immune function'
+                },
+                {
+                    name: 'Vitamin D',
+                    value: Math.round(recipe.nutrition?.vitamin_d_iu || 0),
+                    unit: 'IU',
+                    target: 2000,
+                    benefit: 'crucial for mood regulation and seasonal depression'
+                },
+                {
+                    name: 'Fiber',
+                    value: Math.round(recipe.nutrition?.fiber_g || 0),
+                    unit: 'g',
+                    target: 28,
+                    benefit: 'stabilizes blood sugar and prevents energy crashes'
+                }
+            ];
+            
+            // Filter to only show nutrients with non-zero values
+            const nonZeroNutrients = nutrients.filter(nutrient => nutrient.value > 0);
+            
+            // If only fiber has values, provide more comprehensive highlights
+            if (nonZeroNutrients.length <= 1) {
+                const highlights = [];
+                
+                // Always include macronutrient benefits
+                const calories = Math.round(recipe.nutrition?.calories || 0);
+                const protein = Math.round(recipe.nutrition?.protein_g || 0);
+                const fiber = Math.round(recipe.nutrition?.fiber_g || 0);
+                
+                if (calories > 0) {
+                    highlights.push(`<li><strong>Energy:</strong> ${calories} calories provide sustained energy for mood stability and focus.</li>`);
+                }
+                
+                if (protein > 0) {
+                    highlights.push(`<li><strong>Protein:</strong> ${protein}g supports neurotransmitter production and helps regulate blood sugar levels.</li>`);
+                }
+                
+                if (fiber > 0) {
+                    highlights.push(`<li><strong>Fiber:</strong> ${fiber}g stabilizes blood sugar and prevents energy crashes that can affect mood.</li>`);
+                }
+                
+                // Add ingredient-based nutrient benefits
+                const ingredients = recipe.ingredients || [];
+                const ingredientText = ingredients.map(ing => ing.name.toLowerCase()).join(' ');
+                
+                if (ingredientText.includes('leafy') || ingredientText.includes('spinach') || ingredientText.includes('kale')) {
+                    highlights.push(`<li><strong>Leafy Greens:</strong> Rich in folate, iron, and magnesium for mood support and stress reduction.</li>`);
+                }
+                
+                if (ingredientText.includes('fish') || ingredientText.includes('salmon') || ingredientText.includes('tuna') || ingredientText.includes('mackerel')) {
+                    highlights.push(`<li><strong>Omega-3 Fatty Acids:</strong> Anti-inflammatory properties support brain health and mood regulation.</li>`);
+                }
+                
+                if (ingredientText.includes('nuts') || ingredientText.includes('almond') || ingredientText.includes('walnut')) {
+                    highlights.push(`<li><strong>Healthy Fats:</strong> Support brain function and help maintain stable mood throughout the day.</li>`);
+                }
+                
+                if (ingredientText.includes('legume') || ingredientText.includes('bean') || ingredientText.includes('lentil') || ingredientText.includes('chickpea')) {
+                    highlights.push(`<li><strong>Plant Protein:</strong> Provides amino acids for neurotransmitter synthesis and sustained energy.</li>`);
+                }
+                
+                if (ingredientText.includes('whole grain') || ingredientText.includes('quinoa') || ingredientText.includes('brown rice') || ingredientText.includes('oats')) {
+                    highlights.push(`<li><strong>Complex Carbohydrates:</strong> Steady glucose release supports stable mood and energy levels.</li>`);
+                }
+                
+                return highlights.join('');
+            }
+            
+            // Generate HTML for non-zero nutrients
+            return nonZeroNutrients.map(nutrient => 
+                `<li><strong>${nutrient.name}:</strong> ${nutrient.value} ${nutrient.unit} (target: ${nutrient.target} ${nutrient.unit}) — ${nutrient.benefit}.</li>`
+            ).join('');
         }
-    ];
-    
-    // Filter to only show nutrients with non-zero values
-    const nonZeroNutrients = nutrients.filter(nutrient => nutrient.value > 0);
-    
-    // If no nutrients have values, show a message
-    if (nonZeroNutrients.length === 0) {
-        return '<li><em>This recipe provides essential macronutrients (calories, protein, fiber) that support your mood and energy levels.</em></li>';
-    }
-    
-    // Generate HTML for non-zero nutrients
-    return nonZeroNutrients.map(nutrient => 
-        `<li><strong>${nutrient.name}:</strong> ${nutrient.value} ${nutrient.unit} (target: ${nutrient.target} ${nutrient.unit}) — ${nutrient.benefit}.</li>`
-    ).join('');
-}
 
 // Generate detailed rationale with nutritional information
 function generateDetailedRationale(recipe, nutrition, rationale) {
