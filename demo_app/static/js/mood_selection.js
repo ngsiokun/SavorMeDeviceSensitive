@@ -100,14 +100,14 @@ async function generateRecommendation() {
     loadingIndicator.style.display = 'block';
     generateBtn.disabled = true;
     
-    // Cute loading messages with realistic timing
+    // Cute loading messages with extended timing
     const loadingMessages = [
         { text: "Finding your perfect recipe...", delay: 0 },
-        { text: "Analyzing your mood... 🧠", delay: 2000 },
-        { text: "Searching for the best ingredients... 🥬", delay: 4000 },
-        { text: "Crafting your personalized recipe... 👨‍🍳", delay: 6000 },
-        { text: "Adding a sprinkle of magic... ✨", delay: 8000 },
-        { text: "Almost ready... just a moment! 🍽️", delay: 10000 }
+        { text: "Analyzing your mood... 🧠", delay: 3000 },
+        { text: "Searching for the best ingredients... 🥬", delay: 6000 },
+        { text: "Crafting your personalized recipe... 👨‍🍳", delay: 9000 },
+        { text: "Adding a sprinkle of magic... ✨", delay: 12000 },
+        { text: "Almost ready... just a moment! 🍽️", delay: 15000 }
     ];
     
     let messageIndex = 0;
@@ -116,7 +116,7 @@ async function generateRecommendation() {
             loadingText.textContent = loadingMessages[messageIndex].text;
             messageIndex++;
         }
-    }, 2000);
+    }, 3000);
     
     try {
         // Build request payload
