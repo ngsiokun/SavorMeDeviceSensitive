@@ -1,4 +1,4 @@
-# Evidence-Based Moods v2.0.0 - Focus on Scientific Rigor
+# Evidence-Based Moods v2.1.0 - Focus on Scientific Rigor
 
 ## 🎯 Major Change: 12 Moods → 4 Evidence-Based Moods
 
@@ -337,8 +337,8 @@ if mood_id in ["dreamy", "focused", ...]:  # Now invalid
 
 ---
 
-**Version**: 2.0.0  
-**Date**: 2025-10-01  
+**Version**: 2.1.0  
+**Date**: 2025-10-05  
 **Status**: Production Ready  
 **Breaking Change**: Yes - Old mood IDs no longer supported
 
