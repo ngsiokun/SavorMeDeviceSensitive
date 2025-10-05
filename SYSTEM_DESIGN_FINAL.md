@@ -326,8 +326,8 @@ All documentation is available in the repository:
 
 ---
 
-**Version**: 2.0.0  
-**Date**: October 1, 2025  
+**Version**: 2.1.0  
+**Date**: October 5, 2025  
 **Status**: MVP Complete - Ready for Testing  
 **GitHub**: https://github.com/ngsiokun/SavorMe-backend
 
