@@ -38,9 +38,7 @@ function displayRecipe(data) {
         directionsHTML += '</ol></div>';
     }
     
-    if (recipe.source_url) {
-        directionsHTML += `<div class="source-link"><a href="${recipe.source_url}" target="_blank">📖 View Full Recipe</a></div>`;
-    }
+    // Removed external link to keep users on the platform
     
     // Create image HTML with fallback
     let imageHTML = '';
