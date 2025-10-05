@@ -56,6 +56,29 @@ app/
 
 ## 🚀 Getting Started
 
+### 🎯 Quick Start Options
+
+#### **Option 1: Automatic Setup (Recommended)**
+```bash
+# Clone and start with automatic setup
+git clone https://github.com/ngsiokun/SavorMe-backend.git
+cd SavorMe-backend
+start_savorme_auto.bat
+```
+
+#### **Option 2: Python Direct Start**
+```bash
+# Clone and start with Python setup
+git clone https://github.com/ngsiokun/SavorMe-backend.git
+cd SavorMe-backend
+py start_with_setup.py
+```
+
+#### **Option 3: Manual Setup**
+Follow the detailed installation steps below.
+
+## 📋 Detailed Installation
+
 ### Prerequisites
 
 - Python 3.8+

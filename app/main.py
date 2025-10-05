@@ -2,11 +2,75 @@
 SavorMe Backend - Main FastAPI Application
 Mood-Based Recipe Companion Backend
 """
+import os
+import sys
+import subprocess
+from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .core.config import settings
 from .api.routes import router
+
+
+def check_and_setup_environment():
+    """
+    Check if the environment is properly set up and run setup if needed
+    """
+    print("🔍 Checking SavorMe environment setup...")
+    
+    # Check if .env file exists
+    env_file = Path(".env")
+    if not env_file.exists():
+        print("⚠️  .env file not found. Running setup...")
+        run_setup_script()
+        return
+    
+    # Check if virtual environment is activated
+    if not hasattr(sys, 'real_prefix') and not (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix):
+        print("⚠️  Virtual environment not detected. Please activate venv first.")
+        print("💡 Run: venv\\Scripts\\activate.bat (Windows) or source venv/bin/activate (Linux/Mac)")
+        return
+    
+    # Check if required packages are installed
+    try:
+        import fastapi
+        import uvicorn
+        import requests
+        print("✅ Environment setup verified successfully!")
+    except ImportError as e:
+        print(f"⚠️  Missing required package: {e}")
+        print("💡 Run: pip install -r requirements.txt")
+        return
+
+
+def run_setup_script():
+    """
+    Run the automated setup script
+    """
+    print("🚀 Running automated setup...")
+    
+    setup_script = Path("setup_new_clone.bat")
+    if setup_script.exists():
+        try:
+            # Run the setup script
+            result = subprocess.run([str(setup_script)], 
+                                  capture_output=True, 
+                                  text=True, 
+                                  shell=True)
+            if result.returncode == 0:
+                print("✅ Setup completed successfully!")
+                print("💡 Please restart the application after setup.")
+            else:
+                print(f"❌ Setup failed: {result.stderr}")
+        except Exception as e:
+            print(f"❌ Error running setup: {e}")
+    else:
+        print("⚠️  Setup script not found. Please run setup manually:")
+        print("1. Create virtual environment: py -m venv venv")
+        print("2. Activate venv: venv\\Scripts\\activate.bat")
+        print("3. Install dependencies: pip install -r requirements.txt")
+        print("4. Create .env file with your API keys")
 
 
 # Create FastAPI app
@@ -17,6 +81,14 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc"
 )
+
+
+@app.on_event("startup")
+async def startup_event():
+    """
+    Run environment setup check on application startup
+    """
+    check_and_setup_environment()
 
 # Add CORS middleware
 cors_origins = settings.CORS_ORIGINS.split(",") if "," in settings.CORS_ORIGINS else [settings.CORS_ORIGINS]
