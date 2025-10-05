@@ -348,14 +348,7 @@ function showNutrientAnalysis() {
                                 <div class="nutrient-highlights">
                                     <h4>Nutrient Highlights:</h4>
                                     <ul>
-                                        <li><strong>Magnesium:</strong> ${Math.round(recipe.nutrition?.magnesium_mg || 0)} mg (target: 120 mg) — supports nervous system and stress response.</li>
-                                        <li><strong>Omega 3 EPA DHA:</strong> ${Math.round((recipe.nutrition?.omega3_g || 0) * 10) / 10} g (target: 2.0 g) — anti-inflammatory, supports mood regulation.</li>
-                                        <li><strong>Iron:</strong> ${Math.round(recipe.nutrition?.iron_mg || 0)} mg (target: 18 mg) — prevents fatigue and supports cognitive function.</li>
-                                        <li><strong>Folate (B9):</strong> ${Math.round(recipe.nutrition?.folate_mcg || 0)} mcg (target: 400 mcg) — essential for neurotransmitter synthesis and mood stability.</li>
-                                        <li><strong>Vitamin B12:</strong> ${Math.round(recipe.nutrition?.vitamin_b12_mcg || 0)} mcg (target: 2.4 mcg) — supports brain function and prevents depression.</li>
-                                        <li><strong>Zinc:</strong> ${Math.round(recipe.nutrition?.zinc_mg || 0)} mg (target: 11 mg) — regulates stress response and immune function.</li>
-                                        <li><strong>Vitamin D:</strong> ${Math.round(recipe.nutrition?.vitamin_d_iu || 0)} IU (target: 2000 IU) — crucial for mood regulation and seasonal depression.</li>
-                                        <li><strong>Fiber:</strong> ${Math.round(recipe.nutrition?.fiber_g || 0)} g (target: 28 g) — stabilizes blood sugar and prevents energy crashes.</li>
+                                        ${generateNutrientHighlights(recipe)}
                                     </ul>
                                 </div>
                     </div>
@@ -401,6 +394,81 @@ function closeNutrientModal() {
     if (modal) {
         modal.remove();
     }
+}
+
+// Generate nutrient highlights for only non-zero nutrients
+function generateNutrientHighlights(recipe) {
+    const nutrients = [
+        {
+            name: 'Magnesium',
+            value: Math.round(recipe.nutrition?.magnesium_mg || 0),
+            unit: 'mg',
+            target: 120,
+            benefit: 'supports nervous system and stress response'
+        },
+        {
+            name: 'Omega 3 EPA DHA',
+            value: Math.round((recipe.nutrition?.omega3_g || 0) * 10) / 10,
+            unit: 'g',
+            target: 2.0,
+            benefit: 'anti-inflammatory, supports mood regulation'
+        },
+        {
+            name: 'Iron',
+            value: Math.round(recipe.nutrition?.iron_mg || 0),
+            unit: 'mg',
+            target: 18,
+            benefit: 'prevents fatigue and supports cognitive function'
+        },
+        {
+            name: 'Folate (B9)',
+            value: Math.round(recipe.nutrition?.folate_mcg || 0),
+            unit: 'mcg',
+            target: 400,
+            benefit: 'essential for neurotransmitter synthesis and mood stability'
+        },
+        {
+            name: 'Vitamin B12',
+            value: Math.round(recipe.nutrition?.vitamin_b12_mcg || 0),
+            unit: 'mcg',
+            target: 2.4,
+            benefit: 'supports brain function and prevents depression'
+        },
+        {
+            name: 'Zinc',
+            value: Math.round(recipe.nutrition?.zinc_mg || 0),
+            unit: 'mg',
+            target: 11,
+            benefit: 'regulates stress response and immune function'
+        },
+        {
+            name: 'Vitamin D',
+            value: Math.round(recipe.nutrition?.vitamin_d_iu || 0),
+            unit: 'IU',
+            target: 2000,
+            benefit: 'crucial for mood regulation and seasonal depression'
+        },
+        {
+            name: 'Fiber',
+            value: Math.round(recipe.nutrition?.fiber_g || 0),
+            unit: 'g',
+            target: 28,
+            benefit: 'stabilizes blood sugar and prevents energy crashes'
+        }
+    ];
+    
+    // Filter to only show nutrients with non-zero values
+    const nonZeroNutrients = nutrients.filter(nutrient => nutrient.value > 0);
+    
+    // If no nutrients have values, show a message
+    if (nonZeroNutrients.length === 0) {
+        return '<li><em>This recipe provides essential macronutrients (calories, protein, fiber) that support your mood and energy levels.</em></li>';
+    }
+    
+    // Generate HTML for non-zero nutrients
+    return nonZeroNutrients.map(nutrient => 
+        `<li><strong>${nutrient.name}:</strong> ${nutrient.value} ${nutrient.unit} (target: ${nutrient.target} ${nutrient.unit}) — ${nutrient.benefit}.</li>`
+    ).join('');
 }
 
 // Generate detailed rationale with nutritional information
