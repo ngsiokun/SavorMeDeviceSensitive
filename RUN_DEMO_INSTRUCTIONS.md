@@ -29,7 +29,7 @@ del /s /q *.pyc
 
 ### **Step 5: Start Backend (Terminal 1)**
 ```cmd
-python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+py -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 Wait until you see:
@@ -42,7 +42,7 @@ INFO:     Application startup complete.
 - Navigate and activate venv:
 
 ```cmd
-cd C:\Users\HP\SavorMe\SavorMe-1\demo_app
+cd C:\Users\HP\SavorMe\SavorMe-backend\demo_app
 ..\venv\Scripts\activate.bat
 python app.py
 ```
