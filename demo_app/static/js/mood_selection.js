@@ -100,21 +100,23 @@ async function generateRecommendation() {
     loadingIndicator.style.display = 'block';
     generateBtn.disabled = true;
     
-    // Cute loading messages that cycle
+    // Cute loading messages with realistic timing
     const loadingMessages = [
-        "Finding your perfect recipe...",
-        "Analyzing your mood... 🧠",
-        "Searching for the best ingredients... 🥬",
-        "Crafting your personalized recipe... 👨‍🍳",
-        "Adding a sprinkle of magic... ✨",
-        "Almost ready... just a moment! 🍽️"
+        { text: "Finding your perfect recipe...", delay: 0 },
+        { text: "Analyzing your mood... 🧠", delay: 2000 },
+        { text: "Searching for the best ingredients... 🥬", delay: 4000 },
+        { text: "Crafting your personalized recipe... 👨‍🍳", delay: 6000 },
+        { text: "Adding a sprinkle of magic... ✨", delay: 8000 },
+        { text: "Almost ready... just a moment! 🍽️", delay: 10000 }
     ];
     
     let messageIndex = 0;
     const messageInterval = setInterval(() => {
-        loadingText.textContent = loadingMessages[messageIndex];
-        messageIndex = (messageIndex + 1) % loadingMessages.length;
-    }, 1500);
+        if (messageIndex < loadingMessages.length) {
+            loadingText.textContent = loadingMessages[messageIndex].text;
+            messageIndex++;
+        }
+    }, 2000);
     
     try {
         // Build request payload
