@@ -12,7 +12,7 @@ echo.
 echo Starting Flask demo app on http://localhost:5000
 echo.
 
-python app.py
+py app.py
 
 pause
 
