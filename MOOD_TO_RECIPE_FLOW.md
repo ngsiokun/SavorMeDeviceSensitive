@@ -1,5 +1,9 @@
 # Complete Flow: Mood → Nutrients → Recipe
 
+## Technical Documentation - Current Working System
+
+This document provides a detailed technical walkthrough of how the SavorMe system works from user input to recipe recommendation. **Status: Current and accurate for v2.1.0**
+
 ## End-to-End Example: User Feeling Stressed
 
 Let me walk you through exactly how the system works from a user selecting "Stressed" to getting a specific recipe recommendation.
