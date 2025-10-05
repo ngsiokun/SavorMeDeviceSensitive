@@ -396,7 +396,7 @@ function closeNutrientModal() {
     }
 }
 
-        // Generate nutrient highlights with fallback for limited micronutrient data
+        // Generate nutrient highlights with target values for mood-supporting nutrients
         function generateNutrientHighlights(recipe) {
             const nutrients = [
                 {
@@ -404,114 +404,147 @@ function closeNutrientModal() {
                     value: Math.round(recipe.nutrition?.magnesium_mg || 0),
                     unit: 'mg',
                     target: 120,
-                    benefit: 'supports nervous system and stress response'
+                    benefit: 'supports nervous system and stress response',
+                    moodImportance: 'Critical for stress management and muscle relaxation'
                 },
                 {
                     name: 'Omega 3 EPA DHA',
                     value: Math.round((recipe.nutrition?.omega3_g || 0) * 10) / 10,
                     unit: 'g',
                     target: 2.0,
-                    benefit: 'anti-inflammatory, supports mood regulation'
+                    benefit: 'anti-inflammatory, supports mood regulation',
+                    moodImportance: 'Essential for brain health and depression prevention'
                 },
                 {
                     name: 'Iron',
                     value: Math.round(recipe.nutrition?.iron_mg || 0),
                     unit: 'mg',
                     target: 18,
-                    benefit: 'prevents fatigue and supports cognitive function'
+                    benefit: 'prevents fatigue and supports cognitive function',
+                    moodImportance: 'Prevents mood-related fatigue and brain fog'
                 },
                 {
                     name: 'Folate (B9)',
                     value: Math.round(recipe.nutrition?.folate_mcg || 0),
                     unit: 'mcg',
                     target: 400,
-                    benefit: 'essential for neurotransmitter synthesis and mood stability'
+                    benefit: 'essential for neurotransmitter synthesis and mood stability',
+                    moodImportance: 'Critical for serotonin and dopamine production'
                 },
                 {
                     name: 'Vitamin B12',
                     value: Math.round(recipe.nutrition?.vitamin_b12_mcg || 0),
                     unit: 'mcg',
                     target: 2.4,
-                    benefit: 'supports brain function and prevents depression'
+                    benefit: 'supports brain function and prevents depression',
+                    moodImportance: 'Essential for nerve function and mood regulation'
                 },
                 {
                     name: 'Zinc',
                     value: Math.round(recipe.nutrition?.zinc_mg || 0),
                     unit: 'mg',
                     target: 11,
-                    benefit: 'regulates stress response and immune function'
+                    benefit: 'regulates stress response and immune function',
+                    moodImportance: 'Supports stress resilience and immune health'
                 },
                 {
                     name: 'Vitamin D',
                     value: Math.round(recipe.nutrition?.vitamin_d_iu || 0),
                     unit: 'IU',
                     target: 2000,
-                    benefit: 'crucial for mood regulation and seasonal depression'
+                    benefit: 'crucial for mood regulation and seasonal depression',
+                    moodImportance: 'Prevents seasonal mood disorders and supports well-being'
                 },
                 {
                     name: 'Fiber',
                     value: Math.round(recipe.nutrition?.fiber_g || 0),
                     unit: 'g',
                     target: 28,
-                    benefit: 'stabilizes blood sugar and prevents energy crashes'
+                    benefit: 'stabilizes blood sugar and prevents energy crashes',
+                    moodImportance: 'Prevents mood swings from blood sugar fluctuations'
                 }
             ];
             
             // Filter to only show nutrients with non-zero values
             const nonZeroNutrients = nutrients.filter(nutrient => nutrient.value > 0);
             
-            // If only fiber has values, provide more comprehensive highlights
-            if (nonZeroNutrients.length <= 1) {
-                const highlights = [];
-                
-                // Always include macronutrient benefits
-                const calories = Math.round(recipe.nutrition?.calories || 0);
-                const protein = Math.round(recipe.nutrition?.protein_g || 0);
-                const fiber = Math.round(recipe.nutrition?.fiber_g || 0);
-                
-                if (calories > 0) {
-                    highlights.push(`<li><strong>Energy:</strong> ${calories} calories provide sustained energy for mood stability and focus.</li>`);
-                }
-                
-                if (protein > 0) {
-                    highlights.push(`<li><strong>Protein:</strong> ${protein}g supports neurotransmitter production and helps regulate blood sugar levels.</li>`);
-                }
-                
-                if (fiber > 0) {
-                    highlights.push(`<li><strong>Fiber:</strong> ${fiber}g stabilizes blood sugar and prevents energy crashes that can affect mood.</li>`);
-                }
-                
-                // Add ingredient-based nutrient benefits
-                const ingredients = recipe.ingredients || [];
-                const ingredientText = ingredients.map(ing => ing.name.toLowerCase()).join(' ');
-                
-                if (ingredientText.includes('leafy') || ingredientText.includes('spinach') || ingredientText.includes('kale')) {
-                    highlights.push(`<li><strong>Leafy Greens:</strong> Rich in folate, iron, and magnesium for mood support and stress reduction.</li>`);
-                }
-                
-                if (ingredientText.includes('fish') || ingredientText.includes('salmon') || ingredientText.includes('tuna') || ingredientText.includes('mackerel')) {
-                    highlights.push(`<li><strong>Omega-3 Fatty Acids:</strong> Anti-inflammatory properties support brain health and mood regulation.</li>`);
-                }
-                
-                if (ingredientText.includes('nuts') || ingredientText.includes('almond') || ingredientText.includes('walnut')) {
-                    highlights.push(`<li><strong>Healthy Fats:</strong> Support brain function and help maintain stable mood throughout the day.</li>`);
-                }
-                
-                if (ingredientText.includes('legume') || ingredientText.includes('bean') || ingredientText.includes('lentil') || ingredientText.includes('chickpea')) {
-                    highlights.push(`<li><strong>Plant Protein:</strong> Provides amino acids for neurotransmitter synthesis and sustained energy.</li>`);
-                }
-                
-                if (ingredientText.includes('whole grain') || ingredientText.includes('quinoa') || ingredientText.includes('brown rice') || ingredientText.includes('oats')) {
-                    highlights.push(`<li><strong>Complex Carbohydrates:</strong> Steady glucose release supports stable mood and energy levels.</li>`);
-                }
-                
-                return highlights.join('');
+            // If we have micronutrient data, show it with targets
+            if (nonZeroNutrients.length > 1) {
+                return nonZeroNutrients.map(nutrient => {
+                    const percentage = Math.round((nutrient.value / nutrient.target) * 100);
+                    const statusIcon = percentage >= 50 ? '✅' : percentage >= 25 ? '🟡' : '🔴';
+                    
+                    return `<li><strong>${nutrient.name}:</strong> ${nutrient.value} ${nutrient.unit} of ${nutrient.target} ${nutrient.unit} target (${percentage}%) ${statusIcon}<br>
+                            <em>${nutrient.moodImportance}</em></li>`;
+                }).join('');
             }
             
-            // Generate HTML for non-zero nutrients
-            return nonZeroNutrients.map(nutrient => 
-                `<li><strong>${nutrient.name}:</strong> ${nutrient.value} ${nutrient.unit} (target: ${nutrient.target} ${nutrient.unit}) — ${nutrient.benefit}.</li>`
-            ).join('');
+            // Fallback: Show macronutrients with targets and ingredient-based analysis
+            const highlights = [];
+            
+            // Always include macronutrient benefits with targets
+            const calories = Math.round(recipe.nutrition?.calories || 0);
+            const protein = Math.round(recipe.nutrition?.protein_g || 0);
+            const fiber = Math.round(recipe.nutrition?.fiber_g || 0);
+            
+            if (calories > 0) {
+                const calorieTarget = 2000; // Daily calorie target
+                const caloriePercent = Math.round((calories / calorieTarget) * 100);
+                highlights.push(`<li><strong>Energy:</strong> ${calories} calories (${caloriePercent}% of daily target) provide sustained energy for mood stability and focus.</li>`);
+            }
+            
+            if (protein > 0) {
+                const proteinTarget = 50; // Daily protein target
+                const proteinPercent = Math.round((protein / proteinTarget) * 100);
+                highlights.push(`<li><strong>Protein:</strong> ${protein}g (${proteinPercent}% of daily target) supports neurotransmitter production and helps regulate blood sugar levels.</li>`);
+            }
+            
+            if (fiber > 0) {
+                const fiberTarget = 25; // Daily fiber target
+                const fiberPercent = Math.round((fiber / fiberTarget) * 100);
+                highlights.push(`<li><strong>Fiber:</strong> ${fiber}g (${fiberPercent}% of daily target) stabilizes blood sugar and prevents energy crashes that can affect mood.</li>`);
+            }
+            
+            // Add ingredient-based nutrient benefits with estimated targets
+            const ingredients = recipe.ingredients || [];
+            const ingredientText = ingredients.map(ing => ing.name.toLowerCase()).join(' ');
+            
+            if (ingredientText.includes('leafy') || ingredientText.includes('spinach') || ingredientText.includes('kale')) {
+                highlights.push(`<li><strong>Leafy Greens:</strong> Rich in folate (target: 400mcg), iron (target: 18mg), and magnesium (target: 120mg) for mood support and stress reduction.</li>`);
+            }
+            
+            if (ingredientText.includes('fish') || ingredientText.includes('salmon') || ingredientText.includes('tuna') || ingredientText.includes('mackerel')) {
+                highlights.push(`<li><strong>Omega-3 Fatty Acids:</strong> Anti-inflammatory properties support brain health and mood regulation (target: 2g daily).</li>`);
+            }
+            
+            if (ingredientText.includes('nuts') || ingredientText.includes('almond') || ingredientText.includes('walnut')) {
+                highlights.push(`<li><strong>Healthy Fats:</strong> Support brain function and help maintain stable mood throughout the day (target: 20-35% of calories).</li>`);
+            }
+            
+            if (ingredientText.includes('legume') || ingredientText.includes('bean') || ingredientText.includes('lentil') || ingredientText.includes('chickpea')) {
+                highlights.push(`<li><strong>Plant Protein:</strong> Provides amino acids for neurotransmitter synthesis and sustained energy (target: 50g daily).</li>`);
+            }
+            
+            if (ingredientText.includes('whole grain') || ingredientText.includes('quinoa') || ingredientText.includes('brown rice') || ingredientText.includes('oats')) {
+                highlights.push(`<li><strong>Complex Carbohydrates:</strong> Steady glucose release supports stable mood and energy levels (target: 45-65% of calories).</li>`);
+            }
+            
+            // Add mood-specific nutrient targets
+            const selectedMoods = JSON.parse(sessionStorage.getItem('selectedMoods') || '[]');
+            if (selectedMoods.includes('stressed')) {
+                highlights.push(`<li><strong>Stress Support:</strong> This recipe targets magnesium (120mg), omega-3 (2g), and B-vitamins to help manage stress response.</li>`);
+            }
+            if (selectedMoods.includes('fatigued')) {
+                highlights.push(`<li><strong>Energy Support:</strong> This recipe targets iron (18mg), B12 (2.4mcg), and folate (400mcg) to combat fatigue and boost energy.</li>`);
+            }
+            if (selectedMoods.includes('low_mood')) {
+                highlights.push(`<li><strong>Mood Support:</strong> This recipe targets omega-3 (2g), folate (400mcg), and vitamin D (2000IU) to support mood regulation.</li>`);
+            }
+            if (selectedMoods.includes('irritable')) {
+                highlights.push(`<li><strong>Mood Stability:</strong> This recipe targets magnesium (120mg), zinc (11mg), and B-vitamins to help regulate mood and reduce irritability.</li>`);
+            }
+            
+            return highlights.join('');
         }
 
 // Generate detailed rationale with nutritional information
@@ -527,55 +560,76 @@ function generateDetailedRationale(recipe, nutrition, rationale) {
     const zinc = Math.round(recipe.nutrition?.zinc_mg || 0);
     const vitaminD = Math.round(recipe.nutrition?.vitamin_d_iu || 0);
     
-    const targetCalories = Math.round(nutrition?.target_calories || 0);
-    const targetProtein = Math.round(nutrition?.target_protein || 0);
-    const targetFiber = Math.round(nutrition?.target_fiber || 0);
+    const targetCalories = Math.round(nutrition?.target_calories || 2000);
+    const targetProtein = Math.round(nutrition?.target_protein || 50);
+    const targetFiber = Math.round(nutrition?.target_fiber || 25);
     
     const caloriePercent = Math.round((calories / targetCalories) * 100);
     const proteinPercent = Math.round((protein / targetProtein) * 100);
     const fiberPercent = Math.round((fiber / targetFiber) * 100);
     
-    let rationaleText = `This ${recipe.name} was carefully selected to provide optimal nutrition for your current needs. `;
+    let rationaleText = `This ${recipe.name} was carefully selected to provide optimal nutrition for your current mood needs. `;
     
-    // Calorie information
-    rationaleText += `With ${calories} calories (${caloriePercent}% of your daily target), `;
+    // Calorie information with target
+    rationaleText += `With ${calories} calories (${caloriePercent}% of your daily target of ${targetCalories} calories), `;
     
-    // Protein information
-    rationaleText += `it delivers ${protein}g of protein (${proteinPercent}% of daily needs) for sustained energy and muscle support. `;
+    // Protein information with target
+    rationaleText += `it delivers ${protein}g of protein (${proteinPercent}% of daily target of ${targetProtein}g) for sustained energy and muscle support. `;
     
-    // Fiber information
-    rationaleText += `The ${fiber}g of fiber (${fiberPercent}% of daily target) helps maintain stable blood sugar levels and supports digestive health. `;
+    // Fiber information with target
+    rationaleText += `The ${fiber}g of fiber (${fiberPercent}% of daily target of ${targetFiber}g) helps maintain stable blood sugar levels and supports digestive health. `;
     
-    // Key nutrients
+    // Key mood-supporting nutrients with targets
     if (magnesium > 0) {
-        rationaleText += `Rich in magnesium (${magnesium}mg), this recipe supports nervous system function and stress response. `;
+        const magPercent = Math.round((magnesium / 120) * 100);
+        rationaleText += `Rich in magnesium (${magnesium}mg, ${magPercent}% of daily target of 120mg), this recipe supports nervous system function and stress response. `;
     }
     
     if (omega3 > 0) {
-        rationaleText += `The ${omega3}g of omega-3 fatty acids provide anti-inflammatory benefits and support mood regulation. `;
+        const omegaPercent = Math.round((omega3 / 2.0) * 100);
+        rationaleText += `The ${omega3}g of omega-3 fatty acids (${omegaPercent}% of daily target of 2g) provide anti-inflammatory benefits and support mood regulation. `;
     }
     
     if (iron > 0) {
-        rationaleText += `With ${iron}mg of iron, it helps maintain energy levels and cognitive function. `;
+        const ironPercent = Math.round((iron / 18) * 100);
+        rationaleText += `With ${iron}mg of iron (${ironPercent}% of daily target of 18mg), it helps maintain energy levels and cognitive function. `;
     }
     
     if (folate > 0) {
-        rationaleText += `The ${folate}mcg of folate (B9) is essential for neurotransmitter synthesis and mood stability. `;
+        const folatePercent = Math.round((folate / 400) * 100);
+        rationaleText += `The ${folate}mcg of folate (B9) (${folatePercent}% of daily target of 400mcg) is essential for neurotransmitter synthesis and mood stability. `;
     }
     
     if (b12 > 0) {
-        rationaleText += `Vitamin B12 (${b12}mcg) supports brain function and helps prevent depression. `;
+        const b12Percent = Math.round((b12 / 2.4) * 100);
+        rationaleText += `Vitamin B12 (${b12}mcg, ${b12Percent}% of daily target of 2.4mcg) supports brain function and helps prevent depression. `;
     }
     
     if (zinc > 0) {
-        rationaleText += `Zinc (${zinc}mg) regulates stress response and supports immune function. `;
+        const zincPercent = Math.round((zinc / 11) * 100);
+        rationaleText += `Zinc (${zinc}mg, ${zincPercent}% of daily target of 11mg) regulates stress response and supports immune function. `;
     }
     
     if (vitaminD > 0) {
-        rationaleText += `Vitamin D (${vitaminD}IU) is crucial for mood regulation and helps combat seasonal depression. `;
+        const vitDPercent = Math.round((vitaminD / 2000) * 100);
+        rationaleText += `Vitamin D (${vitaminD}IU, ${vitDPercent}% of daily target of 2000IU) is crucial for mood regulation and helps combat seasonal depression. `;
     }
     
-    // Mood-specific benefits
+    // Mood-specific benefits with targets
+    const selectedMoods = JSON.parse(sessionStorage.getItem('selectedMoods') || '[]');
+    if (selectedMoods.includes('stressed')) {
+        rationaleText += `For stress management, this recipe targets magnesium (120mg daily), omega-3 (2g daily), and B-vitamins to help regulate your stress response. `;
+    }
+    if (selectedMoods.includes('fatigued')) {
+        rationaleText += `To combat fatigue, this recipe focuses on iron (18mg daily), B12 (2.4mcg daily), and folate (400mcg daily) to boost energy and cognitive function. `;
+    }
+    if (selectedMoods.includes('low_mood')) {
+        rationaleText += `For mood support, this recipe emphasizes omega-3 (2g daily), folate (400mcg daily), and vitamin D (2000IU daily) to support mood regulation. `;
+    }
+    if (selectedMoods.includes('irritable')) {
+        rationaleText += `To reduce irritability, this recipe targets magnesium (120mg daily), zinc (11mg daily), and B-vitamins to help stabilize mood. `;
+    }
+    
     rationaleText += `This combination of nutrients works synergistically to support your emotional well-being and provide the energy your body needs.`;
     
     return rationaleText;
