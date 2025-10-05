@@ -118,7 +118,7 @@
 
 ---
 
-## 📉 Removed Moods (v1.0.0 → v2.0.0)
+## 📉 Removed Moods (v2.1.0 → v2.1.0)
 
 The following 8 moods were **removed** due to insufficient scientific evidence:
 
@@ -216,7 +216,7 @@ Each recommendation now includes:
 
 ### Validation Tests Needed
 
-1. **Load `mood_mapping.json` v2.0.0**
+1. **Load `mood_mapping.json` v2.1.0**
    - Verify 4 moods load correctly
    - Check all nutrient targets parse
    - Validate evidence levels present

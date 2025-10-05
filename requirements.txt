@@ -9,11 +9,11 @@ httpx==0.26.0
 
 # API Integrations
 requests>=2.31.0
-openai>=1.0.0  # For OpenRouter API compatibility
+openai>=2.1.0  # For OpenRouter API compatibility
 huggingface-hub>=0.16.0  # For Hugging Face Stable Diffusion API
 
 # Environment & Configuration
-python-dotenv>=1.0.0
+python-dotenv>=2.1.0
 
 # Database (SQLAlchemy for future use)
 sqlalchemy==2.0.25

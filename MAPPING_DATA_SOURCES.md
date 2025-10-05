@@ -248,7 +248,6 @@ Maps different nutrient name formats to canonical names:
 
 | Document | Purpose | Location |
 |----------|---------|----------|
-| **MAPPING_STRATEGY.md** | Complete technical architecture | Root directory |
 | **EVIDENCE_BASED_MOODS_v2.md** | Evidence levels, removed moods | Root directory |
 | **MOOD_TO_RECIPE_FLOW.md** | End-to-end example | Root directory |
 | **mood_mapping.json** | **Actual data source** | `app/data/` |

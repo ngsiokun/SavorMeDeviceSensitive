@@ -303,12 +303,9 @@ if female and age >= 50:
 
 All documentation is available in the repository:
 
-1. **QUICK_START_GUIDE.md** - How to run the backend
-2. **MAPPING_STRATEGY.md** - Complete technical architecture
 3. **MAPPING_DATA_SOURCES.md** - Where the data comes from
 4. **EVIDENCE_BASED_MOODS_v2.md** - Why 4 moods, evidence levels
 5. **MOOD_TO_RECIPE_FLOW.md** - End-to-end example walkthrough
-6. **IMPLEMENTATION_ROADMAP.md** - Status, next steps, testing plan
 7. **SYSTEM_DESIGN_FINAL.md** - This document
 
 ---
