@@ -203,17 +203,17 @@ class MoodNutritionEngine:
                 if target.min_per_meal <= value <= target.max_per_meal:
                     mid = (target.min_per_meal + target.max_per_meal) / 2.0
                     closeness = 1.0 - min(1.0, abs(value - mid) / max(mid, 1.0))
-                    contrib = 0.75 + 0.5 * closeness  # 0.75 to 1.25
+                    contrib = 0.75 + 0.25 * closeness  # 0.75 to 1.0
                 elif value > target.max_per_meal:
                     # Overshoot gets some credit but penalty
                     contrib = 0.6
                 else:
                     # Under minimum
-                    contrib = min(1.25, value / max(target.min_per_meal, 1e-6))
+                    contrib = min(1.0, value / max(target.min_per_meal, 1e-6))
             
             elif target.min_per_meal is not None:
                 # Minimum only: scale up to 1.25 for exceeding
-                contrib = min(1.25, value / max(target.min_per_meal, 1e-6))
+                contrib = min(1.0, value / max(target.min_per_meal, 1e-6))
             
             elif target.max_per_meal is not None:
                 # Maximum only: penalize exceeding

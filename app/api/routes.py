@@ -355,7 +355,7 @@ async def get_recipe_recommendation(
             "desired_flavors": mood_interpretation.flavor_profile.flavor_bias,
             "desired_textures": mood_interpretation.flavor_profile.texture_preference,
             "culinary_tone": mood_interpretation.flavor_profile.culinary_tone,
-            "nutrient_match_score": round(best["score"] * 100, 1),  # Convert to 0-100 scale
+            "nutrient_match_score": round(min(best["score"] * 100, 100), 1),  # Convert to 0-100 scale, cap at 100%
             "nutrient_reasons": best["reasons"],
             "evidence_based": True
         }

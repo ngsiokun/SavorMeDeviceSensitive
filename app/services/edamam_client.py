@@ -207,8 +207,9 @@ class EdamamClient:
         total_nutrients = recipe_data.get("totalNutrients", {})
         servings = float(recipe_data.get("yield", 1))
         
-        # Edamam nutrient code mapping
+        # Edamam nutrient code mapping - Complete micronutrient coverage
         nutrient_map = {
+            # Macronutrients
             "ENERC_KCAL": "calories",
             "PROCNT": "protein",
             "CHOCDF": "carbohydrate_by_difference",
@@ -216,14 +217,36 @@ class EdamamClient:
             "FAT": "total_fat",
             "SUGAR": "sugars_total",
             "SUGAR.added": "added_sugars",
+            
+            # Minerals
             "FE": "iron",
             "MG": "magnesium",
-            "VITC": "vitamin_c",
-            "VITD": "vitamin_d",
             "CA": "calcium",
             "K": "potassium",
             "NA": "sodium",
-            "ZN": "zinc"
+            "ZN": "zinc",
+            "P": "phosphorus",
+            "CU": "copper",
+            "MN": "manganese",
+            "SE": "selenium",
+            
+            # Vitamins
+            "VITC": "vitamin_c",
+            "VITD": "vitamin_d",
+            "VITB6A": "vitamin_b6",
+            "VITB12": "vitamin_b12",
+            "FOLDFE": "folate",  # Folate (B9)
+            "THIA": "thiamin",   # B1
+            "RIBF": "riboflavin", # B2
+            "NIA": "niacin",     # B3
+            "VITK1": "vitamin_k",
+            "VITE": "vitamin_e",
+            "VITA_RAE": "vitamin_a",
+            
+            # Omega-3 fatty acids
+            "EPA": "epa",
+            "DHA": "dha",
+            "OMEGA3": "omega3_g"
         }
         
         for edamam_code, canonical_name in nutrient_map.items():
@@ -231,11 +254,17 @@ class EdamamClient:
                 quantity = total_nutrients[edamam_code].get("quantity", 0)
                 nutrients_raw[canonical_name] = quantity / servings
         
-        # Calculate EPA+DHA if available
+        # Calculate EPA+DHA if available (convert mg to g)
         epa = total_nutrients.get("EPA", {}).get("quantity", 0) / servings
         dha = total_nutrients.get("DHA", {}).get("quantity", 0) / servings
         if epa > 0 or dha > 0:
-            nutrients_raw["omega_3_epa_dha"] = (epa + dha) / 1000.0  # Convert mg to g
+            nutrients_raw["omega3_g"] = (epa + dha) / 1000.0  # Convert mg to g
+        
+        # Also check for direct omega-3 value
+        if "OMEGA3" in total_nutrients:
+            omega3_mg = total_nutrients["OMEGA3"].get("quantity", 0) / servings
+            if omega3_mg > 0:
+                nutrients_raw["omega3_g"] = omega3_mg / 1000.0  # Convert mg to g
         
         return nutrients_raw
     
@@ -340,14 +369,14 @@ class EdamamClient:
                     health_labels.append(label)
                     break
         
-        # Calculate calorie range (target ± 20%)
-        cal_min = int(nutrition_targets.calories * 0.25)  # About 25% for one meal
-        cal_max = int(nutrition_targets.calories * 0.40)  # About 40% for main meal
+        # Calculate calorie range (more flexible for better recipe matching)
+        cal_min = int(nutrition_targets.calories * 0.15)  # About 15% for light meal
+        cal_max = int(nutrition_targets.calories * 0.50)  # About 50% for hearty meal
         calories_range = f"{cal_min}-{cal_max}"
         
-        # Protein range (target ± 20%)
-        protein_min = int(nutrition_targets.protein_g * 0.20)
-        protein_max = int(nutrition_targets.protein_g * 0.40)
+        # Protein range (more flexible for better recipe matching)
+        protein_min = int(nutrition_targets.protein_g * 0.10)  # Minimum 10% of daily protein
+        protein_max = int(nutrition_targets.protein_g * 0.60)  # Up to 60% of daily protein
         protein_range = f"{protein_min}-{protein_max}"
         
         return {

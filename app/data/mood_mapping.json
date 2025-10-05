@@ -163,11 +163,13 @@
     "protein": ["protein", "Protein", "PROCNT"],
     "added_sugar": ["added_sugars", "Sugars, added", "SUGAR.added"],
     "vitamin_c": ["vitamin_c", "ascorbic_acid", "Vitamin C, total ascorbic acid", "VITC"],
-    "vitamin_b6": ["vitamin_b6", "pyridoxine", "Vitamin B-6", "B6", "VB6"],
-    "vitamin_b12": ["vitamin_b12", "cobalamin", "Vitamin B-12", "B12", "VB12"],
-    "folate": ["folate", "folic_acid", "Folate, total", "FOL", "Vitamin B-9"],
+    "vitamin_b6": ["vitamin_b6", "pyridoxine", "Vitamin B-6", "B6", "VB6", "VITB6A"],
+    "vitamin_b12": ["vitamin_b12", "cobalamin", "Vitamin B-12", "B12", "VB12", "VITB12"],
+    "folate": ["folate", "folic_acid", "Folate, total", "FOL", "Vitamin B-9", "FOLDFE"],
+    "vitamin_d": ["vitamin_d", "cholecalciferol", "Vitamin D", "VITD"],
+    "zinc": ["zinc", "ZN"],
     "complex_carbs": ["carbohydrate_by_difference", "Carbohydrate, by difference", "CHOCDF"],
-    "omega_3_epa_dha": ["epa", "dha", "omega_3_total", "EPA", "DHA", "20:5 n-3 (EPA)", "22:6 n-3 (DHA)"],
+    "omega_3_epa_dha": ["epa", "dha", "omega_3_total", "EPA", "DHA", "20:5 n-3 (EPA)", "22:6 n-3 (DHA)", "omega3_g"],
     "polyphenols": ["polyphenols_estimated", "Total polyphenols"]
   },
   
