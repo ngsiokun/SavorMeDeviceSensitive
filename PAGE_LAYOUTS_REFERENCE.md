@@ -57,18 +57,34 @@ This document provides a complete reference of all page layouts, file structures
 - Dynamic calorie preference handling
 
 ### 3. Mood Selection Page (`demo_app/templates/mood_selection.html`)
-**Design**: Mood cards with intensity selection
+**Design**: 2x2 mood card grid with intensity selection
 **Key Elements**:
-- Mood cards in grid layout (happy, sad, stressed, energetic, calm, anxious, excited, tired)
-- Intensity selection (low, medium, high)
-- Evidence banner at top
-- "Get Recipe Recommendations" button
-- Loading spinner during API calls
+- Header: "How are you feeling?"
+- Subtitle: "Select 1-3 moods that resonate with you"
+- Evidence banner: "✨ All moods backed by scientific research" (GREEN THEME - not yellow)
+- 2x2 mood grid:
+  - Stressed (blue border #3B82F6)
+  - Fatigued (red border #EF4444)
+  - Low Mood (purple border #8B5CF6)
+  - Irritable (orange border #F97316)
+- Selection counter: "X moods selected (max 3)"
+- Intensity section: "How intense is this feeling?"
+  - A little / Medium / Very buttons
+- Generate button: "🍽️ Get My Recipe Recommendation" (WORKING - fixed API import error)
+- Loading indicator with spinner
+- Version badge: "v2.1 • Evidence-Based System"
 
 **CSS**: `demo_app/static/css/mood_selection.css`
+- `.mood-grid` with 2x2 layout
+- `.mood-card` with specific colored borders and hover effects
+- `.evidence-note` with GREEN gradient background (F0FDF4 to DCFCE7)
+- `.intensity-section` with button styling
+- `.generate-btn` with gradient and proper disabled states
+
 **JavaScript**: `demo_app/static/js/mood_selection.js`
 - Mood and intensity selection logic
 - API integration with backend
+- Button state management (enables/disables based on selection)
 
 ### 4. Recipe Result Page (`demo_app/templates/recipe_result.html`)
 **Design**: Comprehensive recipe display with multiple sections
