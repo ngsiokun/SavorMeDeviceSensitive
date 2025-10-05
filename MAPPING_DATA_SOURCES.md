@@ -18,7 +18,7 @@ This JSON file is the **single source of truth** for all mood-to-nutrient mappin
 
 ```json
 {
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Evidence-based mood-to-nutrient mapping...",
   
   "moods": [
@@ -37,7 +37,7 @@ This JSON file is the **single source of truth** for all mood-to-nutrient mappin
       "evidence_level": "Moderate - Mixed but trending positive",
       "key_studies": [...]
     },
-    // ... 3 more moods
+    // ... 3 more evidence-based moods (fatigued, low_mood, irritable)
   ],
   
   "patterns": {
