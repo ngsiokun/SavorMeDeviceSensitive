@@ -83,6 +83,25 @@ class EdamamClient:
         if protein_range:
             params.append(("nutrients[PROCNT]", protein_range))
         
+        # Add specific nutrients we want for mood analysis
+        # This ensures Edamam API returns detailed micronutrient data
+        nutrients_to_request = [
+            "FIBTG",    # Fiber
+            "FE",       # Iron
+            "MG",       # Magnesium
+            "VITB6A",   # Vitamin B6
+            "VITB12",   # Vitamin B12
+            "FOLDFE",   # Folate (B9)
+            "VITD",     # Vitamin D
+            "ZN",       # Zinc
+            "EPA",      # EPA (omega-3)
+            "DHA",      # DHA (omega-3)
+            "OMEGA3"    # Total omega-3
+        ]
+        
+        for nutrient in nutrients_to_request:
+            params.append(("nutrients", nutrient))
+        
         # Make API request
         async with httpx.AsyncClient(timeout=30.0) as client:
             response = await client.get(self.base_url, params=params)
