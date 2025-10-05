@@ -5,6 +5,7 @@ from fastapi import APIRouter, HTTPException
 from typing import List, Optional, Dict, Any
 import httpx
 import random
+import base64
 
 from app.models.user import UserProfile, NutritionTargets
 from app.models.mood import MoodBlend, MoodInterpretation
@@ -22,6 +23,22 @@ router = APIRouter()
 # Simple in-memory variety tracking (in production, use Redis or database)
 recent_keywords = []
 recent_ingredients = []  # Track individual ingredients for better variety
+
+
+@router.get("/health")
+async def health_check():
+    """
+    Health check endpoint for monitoring and load balancers
+    
+    Returns:
+        Health status and basic system information
+    """
+    return {
+        "status": "healthy",
+        "version": "2.1.0",
+        "service": "SavorMe Backend API",
+        "timestamp": "2025-10-05T00:00:00Z"
+    }
 
 
 @router.post("/nutrition/calculate", response_model=NutritionTargets)
