@@ -1,14 +1,21 @@
 """Data models for SavorMe"""
 
-from .mood import MoodRequest, MoodResponse
-from .recipe import RecipeRequest, RecipeResponse
-from .user import UserProfile
+from .mood import MoodBlend, MoodInterpretation, MoodSelection, MoodType, IntensityLevel
+from .recipe import Recipe, RecipeRecommendation, Ingredient, NutritionInfo, EmotionalRationale
+from .user import UserProfile, NutritionTargets
 
 __all__ = [
-    "MoodRequest",
-    "MoodResponse", 
-    "RecipeRequest",
-    "RecipeResponse",
-    "UserProfile"
+    "MoodBlend",
+    "MoodInterpretation",
+    "MoodSelection", 
+    "MoodType",
+    "IntensityLevel",
+    "Recipe",
+    "RecipeRecommendation",
+    "Ingredient",
+    "NutritionInfo",
+    "EmotionalRationale",
+    "UserProfile",
+    "NutritionTargets"
 ]
 
