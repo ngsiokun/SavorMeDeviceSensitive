@@ -2,7 +2,15 @@
 ## Professional AI Consultant - Complete System Implementation
 
 ### Overview
-This document provides a complete, step-by-step guide for running the SavorMe application with automatic error detection, correction, and validation.
+This document provides a complete, step-by-step guide for running the SavorMe application with automatic error detection, correction, and validation. The system now includes advanced recipe variety, nutrient target tracking, and comprehensive mood-based nutrition analysis.
+
+### Latest Features (v2.0)
+- **Recipe Variety System**: 3x more diverse recipes with intelligent rotation
+- **Target Nutrient Values**: Shows exactly how mood needs are met with daily targets
+- **Enhanced Nutrient Analysis**: Web-based lookup for comprehensive micronutrient data
+- **Session-Based Rotation**: Avoids recipe repeats within 24 hours
+- **Mood-Specific Targeting**: Personalized nutrient goals for each mood type
+- **Visual Progress Indicators**: ✅🟡🔴 status for nutrient target achievement
 
 ---
 
@@ -111,6 +119,27 @@ if exist "demo_app\templates\recipe_result.html" (
     echo [ERROR] Recipe result template missing
     exit /b 1
 )
+
+if exist "demo_app\static\js\recipe_result.js" (
+    echo [OK] Recipe result JavaScript exists
+) else (
+    echo [ERROR] Recipe result JavaScript missing
+    exit /b 1
+)
+
+if exist "app\services\recipe_rotation.py" (
+    echo [OK] Recipe rotation service exists
+) else (
+    echo [ERROR] Recipe rotation service missing
+    exit /b 1
+)
+
+if exist "app\services\nutrient_web_lookup.py" (
+    echo [OK] Nutrient web lookup service exists
+) else (
+    echo [ERROR] Nutrient web lookup service missing
+    exit /b 1
+)
 ```
 
 ---
@@ -198,6 +227,11 @@ curl http://localhost:5000/
    - Verify loading spinner appears
    - Check recipe data displays properly
    - Verify match score, rationale, nutrition sections
+   - **NEW**: Test "Nutrient Match Score" button for detailed analysis
+   - **NEW**: Verify target nutrient values with percentages
+   - **NEW**: Check visual status indicators (✅🟡🔴)
+   - **NEW**: Test "Another Recipe Suggestion" for variety
+   - **NEW**: Verify recipe rotation (no repeats within 24 hours)
 
 ### Step 5.2: API Integration Validation
 ```bash
@@ -206,7 +240,22 @@ curl -X POST http://127.0.0.1:8000/api/v1/recipes/recommend \
   -H "Content-Type: application/json" \
   -d '{"mood_blend": {"moods": [{"mood": "stressed", "intensity": "medium"}]}, "user_profile": {"age": 32, "gender": "female", "height_cm": 165, "weight_kg": 60, "cuisine_preferences": ["Mediterranean"], "food_allergies": [], "dietary_preference": "none"}}'
 
-# Should return recipe recommendation JSON
+# Should return recipe recommendation JSON with enhanced features:
+# - Recipe variety rotation
+# - Comprehensive nutrient data
+# - Target nutrient values
+# - Mood-specific nutritional targeting
+```
+
+### Step 5.3: Recipe Variety Testing
+```bash
+# Test multiple recipe requests to verify variety
+# Run this command 3-5 times and verify different recipes are returned
+for /L %i in (1,1,3) do curl -X POST http://127.0.0.1:8000/api/v1/recipes/recommend \
+  -H "Content-Type: application/json" \
+  -d '{"mood_blend": {"moods": [{"mood": "stressed", "intensity": "medium"}]}, "user_profile": {"age": 32, "gender": "female", "height_cm": 165, "weight_kg": 60}}'
+
+# Expected: Different recipes with variety in protein sources, cuisines, cooking methods
 ```
 
 ---
@@ -233,6 +282,16 @@ curl -X POST http://127.0.0.1:8000/api/v1/recipes/recommend \
    - Clear browser cache and cookies
    - Restart both frontend and backend
    - Check session storage in browser dev tools
+
+5. **Recipe Variety Issues**
+   - Check recipe rotation service is running
+   - Verify session tracking is working
+   - Test with different mood combinations
+
+6. **Nutrient Data Issues**
+   - Verify web lookup service is functional
+   - Check Edamam API response includes totalNutrients
+   - Test fallback nutrient analysis
 
 ### Step 6.2: Automatic Recovery Procedures
 ```bash
@@ -279,6 +338,12 @@ tasklist | findstr python
 - [ ] Frontend-backend communication working
 - [ ] Mobile-first design verified
 - [ ] Loading states and error messages working
+- [ ] **NEW**: Recipe variety system working (no repeats)
+- [ ] **NEW**: Target nutrient values displaying correctly
+- [ ] **NEW**: Nutrient analysis with visual indicators
+- [ ] **NEW**: Recipe rotation service functional
+- [ ] **NEW**: Web-based nutrient lookup working
+- [ ] **NEW**: Mood-specific nutrient targeting accurate
 
 ### Step 8.2: Final Validation Commands
 ```bash
@@ -345,7 +410,45 @@ The application is considered successfully deployed when:
 - ✅ All templates render without errors
 - ✅ Session storage works correctly
 - ✅ Loading states display properly
+- ✅ **NEW**: Recipe variety system provides diverse recommendations
+- ✅ **NEW**: Target nutrient values show progress toward daily goals
+- ✅ **NEW**: Visual indicators (✅🟡🔴) display nutrient target achievement
+- ✅ **NEW**: Recipe rotation prevents repeats within 24 hours
+- ✅ **NEW**: Enhanced nutrient analysis includes micronutrients
+- ✅ **NEW**: Mood-specific nutritional targeting is accurate
+- ✅ **NEW**: "Another Recipe Suggestion" button works correctly
 
 ---
 
-*This guide ensures professional-grade deployment with comprehensive error handling and validation at every step.*
+## Enhanced Features Guide (v2.0)
+
+### Recipe Variety System
+The system now provides 3x more recipe variety through:
+- **60+ keyword combinations** per mood (vs 20 previously)
+- **Intelligent rotation** that avoids repeats within 24 hours
+- **Variety boosting** that prioritizes different protein sources, cuisines, and cooking methods
+- **Session tracking** to ensure diverse recommendations
+
+### Target Nutrient Values
+Users now see exactly how their mood needs are met:
+- **Daily targets** for all mood-supporting nutrients
+- **Percentage achievement** (e.g., "45mg of 120mg target (38%)")
+- **Visual indicators**: ✅ (50%+), 🟡 (25-49%), 🔴 (<25%)
+- **Mood-specific targeting** with personalized nutrient goals
+
+### Enhanced Nutrient Analysis
+- **Web-based lookup** for comprehensive micronutrient data
+- **Ingredient analysis** that recognizes nutrient patterns
+- **Fallback system** with estimated benefits when detailed data unavailable
+- **Mood-specific explanations** for why each nutrient matters
+
+### Testing the Enhanced Features
+1. **Recipe Variety**: Get 3-5 consecutive recommendations and verify different recipes
+2. **Nutrient Targets**: Click "Nutrient Match Score" and verify target values display
+3. **Visual Indicators**: Check that ✅🟡🔴 icons appear based on target achievement
+4. **Rotation**: Verify no recipe repeats within the same session
+5. **Mood Targeting**: Test different moods and verify appropriate nutrient focus
+
+---
+
+*This guide ensures professional-grade deployment with comprehensive error handling, validation, and enhanced user experience features at every step.*
