@@ -50,7 +50,6 @@ def get_recommendation():
         print(f"Received request: {data}")
         
         # Use synchronous requests instead of async
-        import requests
         response = requests.post(
             f"{BACKEND_URL}/api/v1/recipes/recommend",
             json=data,

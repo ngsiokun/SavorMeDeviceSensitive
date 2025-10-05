@@ -1,15 +1,15 @@
 /* Mood Selection Page Styles */
 
 .evidence-note {
-    background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
-    border: 2px solid #F59E0B;
-    border-radius: 12px;
-    padding: 12px;
+    background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
+    border: 1px solid #10B981;
+    border-radius: 8px;
+    padding: 10px;
     margin-bottom: 20px;
     text-align: center;
     font-size: 12px;
-    font-weight: 600;
-    color: #92400E;
+    font-weight: 500;
+    color: #065F46;
 }
 
 .mood-grid {
@@ -22,7 +22,7 @@
 .mood-card {
     background: white;
     border: 2px solid #E5E7EB;
-    border-radius: 16px;
+    border-radius: 12px;
     padding: 16px;
     text-align: center;
     cursor: pointer;
@@ -32,6 +32,22 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.mood-card.stressed {
+    border-color: #3B82F6;
+}
+
+.mood-card.fatigued {
+    border-color: #EF4444;
+}
+
+.mood-card.low_mood {
+    border-color: #8B5CF6;
+}
+
+.mood-card.irritable {
+    border-color: #F97316;
 }
 
 .mood-card:hover {
@@ -140,6 +156,7 @@
 
 .generate-btn:disabled {
     background: #9CA3AF;
+    color: white;
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
