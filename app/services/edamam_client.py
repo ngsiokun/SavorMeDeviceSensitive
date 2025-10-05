@@ -207,6 +207,10 @@ class EdamamClient:
         total_nutrients = recipe_data.get("totalNutrients", {})
         servings = float(recipe_data.get("yield", 1))
         
+        # Debug: Log available nutrients from Edamam
+        print(f"DEBUG: Available nutrients from Edamam: {list(total_nutrients.keys())}")
+        print(f"DEBUG: Recipe yield: {servings}")
+        
         # Edamam nutrient code mapping - Complete micronutrient coverage
         nutrient_map = {
             # Macronutrients
@@ -253,6 +257,7 @@ class EdamamClient:
             if edamam_code in total_nutrients:
                 quantity = total_nutrients[edamam_code].get("quantity", 0)
                 nutrients_raw[canonical_name] = quantity / servings
+                print(f"DEBUG: Found {canonical_name}: {quantity / servings:.2f} (from {edamam_code})")
         
         # Calculate EPA+DHA if available (convert mg to g)
         epa = total_nutrients.get("EPA", {}).get("quantity", 0) / servings
@@ -266,6 +271,7 @@ class EdamamClient:
             if omega3_mg > 0:
                 nutrients_raw["omega3_g"] = omega3_mg / 1000.0  # Convert mg to g
         
+        print(f"DEBUG: Final extracted nutrients: {nutrients_raw}")
         return nutrients_raw
     
     def build_search_query_from_mood(
