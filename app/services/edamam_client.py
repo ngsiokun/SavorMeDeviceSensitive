@@ -108,9 +108,12 @@ class EdamamClient:
             recipe = self._parse_recipe(recipe_data)
             recipes.append(recipe)
         
+        print(f"Initial search for '{query}' found {len(recipes)} recipes")
+        
         # If no results found and we have restrictive parameters, try a more flexible search
         if not recipes and (calories_range or protein_range or cuisine_types):
             print(f"No results with restrictive parameters, trying flexible search for: {query}")
+            print(f"Restrictive params - calories: {calories_range}, protein: {protein_range}, cuisine: {cuisine_types}")
             
             # Create a more flexible search with only basic parameters
             flexible_params = [
