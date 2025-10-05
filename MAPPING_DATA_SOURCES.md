@@ -4,7 +4,7 @@
 
 ### **Primary Source: `app/data/mood_mapping.json`**
 
-**File Path**: `C:\Users\HP\SavorMe\SavorMe-1\app\data\mood_mapping.json`
+**File Path**: `C:\Users\HP\SavorMe\SavorMe-backend\app\data\mood_mapping.json`
 
 **GitHub**: `https://github.com/ngsiokun/SavorMe-backend/blob/main/app/data/mood_mapping.json`
 

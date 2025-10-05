@@ -11,7 +11,7 @@
 
 ### **Step 2: Navigate to Project**
 ```cmd
-cd C:\Users\HP\SavorMe\SavorMe-1
+cd C:\Users\HP\SavorMe\SavorMe-backend
 ```
 
 ### **Step 3: Activate Virtual Environment**
