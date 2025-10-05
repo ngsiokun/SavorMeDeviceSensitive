@@ -159,7 +159,7 @@ async function generateRecommendation() {
         
     } catch (error) {
         console.error('Error:', error);
-        alert(`Error: ${error.message}\n\nMake sure the backend is running at http://localhost:8000`);
+        alert(`Error: ${error.message}\n\nMake sure the backend is running at http://127.0.0.1:8000`);
     } finally {
         clearInterval(messageInterval);
         loadingIndicator.style.display = 'none';

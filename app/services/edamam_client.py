@@ -108,6 +108,37 @@ class EdamamClient:
             recipe = self._parse_recipe(recipe_data)
             recipes.append(recipe)
         
+        # If no results found and we have restrictive parameters, try a more flexible search
+        if not recipes and (calories_range or protein_range or cuisine_types):
+            print(f"No results with restrictive parameters, trying flexible search for: {query}")
+            
+            # Create a more flexible search with only basic parameters
+            flexible_params = [
+                ("type", "public"),
+                ("q", query),
+                ("app_id", self.app_id),
+                ("app_key", self.app_key),
+            ]
+            
+            # Add only the most important fields
+            for field in ["uri", "label", "image", "ingredients", "calories", "totalNutrients"]:
+                flexible_params.append(("field", field))
+            
+            try:
+                response = await client.get(self.base_url, params=flexible_params)
+                response.raise_for_status()
+                data = response.json()
+                
+                # Parse flexible results
+                for hit in data.get("hits", [])[:max_results]:
+                    recipe_data = hit.get("recipe", {})
+                    recipe = self._parse_recipe(recipe_data)
+                    recipes.append(recipe)
+                    
+                print(f"Flexible search found {len(recipes)} recipes")
+            except Exception as e:
+                print(f"Flexible search also failed: {e}")
+        
         return recipes
     
     def _parse_recipe(self, recipe_data: Dict[str, Any]) -> Recipe:
