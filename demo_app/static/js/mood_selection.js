@@ -92,12 +92,29 @@ async function generateRecommendation() {
         return;
     }
     
-    // Show loading
+    // Show loading with cute animations
     const loadingIndicator = document.getElementById('loadingIndicator');
     const generateBtn = document.getElementById('generateBtn');
+    const loadingText = loadingIndicator.querySelector('div:last-child');
     
     loadingIndicator.style.display = 'block';
     generateBtn.disabled = true;
+    
+    // Cute loading messages that cycle
+    const loadingMessages = [
+        "Finding your perfect recipe...",
+        "Analyzing your mood... 🧠",
+        "Searching for the best ingredients... 🥬",
+        "Crafting your personalized recipe... 👨‍🍳",
+        "Adding a sprinkle of magic... ✨",
+        "Almost ready... just a moment! 🍽️"
+    ];
+    
+    let messageIndex = 0;
+    const messageInterval = setInterval(() => {
+        loadingText.textContent = loadingMessages[messageIndex];
+        messageIndex = (messageIndex + 1) % loadingMessages.length;
+    }, 1500);
     
     try {
         // Build request payload
@@ -142,6 +159,7 @@ async function generateRecommendation() {
         console.error('Error:', error);
         alert(`Error: ${error.message}\n\nMake sure the backend is running at http://localhost:8000`);
     } finally {
+        clearInterval(messageInterval);
         loadingIndicator.style.display = 'none';
         generateBtn.disabled = false;
     }
