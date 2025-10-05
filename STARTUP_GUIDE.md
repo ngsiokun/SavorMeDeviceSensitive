@@ -1,8 +1,26 @@
 # SavorMe Application - Complete Startup Guide
 
-## 🚀 Quick Start (Always Use This Order)
+## 🚀 Quick Start Options
 
-### 1. Environment Setup
+### **Option 1: Automatic Setup (Recommended for New Clones)**
+```cmd
+# Clone and start with automatic setup
+git clone https://github.com/ngsiokun/SavorMe-backend.git
+cd SavorMe-backend
+start_savorme_auto.bat
+```
+
+### **Option 2: Python Setup Script**
+```cmd
+# Clone and start with Python setup
+git clone https://github.com/ngsiokun/SavorMe-backend.git
+cd SavorMe-backend
+py start_with_setup.py
+```
+
+### **Option 3: Manual Setup (For Existing Projects)**
+
+#### 1. Environment Setup
 ```cmd
 # Activate virtual environment
 venv\Scripts\activate.bat
@@ -11,7 +29,7 @@ venv\Scripts\activate.bat
 py --version
 ```
 
-### 2. Start Backend Server
+#### 2. Start Backend Server
 ```cmd
 # Option 1: Use batch file
 start_backend.bat
@@ -20,7 +38,7 @@ start_backend.bat
 py -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-### 3. Start Frontend Server (In New Terminal)
+#### 3. Start Frontend Server (In New Terminal)
 ```cmd
 # Option 1: Use batch file
 start_demo.bat
@@ -28,6 +46,12 @@ start_demo.bat
 # Option 2: Manual command
 cd demo_app
 py app.py
+```
+
+### **Option 4: Reliable Startup (For Existing Projects)**
+```cmd
+# Use the reliable startup script
+start_app_reliable.bat
 ```
 
 ### 4. Verify Both Servers Are Running

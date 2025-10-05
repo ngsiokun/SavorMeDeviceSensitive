@@ -4,30 +4,48 @@
 
 ## 🎯 Complete Instructions
 
-### **Step 1: Open Command Prompt**
+### **Option 1: Automatic Setup (Recommended for New Clones)**
+```cmd
+# Clone and start with automatic setup
+git clone https://github.com/ngsiokun/SavorMe-backend.git
+cd SavorMe-backend
+start_savorme_auto.bat
+```
+
+### **Option 2: Python Setup (New Clones)**
+```cmd
+# Clone and start with Python setup
+git clone https://github.com/ngsiokun/SavorMe-backend.git
+cd SavorMe-backend
+py start_with_setup.py
+```
+
+### **Option 3: Manual Setup (Existing Projects)**
+
+#### **Step 1: Open Command Prompt**
 - Press `Win + R`
 - Type `cmd`
 - Press Enter
 
-### **Step 2: Navigate to Project**
+#### **Step 2: Navigate to Project**
 ```cmd
 cd C:\Users\HP\SavorMe\SavorMe-backend
 ```
 
-### **Step 3: Activate Virtual Environment**
+#### **Step 3: Activate Virtual Environment**
 ```cmd
 venv\Scripts\activate.bat
 ```
 
 You should see `(venv)` appear in your prompt.
 
-### **Step 4: Clear Python Cache** (Important!)
+#### **Step 4: Clear Python Cache** (Important!)
 ```cmd
 del /s /q __pycache__
 del /s /q *.pyc
 ```
 
-### **Step 5: Start Backend (Terminal 1)**
+#### **Step 5: Start Backend (Terminal 1)**
 ```cmd
 py -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```

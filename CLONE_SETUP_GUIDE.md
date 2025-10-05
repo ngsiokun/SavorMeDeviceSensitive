@@ -22,14 +22,21 @@
 
 ## 🚀 Setup Process After Cloning
 
-### **Option 1: Automated Setup (Recommended)**
+### **Option 1: Automatic Setup (Recommended)**
 ```cmd
 # After cloning
 cd [your-new-clone-directory]
-setup_new_clone.bat
+start_savorme_auto.bat
 ```
 
-### **Option 2: Manual Setup**
+### **Option 2: Python Setup Script**
+```cmd
+# After cloning
+cd [your-new-clone-directory]
+py start_with_setup.py
+```
+
+### **Option 3: Manual Setup**
 ```cmd
 # 1. Create virtual environment
 py -m venv venv

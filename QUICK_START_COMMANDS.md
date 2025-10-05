@@ -2,13 +2,34 @@
 
 ## 🚀 Start Application (Copy & Paste These Commands)
 
-### Terminal 1 - Backend:
+### **Option 1: Automatic Setup (New Clones)**
+```cmd
+git clone https://github.com/ngsiokun/SavorMe-backend.git
+cd SavorMe-backend
+start_savorme_auto.bat
+```
+
+### **Option 2: Python Setup (New Clones)**
+```cmd
+git clone https://github.com/ngsiokun/SavorMe-backend.git
+cd SavorMe-backend
+py start_with_setup.py
+```
+
+### **Option 3: Reliable Startup (Existing Projects)**
+```cmd
+start_app_reliable.bat
+```
+
+### **Option 4: Manual Startup (Existing Projects)**
+
+#### Terminal 1 - Backend:
 ```cmd
 venv\Scripts\activate.bat
 start_backend.bat
 ```
 
-### Terminal 2 - Frontend:
+#### Terminal 2 - Frontend:
 ```cmd
 venv\Scripts\activate.bat
 start_demo.bat
