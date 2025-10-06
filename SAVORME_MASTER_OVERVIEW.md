@@ -156,6 +156,14 @@ SavorMe is a comprehensive mood-based recipe recommendation system that provides
 - **Daily Intake Context**: Shows meal targets vs daily needs
 - **Nutrient Breakdown**: Individual nutrient contributions to overall score
 
+### **Enhanced Cooking Directions**
+- **Professional Chef-Level Instructions**: Comprehensive, detailed cooking directions
+- **AI-Generated Directions**: 1200 token limit for thorough instructions
+- **Detailed Fallback System**: Complete ingredient-specific cooking methods
+- **Sectioned Format**: PREPARATION, COOKING STEPS, FINISHING, and TIPS
+- **Specific Temperatures & Times**: Professional cooking techniques
+- **Beginner-Friendly**: Clear enough for new cooks to follow successfully
+
 ### **Evidence-Based Nutrition**
 - **EPA-focused Omega-3**: Prioritizes EPA ≥ 60% of EPA+DHA
 - **Iron-Supportive Implementation**: Heme/non-heme with vitamin C pairing

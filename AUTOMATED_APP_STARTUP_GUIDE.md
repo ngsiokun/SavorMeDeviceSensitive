@@ -31,6 +31,7 @@ This document provides a complete, step-by-step guide for running the SavorMe ap
 - **Anti-Inflammatory Mediterranean Pattern**: Enhanced with neuroprotective herbs/spices
 - **Iron-Supportive Implementation**: Heme/non-heme sources with vitamin C pairing
 - **Scientific Claim Accuracy**: Medically safe wording based on evidence strength
+- **Enhanced Cooking Directions**: Professional chef-level instructions with comprehensive details
 - **Recipe Variety System**: 3x more diverse recipes with intelligent rotation
 - **Target Nutrient Values**: Shows exactly how mood needs are met with daily targets
 - **Enhanced Nutrient Analysis**: Web-based lookup for comprehensive micronutrient data
@@ -424,7 +425,23 @@ Verify these essential functions exist in `demo_app/static/js/recipe_result.js`:
 - `generatePage()` - Dynamic page generation
 - `addEventListeners()` - Button functionality
 
-### Step 2.5.4: Evidence-Based Nutrient Targeting Verification
+### Step 2.5.4: Enhanced Cooking Directions Verification
+Verify the cooking directions system provides comprehensive instructions (see `CUSTOMIZATIONS_PERSISTENT.md` Section 4):
+
+#### **AI-Generated Directions (When API Available):**
+- **Token Limit**: 1200 tokens (increased from 500) for detailed instructions
+- **Professional Prompt**: Requests preparation, cooking steps, finishing, and tips
+- **Comprehensive Format**: Sectioned instructions with specific temperatures and times
+- **Beginner-Friendly**: Clear enough for someone new to cooking
+
+#### **Fallback Directions (When API Unavailable):**
+- **Sectioned Format**: PREPARATION, COOKING STEPS, FINISHING, and TIPS sections
+- **Ingredient-Specific Methods**: Different approaches for meat, fish, vegetables, pasta
+- **Specific Temperatures**: 375°F for meat, 400°F for fish, 425°F for vegetables
+- **Professional Techniques**: Resting meat, reserving pasta water, proper browning
+- **Pro Tips Included**: Common mistakes to avoid, cooking techniques, equipment guidance
+
+### Step 2.5.5: Evidence-Based Nutrient Targeting Verification
 Ensure the system tracks these nutrients with updated evidence-based targets (see `CUSTOMIZATIONS_PERSISTENT.md` Section 3):
 
 #### **Primary Mood-Supporting Nutrients:**

@@ -1,7 +1,7 @@
 # SavorMe Customizations - Persistent Design System
 
 ## 🎯 **Purpose**
-This document ensures that all customizations made to the SavorMe application persist through GitHub clones and maintain consistent quality, branding, and evidence-based scientific accuracy.
+This document ensures that all customizations made to the SavorMe application persist through GitHub clones and maintain consistent quality, branding, evidence-based scientific accuracy, and comprehensive cooking instructions.
 
 ## 📁 **Files Modified/Created**
 
@@ -48,13 +48,18 @@ This document ensures that all customizations made to the SavorMe application pe
   - **Evidence-based weighting** (1.0 = strongest evidence, 0.5 = emerging evidence)
   - **Data source transparency** (Edamam API + built-in nutrient database)
 
-### 4. **Backend Cooking Directions Fix**
+### 4. **Enhanced Cooking Directions System (v3.1.0)**
 - **File**: `app/services/openrouter_client.py`
 - **Changes**:
-  - Added fallback cooking directions generation
-  - Intelligent ingredient analysis for cooking methods
-  - Proper error handling when API keys are missing
-  - Step-by-step cooking instructions instead of just links
+  - **Comprehensive AI-Generated Directions**: Increased token limit from 500 to 1200 for detailed instructions
+  - **Professional Chef-Level Instructions**: Enhanced prompt requesting preparation, cooking steps, finishing, and tips
+  - **Detailed Fallback Directions**: Complete rewrite with ingredient-specific cooking methods
+  - **Sectioned Format**: PREPARATION, COOKING STEPS, FINISHING, and TIPS sections
+  - **Specific Temperatures & Times**: 375°F for meat, 400°F for fish, 425°F for vegetables
+  - **Professional Techniques**: Resting meat, reserving pasta water, proper browning methods
+  - **Beginner-Friendly**: Clear enough for someone new to cooking to follow successfully
+  - **Ingredient-Specific Methods**: Different detailed approaches for meat, fish, vegetables, pasta
+  - **Pro Tips Included**: Common mistakes to avoid, cooking techniques, equipment guidance
 
 ### 5. **Evidence-Based Mood Mapping System (v2.2)**
 - **File**: `app/data/mood_mapping.json`
