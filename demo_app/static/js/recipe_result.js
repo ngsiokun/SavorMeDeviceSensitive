@@ -514,38 +514,57 @@ function closeNutrientModal() {
             const ingredientText = ingredients.map(ing => ing.name.toLowerCase()).join(' ');
             
             if (ingredientText.includes('leafy') || ingredientText.includes('spinach') || ingredientText.includes('kale')) {
-                highlights.push(`<li><strong>Leafy Greens:</strong> Rich in folate (target: 400mcg), iron (target: 18mg), and magnesium (target: 120mg) for mood support and stress reduction.</li>`);
+                const folatePercent = folate > 0 ? Math.round((folate / 400) * 100) : 0;
+                const ironPercent = iron > 0 ? Math.round((iron / 18) * 100) : 0;
+                const magPercent = magnesium > 0 ? Math.round((magnesium / 120) * 100) : 0;
+                highlights.push(`<li><strong>Leafy Greens:</strong> Rich in folate (${folate}mcg, ${folatePercent}% of 400mcg target), iron (${iron}mg, ${ironPercent}% of 18mg target), and magnesium (${magnesium}mg, ${magPercent}% of 120mg target) for mood support and stress reduction.</li>`);
             }
             
             if (ingredientText.includes('fish') || ingredientText.includes('salmon') || ingredientText.includes('tuna') || ingredientText.includes('mackerel')) {
-                highlights.push(`<li><strong>Omega-3 Fatty Acids:</strong> Anti-inflammatory properties support brain health and mood regulation (target: 2g daily).</li>`);
+                const omega3Percent = omega3 > 0 ? Math.round((omega3 / 2.0) * 100) : 0;
+                highlights.push(`<li><strong>Omega-3 Fatty Acids:</strong> Provides ${omega3}g (${omega3Percent}% of 2g daily target) with anti-inflammatory properties that support brain health and mood regulation.</li>`);
             }
             
             if (ingredientText.includes('nuts') || ingredientText.includes('almond') || ingredientText.includes('walnut')) {
-                highlights.push(`<li><strong>Healthy Fats:</strong> Support brain function and help maintain stable mood throughout the day (target: 20-35% of calories).</li>`);
+                const fatGrams = Math.round(recipe.nutrition?.fat_g || 0);
+                const fatPercent = fatGrams > 0 ? Math.round((fatGrams / 50) * 100) : 0; // Assuming 50g daily fat target
+                highlights.push(`<li><strong>Healthy Fats:</strong> Provides ${fatGrams}g (${fatPercent}% of daily target) to support brain function and maintain stable mood throughout the day.</li>`);
             }
             
             if (ingredientText.includes('legume') || ingredientText.includes('bean') || ingredientText.includes('lentil') || ingredientText.includes('chickpea')) {
-                highlights.push(`<li><strong>Plant Protein:</strong> Provides amino acids for neurotransmitter synthesis and sustained energy (target: 50g daily).</li>`);
+                const proteinPercent = protein > 0 ? Math.round((protein / 50) * 100) : 0;
+                highlights.push(`<li><strong>Plant Protein:</strong> Provides ${protein}g (${proteinPercent}% of 50g daily target) with amino acids for neurotransmitter synthesis and sustained energy.</li>`);
             }
             
             if (ingredientText.includes('whole grain') || ingredientText.includes('quinoa') || ingredientText.includes('brown rice') || ingredientText.includes('oats')) {
-                highlights.push(`<li><strong>Complex Carbohydrates:</strong> Steady glucose release supports stable mood and energy levels (target: 45-65% of calories).</li>`);
+                const carbsGrams = Math.round(recipe.nutrition?.carbs_g || 0);
+                const carbsPercent = carbsGrams > 0 ? Math.round((carbsGrams / 250) * 100) : 0; // Assuming 250g daily carbs target
+                highlights.push(`<li><strong>Complex Carbohydrates:</strong> Provides ${carbsGrams}g (${carbsPercent}% of daily target) for steady glucose release that supports stable mood and energy levels.</li>`);
             }
             
-            // Add mood-specific nutrient targets
+            // Add mood-specific nutrient values and targets
             const selectedMoods = JSON.parse(sessionStorage.getItem('selectedMoods') || '[]');
             if (selectedMoods.includes('stressed')) {
-                highlights.push(`<li><strong>Stress Support:</strong> This recipe targets magnesium (120mg), omega-3 (2g), and B-vitamins to help manage stress response.</li>`);
+                const magPercent = magnesium > 0 ? Math.round((magnesium / 120) * 100) : 0;
+                const omega3Percent = omega3 > 0 ? Math.round((omega3 / 2.0) * 100) : 0;
+                highlights.push(`<li><strong>Stress Support:</strong> This recipe provides ${magnesium}mg magnesium (${magPercent}% of 120mg target) and ${omega3}g omega-3 (${omega3Percent}% of 2g target) to help manage stress response.</li>`);
             }
             if (selectedMoods.includes('fatigued')) {
-                highlights.push(`<li><strong>Energy Support:</strong> This recipe targets iron (18mg), B12 (2.4mcg), and folate (400mcg) to combat fatigue and boost energy.</li>`);
+                const ironPercent = iron > 0 ? Math.round((iron / 18) * 100) : 0;
+                const b12Percent = b12 > 0 ? Math.round((b12 / 2.4) * 100) : 0;
+                const folatePercent = folate > 0 ? Math.round((folate / 400) * 100) : 0;
+                highlights.push(`<li><strong>Energy Support:</strong> This recipe provides ${iron}mg iron (${ironPercent}% of 18mg target), ${b12}mcg B12 (${b12Percent}% of 2.4mcg target), and ${folate}mcg folate (${folatePercent}% of 400mcg target) to combat fatigue and boost energy.</li>`);
             }
             if (selectedMoods.includes('low_mood')) {
-                highlights.push(`<li><strong>Mood Support:</strong> This recipe targets omega-3 (2g), folate (400mcg), and vitamin D (2000IU) to support mood regulation.</li>`);
+                const omega3Percent = omega3 > 0 ? Math.round((omega3 / 2.0) * 100) : 0;
+                const folatePercent = folate > 0 ? Math.round((folate / 400) * 100) : 0;
+                const vitDPercent = vitaminD > 0 ? Math.round((vitaminD / 2000) * 100) : 0;
+                highlights.push(`<li><strong>Mood Support:</strong> This recipe provides ${omega3}g omega-3 (${omega3Percent}% of 2g target), ${folate}mcg folate (${folatePercent}% of 400mcg target), and ${vitaminD}IU vitamin D (${vitDPercent}% of 2000IU target) to support mood regulation.</li>`);
             }
             if (selectedMoods.includes('irritable')) {
-                highlights.push(`<li><strong>Mood Stability:</strong> This recipe targets magnesium (120mg), zinc (11mg), and B-vitamins to help regulate mood and reduce irritability.</li>`);
+                const magPercent = magnesium > 0 ? Math.round((magnesium / 120) * 100) : 0;
+                const zincPercent = zinc > 0 ? Math.round((zinc / 11) * 100) : 0;
+                highlights.push(`<li><strong>Mood Stability:</strong> This recipe provides ${magnesium}mg magnesium (${magPercent}% of 120mg target) and ${zinc}mg zinc (${zincPercent}% of 11mg target) to help regulate mood and reduce irritability.</li>`);
             }
             
             return highlights.join('');
@@ -619,19 +638,29 @@ function generateDetailedRationale(recipe, nutrition, rationale) {
         rationaleText += `Vitamin D (${vitaminD}IU, ${vitDPercent}% of daily target of 2000IU) is crucial for mood regulation and helps combat seasonal depression. `;
     }
     
-    // Mood-specific benefits with targets
+    // Mood-specific benefits with actual recipe values and targets
     const selectedMoods = JSON.parse(sessionStorage.getItem('selectedMoods') || '[]');
     if (selectedMoods.includes('stressed')) {
-        rationaleText += `For stress management, this recipe targets magnesium (120mg daily), omega-3 (2g daily), and B-vitamins to help regulate your stress response. `;
+        const magPercent = magnesium > 0 ? Math.round((magnesium / 120) * 100) : 0;
+        const omega3Percent = omega3 > 0 ? Math.round((omega3 / 2.0) * 100) : 0;
+        rationaleText += `For stress management, this recipe provides ${magnesium}mg magnesium (${magPercent}% of 120mg daily target) and ${omega3}g omega-3 (${omega3Percent}% of 2g daily target) to help regulate your stress response. `;
     }
     if (selectedMoods.includes('fatigued')) {
-        rationaleText += `To combat fatigue, this recipe focuses on iron (18mg daily), B12 (2.4mcg daily), and folate (400mcg daily) to boost energy and cognitive function. `;
+        const ironPercent = iron > 0 ? Math.round((iron / 18) * 100) : 0;
+        const b12Percent = b12 > 0 ? Math.round((b12 / 2.4) * 100) : 0;
+        const folatePercent = folate > 0 ? Math.round((folate / 400) * 100) : 0;
+        rationaleText += `To combat fatigue, this recipe provides ${iron}mg iron (${ironPercent}% of 18mg daily target), ${b12}mcg B12 (${b12Percent}% of 2.4mcg daily target), and ${folate}mcg folate (${folatePercent}% of 400mcg daily target) to boost energy and cognitive function. `;
     }
     if (selectedMoods.includes('low_mood')) {
-        rationaleText += `For mood support, this recipe emphasizes omega-3 (2g daily), folate (400mcg daily), and vitamin D (2000IU daily) to support mood regulation. `;
+        const omega3Percent = omega3 > 0 ? Math.round((omega3 / 2.0) * 100) : 0;
+        const folatePercent = folate > 0 ? Math.round((folate / 400) * 100) : 0;
+        const vitDPercent = vitaminD > 0 ? Math.round((vitaminD / 2000) * 100) : 0;
+        rationaleText += `For mood support, this recipe provides ${omega3}g omega-3 (${omega3Percent}% of 2g daily target), ${folate}mcg folate (${folatePercent}% of 400mcg daily target), and ${vitaminD}IU vitamin D (${vitDPercent}% of 2000IU daily target) to support mood regulation. `;
     }
     if (selectedMoods.includes('irritable')) {
-        rationaleText += `To reduce irritability, this recipe targets magnesium (120mg daily), zinc (11mg daily), and B-vitamins to help stabilize mood. `;
+        const magPercent = magnesium > 0 ? Math.round((magnesium / 120) * 100) : 0;
+        const zincPercent = zinc > 0 ? Math.round((zinc / 11) * 100) : 0;
+        rationaleText += `To reduce irritability, this recipe provides ${magnesium}mg magnesium (${magPercent}% of 120mg daily target) and ${zinc}mg zinc (${zincPercent}% of 11mg daily target) to help stabilize mood. `;
     }
     
     rationaleText += `This combination of nutrients works synergistically to support your emotional well-being and provide the energy your body needs.`;
