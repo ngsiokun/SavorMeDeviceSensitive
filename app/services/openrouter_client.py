@@ -43,7 +43,7 @@ class OpenRouterClient:
         ingredients_text = "\n".join([f"- {ing.amount} {ing.name}" for ing in ingredients[:10]])
         cuisine = cuisine_type[0] if cuisine_type else "general"
         
-        prompt = f"""Generate clear, step-by-step cooking directions for this recipe:
+        prompt = f"""Generate comprehensive, detailed cooking directions for this recipe:
 
 Recipe: {recipe_name}
 Cuisine: {cuisine}
@@ -51,8 +51,13 @@ Cuisine: {cuisine}
 Ingredients:
 {ingredients_text}
 
-Please provide 5-8 concise cooking steps. Be specific and practical. Format as a numbered list.
-Focus on: preparation, cooking method, timing, and plating."""
+Please provide detailed, step-by-step cooking instructions that include:
+1. PREPARATION: Ingredient prep, equipment needed, timing estimates
+2. COOKING STEPS: Detailed cooking process with specific temperatures, times, and techniques
+3. FINISHING: Plating, garnishing, and serving suggestions
+4. TIPS: Pro tips for best results, common mistakes to avoid, and variations
+
+Make the directions thorough enough for someone to successfully recreate this dish. Include specific cooking times, temperatures, and techniques. Format as a clear numbered list with detailed explanations for each step."""
 
         try:
             async with httpx.AsyncClient(timeout=30.0) as client:
@@ -67,7 +72,7 @@ Focus on: preparation, cooking method, timing, and plating."""
                         "messages": [
                             {
                                 "role": "system",
-                                "content": "You are a professional chef providing clear, concise cooking instructions. Be specific and practical."
+                                "content": "You are a professional chef and cooking instructor providing comprehensive, detailed cooking instructions. Be thorough, specific, and practical. Include cooking times, temperatures, techniques, and helpful tips. Make sure a beginner could follow your instructions successfully."
                             },
                             {
                                 "role": "user",
@@ -75,7 +80,7 @@ Focus on: preparation, cooking method, timing, and plating."""
                             }
                         ],
                         "temperature": 0.7,
-                        "max_tokens": 500
+                        "max_tokens": 1200
                     }
                 )
                 response.raise_for_status()
@@ -98,59 +103,120 @@ Focus on: preparation, cooking method, timing, and plating."""
             line = line.strip()
             if not line:
                 continue
+            
+            # Skip section headers (PREPARATION:, COOKING STEPS:, etc.)
+            if line.endswith(':') and line.isupper():
+                steps.append(line)  # Keep section headers
+                continue
+            
             # Remove numbering if present (1., 2., etc.)
             import re
             cleaned = re.sub(r'^\d+[\.\)]\s*', '', line)
-            if cleaned and len(cleaned) > 10:  # Skip very short lines
+            
+            # Remove bullet points but keep the content
+            cleaned = re.sub(r'^[•\-\*]\s*', '', cleaned)
+            
+            if cleaned and len(cleaned) > 5:  # Include more lines, even shorter ones
                 steps.append(cleaned)
+        
         return steps if steps else [content]
     
     def _generate_fallback_directions(self, recipe_name: str, ingredients: List, cuisine_type: List[str] = None) -> List[str]:
-        """Generate basic cooking directions when API is not available"""
+        """Generate comprehensive cooking directions when API is not available"""
         cuisine = cuisine_type[0] if cuisine_type else "general"
         
-        # Basic cooking directions based on cuisine and ingredients
+        # Comprehensive cooking directions based on cuisine and ingredients
         directions = []
         
         # Analyze ingredients to determine cooking method
         ingredient_names = [ing.name.lower() for ing in ingredients]
+        ingredient_text = " ".join(ingredient_names)
         
-        if any(meat in " ".join(ingredient_names) for meat in ["beef", "chicken", "pork", "lamb", "turkey"]):
+        # PREPARATION SECTION
+        directions.extend([
+            "PREPARATION:",
+            "• Gather all ingredients and equipment needed",
+            "• Wash and prepare all vegetables as required",
+            "• Preheat oven to 375°F (190°C) if baking is needed",
+            "• Have all seasonings and spices ready",
+            ""
+        ])
+        
+        # COOKING STEPS based on ingredients
+        if any(meat in ingredient_text for meat in ["beef", "chicken", "pork", "lamb", "turkey"]):
             directions.extend([
-                f"Preheat oven to 375°F (190°C).",
-                f"Season the meat with salt, pepper, and herbs.",
-                f"Brown the meat in a large skillet over medium-high heat.",
-                f"Add vegetables and continue cooking until tender.",
-                f"Transfer to oven-safe dish and bake for 25-30 minutes.",
-                f"Let rest for 5 minutes before serving."
+                "COOKING STEPS:",
+                "• Season the meat generously with salt, pepper, and your choice of herbs (rosemary, thyme, or oregano work well)",
+                "• Heat 2 tablespoons of oil in a large oven-safe skillet over medium-high heat",
+                "• Brown the meat on all sides for 3-4 minutes per side until golden brown",
+                "• Remove meat and set aside. Add chopped vegetables to the same pan",
+                "• Cook vegetables for 5-7 minutes until they begin to soften",
+                "• Return meat to pan, add any liquid (broth, wine, or water) and bring to a simmer",
+                "• Cover and transfer to preheated oven. Bake for 25-35 minutes until meat is tender",
+                "• Remove from oven and let rest for 5-10 minutes before serving"
             ])
-        elif any(fish in " ".join(ingredient_names) for fish in ["salmon", "tuna", "cod", "halibut", "mackerel"]):
+        elif any(fish in ingredient_text for fish in ["salmon", "tuna", "cod", "halibut", "mackerel"]):
             directions.extend([
-                f"Preheat oven to 400°F (200°C).",
-                f"Season the fish with salt, pepper, and lemon.",
-                f"Heat oil in an oven-safe skillet over medium heat.",
-                f"Cook fish for 3-4 minutes per side until golden.",
-                f"Transfer to oven and bake for 8-10 minutes.",
-                f"Garnish with fresh herbs and serve immediately."
+                "COOKING STEPS:",
+                "• Preheat oven to 400°F (200°C) and heat a large oven-safe skillet over medium heat",
+                "• Pat fish dry and season both sides with salt, pepper, and lemon zest",
+                "• Add 2 tablespoons of oil to the hot skillet",
+                "• Place fish skin-side down (if applicable) and cook for 3-4 minutes without moving",
+                "• Carefully flip fish and cook for another 2-3 minutes",
+                "• Transfer skillet to oven and bake for 6-10 minutes until fish flakes easily",
+                "• Remove from oven and let rest for 2-3 minutes before serving"
             ])
-        elif any(veg in " ".join(ingredient_names) for veg in ["bell pepper", "zucchini", "eggplant", "tomato"]):
+        elif any(veg in ingredient_text for veg in ["bell pepper", "zucchini", "eggplant", "tomato", "onion"]):
             directions.extend([
-                f"Preheat oven to 425°F (220°C).",
-                f"Wash and prepare all vegetables.",
-                f"Toss vegetables with olive oil, salt, and herbs.",
-                f"Arrange on baking sheet in single layer.",
-                f"Roast for 20-25 minutes until tender and golden.",
-                f"Season with additional herbs and serve warm."
+                "COOKING STEPS:",
+                "• Preheat oven to 425°F (220°C) and line a baking sheet with parchment paper",
+                "• Cut vegetables into uniform pieces (about 1-inch cubes for even cooking)",
+                "• Toss vegetables with 3-4 tablespoons of olive oil, salt, pepper, and herbs",
+                "• Arrange vegetables in a single layer on the prepared baking sheet",
+                "• Roast for 20-25 minutes, stirring halfway through, until tender and golden",
+                "• Check for doneness - vegetables should be easily pierced with a fork",
+                "• Season with additional salt, pepper, or herbs to taste"
+            ])
+        elif any(pasta in ingredient_text for pasta in ["pasta", "noodles", "spaghetti", "penne"]):
+            directions.extend([
+                "COOKING STEPS:",
+                "• Bring a large pot of salted water to a rolling boil",
+                "• Add pasta and cook according to package directions, stirring occasionally",
+                "• Meanwhile, heat oil in a large skillet over medium heat",
+                "• Add aromatics (garlic, onions) and cook for 2-3 minutes until fragrant",
+                "• Add other ingredients and cook until heated through",
+                "• Reserve 1 cup of pasta water before draining pasta",
+                "• Toss cooked pasta with sauce and ingredients, adding pasta water as needed",
+                "• Cook for 1-2 minutes more until sauce coats pasta evenly"
             ])
         else:
             directions.extend([
-                f"Prepare all ingredients according to recipe requirements.",
-                f"Heat cooking oil or butter in a large pan over medium heat.",
-                f"Add main ingredients and cook until tender.",
-                f"Season with salt, pepper, and herbs to taste.",
-                f"Simmer for 10-15 minutes to develop flavors.",
-                f"Garnish and serve hot."
+                "COOKING STEPS:",
+                "• Heat 2-3 tablespoons of oil or butter in a large pan over medium heat",
+                "• Add aromatics (onions, garlic) and cook for 2-3 minutes until softened",
+                "• Add main ingredients in order of cooking time (hardest vegetables first)",
+                "• Season with salt, pepper, and herbs, stirring frequently",
+                "• Cook for 10-15 minutes, adding small amounts of liquid if needed",
+                "• Taste and adjust seasoning as needed",
+                "• Continue cooking until all ingredients are tender and flavors are combined"
             ])
+        
+        # FINISHING SECTION
+        directions.extend([
+            "",
+            "FINISHING:",
+            "• Taste and adjust seasoning with salt, pepper, or additional herbs",
+            "• Plate the dish attractively, considering color and texture contrast",
+            "• Garnish with fresh herbs, citrus zest, or a drizzle of quality oil",
+            "• Serve immediately while hot for best flavor and texture",
+            "",
+            "TIPS:",
+            "• Don't overcrowd the pan - cook in batches if necessary",
+            "• Let meat rest after cooking to redistribute juices",
+            "• Taste as you cook and adjust seasoning gradually",
+            "• Keep ingredients at room temperature for even cooking",
+            "• Use a meat thermometer for perfect doneness (145°F for most meats)"
+        ])
         
         return directions
     
