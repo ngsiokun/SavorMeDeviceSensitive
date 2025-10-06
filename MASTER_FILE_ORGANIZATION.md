@@ -61,7 +61,8 @@ requirements.txt             # Python dependencies
 
 #### **Primary Startup Scripts** (Use These)
 ```
-savorme_professional_startup.bat    # ⭐ MAIN STARTUP SCRIPT - Use this
+start_savorme_simple.bat            # ⭐ SIMPLE STARTUP SCRIPT - RECOMMENDED
+savorme_professional_startup.bat    # ⭐ PROFESSIONAL STARTUP - Advanced diagnostics
 start_savorme_reliable.bat          # ⭐ RELIABLE STARTUP - Backup option
 ```
 
@@ -79,15 +80,20 @@ start_with_setup.py                # Python startup script
 
 #### **Master Documentation** (Essential Reading)
 ```
+SAVORME_MASTER_OVERVIEW.md             # ⭐ COMPLETE PROJECT REFERENCE (NEW)
+CUSTOMIZATIONS_PERSISTENT.md           # ⭐ DESIGN SYSTEM & SCORING TRANSPARENCY (CRITICAL)
+AUTOMATED_APP_STARTUP_GUIDE.md         # ⭐ COMPREHENSIVE STARTUP GUIDE
+MASTER_FILE_ORGANIZATION.md            # ⭐ FILE ORGANIZATION & PRIORITIES
 TECHNICAL_SPECIFICATION_COMPLETE.md    # ⭐ COMPLETE TECHNICAL BLUEPRINT
 QUICK_IMPLEMENTATION_GUIDE.md          # ⭐ QUICK START GUIDE
-CUSTOMIZATIONS_PERSISTENT.md           # ⭐ DESIGN SYSTEM & CUSTOMIZATIONS
 README.md                              # ⭐ PROJECT OVERVIEW
 ```
 
 #### **Setup & Deployment Guides** (Important)
 ```
-AUTOMATED_APP_STARTUP_GUIDE.md         # Automated startup process
+CONFIGURATION_SUMMARY.md               # Quick configuration reference (NEW)
+SAVORME_PROJECT_STATUS.md              # Project status overview (NEW)
+DIRECTORY_CLEANUP_ANALYSIS.md          # Directory organization analysis (NEW)
 STARTUP_GUIDE.md                       # General startup instructions
 RUN_DEMO_INSTRUCTIONS.md               # Demo running instructions
 ```
@@ -146,12 +152,12 @@ venv/                                  # Python virtual environment
 - `savorme_professional_startup.bat`
 - `TECHNICAL_SPECIFICATION_COMPLETE.md`
 - `QUICK_IMPLEMENTATION_GUIDE.md`
-- `CUSTOMIZATIONS_PERSISTENT.md`
+- `CUSTOMIZATIONS_PERSISTENT.md` ⚠️ **CRITICAL FOR PAGE REBUILDING**
+- `AUTOMATED_APP_STARTUP_GUIDE.md` ⚠️ **CRITICAL FOR DEPLOYMENT**
 - `README.md`
 
 ### **IMPORTANT FILES** (Should Keep - Operational)
 - `start_savorme_reliable.bat`
-- `AUTOMATED_APP_STARTUP_GUIDE.md`
 - `STARTUP_GUIDE.md`
 - `SYSTEM_DESIGN_FINAL.md`
 - `PAGE_LAYOUTS_REFERENCE.md`
@@ -195,18 +201,81 @@ venv/                                  # Python virtual environment
 - [ ] Update file organization document
 - [ ] Test all essential files
 
+## 🔗 **Critical Documentation Relationships**
+
+### **Documentation Dependencies**
+The following files work together and should be used in conjunction:
+
+1. **`CUSTOMIZATIONS_PERSISTENT.md`** ← **MASTER REFERENCE**
+   - Contains all design system specifications
+   - Lists all customized files and their changes
+   - Provides code snippets for rebuilding pages
+   - **Recipe Match Score Transparency System** with weighted scoring breakdown
+   - **Data source documentation** (Edamam API + built-in nutrient database)
+   - **MUST BE REVIEWED** before any deployment or clone
+
+2. **`AUTOMATED_APP_STARTUP_GUIDE.md`** ← **DEPLOYMENT GUIDE**
+   - References `CUSTOMIZATIONS_PERSISTENT.md` throughout
+   - Includes Command Prompt requirement (never PowerShell)
+   - Provides step-by-step verification of all customizations
+   - **MUST BE USED** for proper deployment
+
+3. **`TECHNICAL_SPECIFICATION_COMPLETE.md`** ← **TECHNICAL BLUEPRINT**
+   - Complete system architecture and functionality
+   - Works with both customization and startup guides
+
+4. **`QUICK_IMPLEMENTATION_GUIDE.md`** ← **QUICK REFERENCE**
+   - Fast setup instructions
+   - Complements the automated startup guide
+
+### **File Usage Workflow**
+```
+CUSTOMIZATIONS_PERSISTENT.md (Review First)
+           ↓
+AUTOMATED_APP_STARTUP_GUIDE.md (Follow for Deployment)
+           ↓
+TECHNICAL_SPECIFICATION_COMPLETE.md (Reference for Details)
+           ↓
+QUICK_IMPLEMENTATION_GUIDE.md (Quick Setup)
+```
+
+### **Critical Files for Page Rebuilding**
+Based on `CUSTOMIZATIONS_PERSISTENT.md`, these files are essential for proper page reconstruction:
+
+#### **Landing Page Customizations**
+- `demo_app/templates/index.html` - Landing page template
+- `demo_app/static/css/landing.css` - Landing page styling
+
+#### **Recipe Results Page Customizations**
+- `demo_app/templates/recipe_result.html` - Minimal template for JavaScript-driven page
+- `demo_app/static/js/recipe_result.js` - Complete JavaScript functionality
+- `demo_app/static/css/recipe_results.css` - Complete styling
+
+#### **Backend Customizations**
+- `app/services/openrouter_client.py` - Cooking directions fix
+
+#### **Design System Files**
+- All CSS files in `demo_app/static/css/`
+- All JavaScript files in `demo_app/static/js/`
+- All template files in `demo_app/templates/`
+
+**⚠️ WARNING**: If any of these files are missing or modified incorrectly, the pages will not display properly. Always reference `CUSTOMIZATIONS_PERSISTENT.md` for the exact specifications.
+
 ## 🚀 **Quick Start File Priority**
 
 ### **For New Developers**
 1. Read `README.md` first
 2. Read `TECHNICAL_SPECIFICATION_COMPLETE.md`
-3. Use `savorme_professional_startup.bat` to start
-4. Reference `CUSTOMIZATIONS_PERSISTENT.md` for design
+3. **CRITICAL**: Review `CUSTOMIZATIONS_PERSISTENT.md` for design system
+4. Use `savorme_professional_startup.bat` to start
+5. Follow `AUTOMATED_APP_STARTUP_GUIDE.md` for complete setup
 
 ### **For Deployment**
-1. Use `savorme_professional_startup.bat`
-2. Follow `AUTOMATED_APP_STARTUP_GUIDE.md`
-3. Reference `QUICK_IMPLEMENTATION_GUIDE.md` for setup
+1. **ALWAYS** review `CUSTOMIZATIONS_PERSISTENT.md` first
+2. Use `savorme_professional_startup.bat`
+3. Follow `AUTOMATED_APP_STARTUP_GUIDE.md` (includes Command Prompt requirement)
+4. Reference `QUICK_IMPLEMENTATION_GUIDE.md` for setup
+5. Verify all customization files are present and correct
 
 ---
 

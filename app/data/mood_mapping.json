@@ -1,7 +1,7 @@
 {
-  "version": "2.1.0",
-  "description": "Evidence-based mood-to-nutrient mapping focused on 4 moods with strongest scientific support",
-  "changelog": "v2.1.0 - Updated claim language for medical safety, added B-vitamins, enhanced evidence descriptions with deficiency context",
+  "version": "2.2.0",
+  "description": "Evidence-based mood-to-nutrient mapping with enhanced scientific accuracy and safe claim wording",
+  "changelog": "v2.2.0 - Enhanced evidence levels, added Vitamin D/Zinc/Selenium, improved safe claim wording, aligned with clinical guidelines",
   
   "moods": [
     {
@@ -11,22 +11,24 @@
       "description": "Feeling anxious, stressed, or unable to relax",
       "targets": {
         "nutrients": [
-          {"name": "magnesium", "unit": "mg", "min_per_meal": 120, "weight": 1.0, "note": "may support nervous system function and stress response"},
+          {"name": "magnesium", "unit": "mg", "min_per_meal": 120, "weight": 1.0, "note": "helps the body cope with stress"},
           {"name": "omega_3_epa_dha", "unit": "g", "min_per_meal": 0.3, "weight": 0.9, "note": "anti-inflammatory properties, may support mood balance"},
           {"name": "fiber", "unit": "g", "min_per_meal": 8, "weight": 0.7, "note": "supports gut-brain axis health"},
+          {"name": "vitamin_d", "unit": "iu", "min_per_meal": 400, "weight": 0.6, "note": "supports overall health and may play a role in mood balance"},
+          {"name": "zinc", "unit": "mg", "min_per_meal": 3, "weight": 0.5, "note": "essential mineral for brain and nervous system support"},
           {"name": "added_sugar", "unit": "g", "max_per_meal": 10, "weight": 0.6, "note": "limit to avoid blood sugar spikes that may worsen stress"}
         ],
         "patterns": ["mediterranean_base", "limit_high_caffeine", "low_ultra_processed"]
       },
       "explainers": [
         "Magnesium-rich foods (leafy greens, nuts, legumes, whole grains) may be linked to calmer mood in several studies, particularly when deficiency exists.",
-        "Omega-3 fatty acids from fish show mixed but trending positive results for anxiety reduction in meta-analyses, with benefits most pronounced in deficiency states.",
-        "Limiting caffeine and refined sugars may help prevent stress-amplifying blood sugar swings.",
-        "Mediterranean dietary pattern is associated with lower stress and anxiety levels in observational studies."
+        "EPA-rich omega-3 sources (salmon, mackerel, sardines) show small-to-modest effects for anxiety reduction in meta-analyses when EPA ≥ 60% of EPA+DHA.",
+        "Mediterranean dietary pattern with anti-inflammatory focus shows observational and some RCT support for stress reduction.",
+        "Limiting caffeine and refined sugars may help prevent stress-amplifying blood sugar swings."
       ],
       "contraindications": [],
       "evidence": "Meta-analyses show magnesium and omega-3 may have small-to-moderate benefits for anxiety, with variable results across studies. Benefits are most pronounced when deficiency exists. Mediterranean pattern shows consistent stress reduction benefits.",
-      "evidence_level": "Moderate - Mixed RCT results, benefits seen in deficiency states",
+      "evidence_level": "Low-Moderate - Observational links, some trials in stress/anxiety, but mixed results",
       "key_studies": [
         "Magnesium and anxiety meta-analyses (PMC)",
         "Omega-3 for anxiety (Cochrane reviews)",
@@ -42,24 +44,26 @@
       "description": "Feeling physically or mentally exhausted, lacking energy",
       "targets": {
         "nutrients": [
-          {"name": "iron", "unit": "mg", "min_per_meal": 6, "weight": 1.0, "note": "essential for oxygen transport and energy when levels are adequate"},
+          {"name": "iron", "unit": "mg", "min_per_meal": 6, "weight": 1.0, "note": "iron-supportive foods help with energy when levels are adequate"},
           {"name": "vitamin_c", "unit": "mg", "min_per_meal": 30, "weight": 0.8, "note": "may enhance non-heme iron absorption"},
           {"name": "complex_carbs", "unit": "g", "min_per_meal": 30, "weight": 0.8, "note": "may provide sustained energy release"},
           {"name": "fiber", "unit": "g", "min_per_meal": 8, "weight": 0.6, "note": "may help prevent energy crashes"},
           {"name": "protein", "unit": "g", "min_per_meal": 20, "weight": 0.7, "note": "may help sustain energy levels"},
-          {"name": "vitamin_b12", "unit": "mcg", "min_per_meal": 1.5, "weight": 0.5, "note": "important for brain function and energy metabolism"}
+          {"name": "vitamin_b12", "unit": "mcg", "min_per_meal": 1.5, "weight": 0.5, "note": "important for brain function and energy metabolism"},
+          {"name": "folate", "unit": "mcg", "min_per_meal": 100, "weight": 0.4, "note": "important for brain function and emotional balance"},
+          {"name": "vitamin_b6", "unit": "mg", "min_per_meal": 1.0, "weight": 0.4, "note": "important for brain function and emotional balance"}
         ],
         "patterns": ["mediterranean_base", "low_ultra_processed", "stabilize_glycemia"]
       },
       "explainers": [
-        "Iron deficiency (even without anemia) is strongly linked to fatigue and poor concentration.",
-        "Vitamin C-rich foods (citrus, peppers, tomatoes) help your body absorb iron from plant sources.",
+        "Iron deficiency (even without anemia) is well-established cause of fatigue, cognitive difficulties, and irritability. Clinical improvement seen when deficiency is corrected.",
+        "Iron-supportive recipes emphasize both heme (lean red meat) and non-heme (spinach, legumes, fortified grains) sources paired with vitamin C for enhanced absorption.",
         "Complex carbohydrates with fiber provide steady energy without crashes.",
         "Protein helps maintain stable blood sugar and sustained energy throughout the day."
       ],
       "contraindications": ["hemochromatosis", "iron_overload"],
       "evidence": "Iron deficiency is a well-established cause of fatigue, even in the absence of anemia. Food-first iron intake with vitamin C co-factors is recommended by WHO and medical guidelines.",
-      "evidence_level": "Strong - Well-established clinical relationship",
+      "evidence_level": "Moderate-Strong - Clinical guidelines, RCTs show benefit when deficient",
       "key_studies": [
         "Iron deficiency and fatigue (Office of Dietary Supplements)",
         "WHO iron guidelines",
@@ -75,24 +79,25 @@
       "description": "Feeling sad, down, or experiencing low mood",
       "targets": {
         "nutrients": [
-          {"name": "fiber", "unit": "g", "min_per_meal": 10, "weight": 1.0, "note": "may support gut microbiome and gut-brain axis health"},
-          {"name": "omega_3_epa_dha", "unit": "g", "min_per_meal": 0.35, "weight": 0.9, "note": "anti-inflammatory properties, may support neurotransmitter function"},
-          {"name": "protein", "unit": "g", "min_per_meal": 20, "weight": 0.7, "note": "provides amino acids that may support neurotransmitter production"},
-          {"name": "added_sugar", "unit": "g", "max_per_meal": 12, "weight": 0.6, "note": "limit as high sugar intake may be linked to mood swings"},
-          {"name": "folate", "unit": "mcg", "min_per_meal": 100, "weight": 0.6, "note": "important for brain function and emotional balance"},
-          {"name": "vitamin_b6", "unit": "mg", "min_per_meal": 1.0, "weight": 0.5, "note": "essential for neurotransmitter synthesis and brain function"}
+          {"name": "omega_3_epa_dha", "unit": "g", "min_per_meal": 0.35, "weight": 1.0, "note": "EPA-rich sources may support balanced mood when included regularly"},
+          {"name": "folate", "unit": "mcg", "min_per_meal": 100, "weight": 0.9, "note": "important for brain function and emotional balance"},
+          {"name": "vitamin_b6", "unit": "mg", "min_per_meal": 1.0, "weight": 0.8, "note": "important for brain function and emotional balance"},
+          {"name": "vitamin_b12", "unit": "mcg", "min_per_meal": 1.5, "weight": 0.8, "note": "important for brain function and emotional balance"},
+          {"name": "fiber", "unit": "g", "min_per_meal": 10, "weight": 0.7, "note": "may support gut microbiome and gut-brain axis health"},
+          {"name": "protein", "unit": "g", "min_per_meal": 20, "weight": 0.6, "note": "provides amino acids that may support neurotransmitter production"},
+          {"name": "added_sugar", "unit": "g", "max_per_meal": 12, "weight": 0.6, "note": "limit as high sugar intake may be linked to mood swings"}
         ],
         "patterns": ["mediterranean_base", "low_ultra_processed"]
       },
       "explainers": [
-        "Mediterranean dietary pattern showed clinically meaningful depression improvement in the SMILES randomized controlled trial.",
+        "Mediterranean dietary pattern with anti-inflammatory focus shows observational and some RCT support for depression improvement (SMILES trial).",
+        "EPA-rich omega-3 sources (≥60% EPA of EPA+DHA) show small-to-modest effect sizes for depressive symptoms in meta-analyses.",
         "High-fiber, plant-rich meals support beneficial gut bacteria, which influence mood through the gut-brain axis.",
-        "Omega-3 fatty acids (especially EPA from fatty fish) show small-to-moderate benefits for mood in meta-analyses.",
-        "Minimizing ultra-processed foods is associated with better mental health outcomes."
+        "B-vitamins (folate, B6, B12) show correlations with mood but limited high-quality RCTs - treat as supportive building blocks."
       ],
       "contraindications": [],
       "evidence": "STRONGEST - The SMILES trial demonstrated significant depression symptom reduction with Mediterranean diet intervention. Multiple meta-analyses support omega-3 and fiber benefits.",
-      "evidence_level": "Strong - RCT support (SMILES trial) + meta-analyses",
+      "evidence_level": "Low-Moderate - Small effect in RCTs/meta-analyses, best in those with inflammation or depression",
       "key_studies": [
         "SMILES trial (2017) - Mediterranean diet for depression",
         "Mediterranean diet and depression meta-analyses",
@@ -109,11 +114,13 @@
       "description": "Feeling irritable, short-tempered, or easily annoyed",
       "targets": {
         "nutrients": [
-          {"name": "protein", "unit": "g", "min_per_meal": 22, "weight": 0.9, "note": "may help stabilize blood sugar to prevent mood swings"},
-          {"name": "fiber", "unit": "g", "min_per_meal": 9, "weight": 0.8, "note": "may slow glucose absorption"},
+          {"name": "folate", "unit": "mcg", "min_per_meal": 100, "weight": 1.0, "note": "important for brain function and emotional balance"},
+          {"name": "vitamin_b6", "unit": "mg", "min_per_meal": 1.0, "weight": 0.9, "note": "important for brain function and emotional balance"},
+          {"name": "vitamin_b12", "unit": "mcg", "min_per_meal": 1.5, "weight": 0.8, "note": "important for brain function and emotional balance"},
+          {"name": "protein", "unit": "g", "min_per_meal": 22, "weight": 0.7, "note": "may help stabilize blood sugar to prevent mood swings"},
+          {"name": "fiber", "unit": "g", "min_per_meal": 9, "weight": 0.6, "note": "may slow glucose absorption"},
           {"name": "added_sugar", "unit": "g", "max_per_meal": 8, "weight": 0.9, "note": "limit as sugar spikes may amplify irritability"},
-          {"name": "omega_3_epa_dha", "unit": "g", "min_per_meal": 0.25, "weight": 0.6, "note": "anti-inflammatory properties that may support mood balance"},
-          {"name": "vitamin_b6", "unit": "mg", "min_per_meal": 1.0, "weight": 0.4, "note": "important for neurotransmitter synthesis and emotional balance"}
+          {"name": "omega_3_epa_dha", "unit": "g", "min_per_meal": 0.25, "weight": 0.5, "note": "anti-inflammatory properties that may support mood balance"}
         ],
         "patterns": ["mediterranean_base", "stabilize_glycemia", "low_ultra_processed", "limit_high_caffeine"]
       },
@@ -125,7 +132,7 @@
       ],
       "contraindications": [],
       "evidence": "Ultra-processed food consumption correlates with mood disturbances. Glycemic stability through protein and fiber helps prevent irritability associated with blood sugar swings.",
-      "evidence_level": "Moderate - Observational studies + physiological mechanisms",
+      "evidence_level": "Low-Moderate - Deficiency linked with depression/irritability; supplementation helps if deficient",
       "key_studies": [
         "Ultra-processed foods and mental health (PMC)",
         "Glycemic index and mood",
@@ -137,9 +144,10 @@
   
   "patterns": {
     "mediterranean_base": {
-      "emphasize_groups": ["vegetables", "fruits", "legumes", "nuts", "whole_grains", "olive_oil", "fish"],
+      "emphasize_groups": ["vegetables", "fruits", "legumes", "nuts", "whole_grains", "olive_oil", "fish", "anti_inflammatory_herbs"],
       "limit_groups": ["ultra_processed", "refined_sweets"],
-      "description": "Mediterranean dietary pattern associated with improved mood outcomes (SMILES trial)"
+      "description": "Mediterranean dietary pattern with anti-inflammatory focus - whole foods, antioxidants, neuroprotective herbs/spices",
+      "practical_guidance": "Focus on anti-oxidant, anti-inflammatory foods. Use herbs/spices (e.g. turmeric) with known neuroprotective potential."
     },
     "low_ultra_processed": {
       "max_servings": 0,
@@ -166,20 +174,23 @@
     "vitamin_b6": ["vitamin_b6", "pyridoxine", "Vitamin B-6", "B6", "VB6", "VITB6A"],
     "vitamin_b12": ["vitamin_b12", "cobalamin", "Vitamin B-12", "B12", "VB12", "VITB12"],
     "folate": ["folate", "folic_acid", "Folate, total", "FOL", "Vitamin B-9", "FOLDFE"],
-    "vitamin_d": ["vitamin_d", "cholecalciferol", "Vitamin D", "VITD"],
-    "zinc": ["zinc", "ZN"],
+    "vitamin_d": ["vitamin_d", "cholecalciferol", "Vitamin D", "VITD", "vitamin_d_iu"],
+    "zinc": ["zinc", "ZN", "zinc_mg"],
+    "selenium": ["selenium", "SE", "selenium_mcg"],
     "complex_carbs": ["carbohydrate_by_difference", "Carbohydrate, by difference", "CHOCDF"],
-    "omega_3_epa_dha": ["epa", "dha", "omega_3_total", "EPA", "DHA", "20:5 n-3 (EPA)", "22:6 n-3 (DHA)", "omega3_g"],
+    "omega_3_epa_dha": ["epa", "dha", "omega_3_total", "EPA", "DHA", "20:5 n-3 (EPA)", "22:6 n-3 (DHA)", "omega3_g", "epa_rich"],
     "polyphenols": ["polyphenols_estimated", "Total polyphenols"]
   },
   
   "disclaimers": {
     "general": "This app provides food suggestions based on mood and nutritional science. It is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.",
-    "iron": "If you experience persistent fatigue, consider getting tested for iron deficiency before significantly increasing iron intake. People with hemochromatosis or iron overload should avoid high-iron recommendations.",
+    "iron": "If you experience persistent fatigue, consider getting tested for iron deficiency before significantly increasing iron intake. People with hemochromatosis or iron overload should avoid high-iron recommendations. Iron-supportive recipes emphasize both heme (animal) and non-heme (plant) sources paired with vitamin C.",
     "b_vitamins": "B-vitamins are important for brain function and may support mood when levels are adequate. Benefits are most pronounced in deficiency states. Consult a healthcare provider if you suspect deficiency.",
     "supplements": "This app recommends food-first approaches. Consult a healthcare provider before taking supplements.",
     "persistent_symptoms": "If mood symptoms persist or worsen, please consult a mental health professional.",
-    "evidence_disclaimer": "The strength of evidence varies by mood. While some recommendations (like Mediterranean diet for low mood) have strong RCT support, others (like magnesium for stress) show mixed results. Individual responses vary."
+    "evidence_disclaimer": "The strength of evidence varies by mood. Mediterranean diet shows observational and some RCT support. Omega-3 EPA shows small-to-modest effects in meta-analyses. Iron deficiency is well-established for fatigue. Other micronutrients show correlations but limited high-quality RCTs. Treat recommendations as supportive building blocks, not cure-alls.",
+    "omega3_epa": "Omega-3 recommendations focus on EPA-rich sources (≥60% EPA of EPA+DHA) based on meta-analyses showing small-to-modest effects for mood support. Include oily fish, flaxseeds, chia seeds as supportive elements.",
+    "micronutrients": "B-vitamins, magnesium, zinc, selenium, vitamin D show observational correlations with mood but limited high-quality RCTs. Use whole-food ingredients rich in these nutrients as supportive building blocks rather than standalone treatments."
   },
   
   "removed_moods_note": "Version 2.0.0 removed 8 moods (dreamy, focused, playful, craving, light, grounded, restorative, charismatic) due to insufficient scientific evidence linking these emotional states to specific nutrient needs. Focus is now exclusively on evidence-based recommendations."

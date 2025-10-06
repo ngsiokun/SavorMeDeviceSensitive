@@ -165,7 +165,7 @@ class RecipeRotationService:
             cooking_methods[method_key].append(recipe)
         
         # Prioritize recipes that provide variety
-        variety_scores = {}
+        variety_scores = []
         for recipe in recipes:
             score = 0
             
@@ -188,10 +188,11 @@ class RecipeRotationService:
             if recipe.name.lower().strip() in recent_names:
                 score -= 3
             
-            variety_scores[recipe] = score
+            variety_scores.append((recipe, score))
         
         # Sort by variety score (highest first)
-        sorted_recipes = sorted(recipes, key=lambda r: variety_scores[r], reverse=True)
+        sorted_recipes = sorted(variety_scores, key=lambda x: x[1], reverse=True)
+        sorted_recipes = [recipe for recipe, score in sorted_recipes]
         
         return sorted_recipes
     

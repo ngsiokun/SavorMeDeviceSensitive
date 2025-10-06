@@ -1,7 +1,7 @@
 # SavorMe Customizations - Persistent Design System
 
 ## 🎯 **Purpose**
-This document ensures that all customizations made to the SavorMe application persist through GitHub clones and maintain consistent quality and branding.
+This document ensures that all customizations made to the SavorMe application persist through GitHub clones and maintain consistent quality, branding, and evidence-based scientific accuracy.
 
 ## 📁 **Files Modified/Created**
 
@@ -30,15 +30,23 @@ This document ensures that all customizations made to the SavorMe application pe
   - Proper loading states and error handling
   - Consistent color scheme and typography
 
-### 3. **Comprehensive Nutrient Analysis System**
+### 3. **Evidence-Based Nutrient Analysis System (v2.2)**
 - **File**: `demo_app/static/js/recipe_result.js`
 - **Changes**:
-  - Enhanced "Why This Recipe?" section with detailed nutritional rationale
-  - Comprehensive nutrient highlights with 8 key mood-supporting nutrients
-  - Scientific evidence section with research backing
+  - Enhanced "Why This Recipe?" section with evidence-based nutritional rationale
+  - EPA-focused omega-3 targeting (≥60% EPA of EPA+DHA)
+  - Iron-supportive recipes with heme/non-heme + vitamin C pairing
+  - Mediterranean pattern with anti-inflammatory herbs/spices
+  - Medically safe claim wording based on evidence strength
+  - Comprehensive nutrient highlights with evidence-based targets
+  - Scientific evidence section with updated research backing
   - "Another Recipe Suggestion" button for seamless recipe exploration
   - Detailed nutritional breakdown with percentages and targets
   - Mood-specific nutrient benefits explanation
+  - **Recipe Match Score Transparency System** with weighted scoring breakdown
+  - **Nutrient contribution display** showing individual nutrient scores
+  - **Evidence-based weighting** (1.0 = strongest evidence, 0.5 = emerging evidence)
+  - **Data source transparency** (Edamam API + built-in nutrient database)
 
 ### 4. **Backend Cooking Directions Fix**
 - **File**: `app/services/openrouter_client.py`
@@ -48,7 +56,18 @@ This document ensures that all customizations made to the SavorMe application pe
   - Proper error handling when API keys are missing
   - Step-by-step cooking instructions instead of just links
 
-### 5. **Professional Startup System**
+### 5. **Evidence-Based Mood Mapping System (v2.2)**
+- **File**: `app/data/mood_mapping.json`
+- **Changes**:
+  - Updated with latest scientific research and meta-analyses
+  - EPA-focused omega-3 targeting (≥60% EPA of EPA+DHA)
+  - Iron-supportive implementation with heme/non-heme + vitamin C
+  - Mediterranean pattern with anti-inflammatory herbs/spices
+  - Medically safe claim wording based on evidence strength
+  - Evidence level transparency (Strong, Moderate, Low-Moderate)
+  - Enhanced micronutrient support (Vitamin D, Zinc, Selenium)
+
+### 6. **Professional Startup System**
 - **File**: `savorme_professional_startup.bat`
 - **File**: `AUTOMATED_APP_STARTUP_GUIDE.md`
 - **Changes**:
@@ -56,6 +75,7 @@ This document ensures that all customizations made to the SavorMe application pe
   - Step-by-step validation process
   - Professional error handling and recovery
   - Complete user flow testing
+  - Evidence-based nutrient targeting verification
 
 ## 🎨 **Design System**
 
@@ -79,6 +99,104 @@ This document ensures that all customizations made to the SavorMe application pe
 - **Glassmorphic Effects**: Semi-transparent cards with blur
 - **Consistent Spacing**: 20px margins, 16px gaps
 - **Responsive**: Scales appropriately for larger screens
+
+## 🔬 **Evidence-Based Scientific Improvements (v2.2)**
+
+### **EPA-Focused Omega-3 Targeting**
+- **Target**: EPA ≥ 60% of EPA+DHA based on meta-analyses
+- **Evidence**: Small-to-modest effects for mood support in meta-analyses
+- **Implementation**: Prioritize salmon, mackerel, sardines over general omega-3 sources
+- **Claim Wording**: "EPA-rich sources may support balanced mood when included regularly"
+
+### **Iron-Supportive Implementation**
+- **Target**: 6mg per meal with heme/non-heme distinction
+- **Evidence**: Moderate-Strong evidence for fatigue when deficient
+- **Implementation**: Combine heme (lean red meat) and non-heme (spinach, legumes) sources
+- **Vitamin C Pairing**: 30mg per meal to enhance non-heme iron absorption
+- **Claim Wording**: "iron-supportive foods help with energy when levels are adequate"
+
+### **Mediterranean Anti-Inflammatory Pattern**
+- **Target**: Whole foods with anti-inflammatory herbs/spices
+- **Evidence**: Observational and some RCT support for mood improvement
+- **Implementation**: Include turmeric, rosemary, oregano for neuroprotective potential
+- **Focus**: Anti-oxidant, anti-inflammatory foods with neuroprotective herbs/spices
+
+## 📊 **Recipe Match Score Transparency System (v2.2)**
+
+### **Scoring Algorithm Overview**
+- **Method**: Weighted average based on scientific evidence strength
+- **Formula**: `Final Score = (Σ nutrient_score × weight) / Σ weight`
+- **Range**: 0-100% (displayed as percentage)
+- **Transparency**: Each nutrient's contribution is calculated and can be displayed
+
+### **Weighting System by Evidence Strength**
+- **Weight 1.0**: Strongest evidence (SMILES trial, clinical guidelines)
+- **Weight 0.9**: Very strong evidence (meta-analyses, Cochrane reviews)
+- **Weight 0.8**: Strong evidence (multiple RCTs)
+- **Weight 0.7**: Good evidence (observational + some trials)
+- **Weight 0.6**: Moderate evidence (correlational studies)
+- **Weight 0.5**: Emerging evidence (limited but promising)
+
+### **Mood-Specific Weight Examples**
+**Stressed/Anxious Mood**:
+- Magnesium: 1.0 (highest - strongest evidence)
+- Omega-3 EPA/DHA: 0.9 (very high - meta-analyses)
+- Fiber: 0.7 (high - gut-brain axis)
+- Added Sugar (limit): 0.6 (medium-high - blood sugar stability)
+- Vitamin D: 0.6 (medium-high - emerging evidence)
+- Zinc: 0.5 (medium - limited studies)
+
+**Fatigued/Low Energy Mood**:
+- Iron: 1.0 (highest - clinical guidelines)
+- Vitamin C: 0.8 (very high - absorption enhancement)
+- Complex Carbs: 0.8 (very high - energy stability)
+- Protein: 0.7 (high - satiety research)
+- Fiber: 0.6 (medium-high - crash prevention)
+- Vitamin B12: 0.5 (medium - deficiency correction)
+
+### **Data Sources for Scoring**
+**Primary Source**: Edamam API
+- Comprehensive nutrition data (macronutrients, minerals, vitamins)
+- Complete micronutrient coverage (iron, magnesium, omega-3, B-vitamins)
+- Per-serving calculations from recipe ingredients
+
+**Enhancement Source**: Built-in Nutrient Database
+- Key mood-supporting ingredients (spinach, salmon, lentils, nuts)
+- Detailed micronutrient data for common ingredients
+- Fills gaps in Edamam's micronutrient coverage
+
+### **Score Calculation Example**
+```
+Recipe: Mediterranean Salmon (per serving)
+Magnesium: 90% × 1.0 = 90
+Omega-3: 80% × 0.9 = 72
+Fiber: 70% × 0.7 = 49
+Added Sugar: 60% × 0.6 = 36
+Vitamin D: 50% × 0.6 = 30
+Zinc: 40% × 0.5 = 20
+
+Total Weighted Sum: 90 + 72 + 49 + 36 + 30 + 20 = 297
+Total Weight: 1.0 + 0.9 + 0.7 + 0.6 + 0.6 + 0.5 = 4.3
+Final Score: 297 ÷ 4.3 = 69.1% ≈ 69%
+```
+
+### **Transparency Features**
+- **Nutrient Breakdown**: Shows individual nutrient scores
+- **Weight Display**: Shows why each nutrient matters more/less
+- **Evidence Level**: Indicates scientific strength behind each target
+- **Data Source**: Traces back to Edamam API + built-in database
+- **Target Comparison**: Shows actual vs. target values
+
+### **Medically Safe Claim Wording**
+- **Approach**: Evidence-based wording that's clinically appropriate
+- **Transparency**: Honest assessment of research strength
+- **Safety**: All claims are medically safe and evidence-based
+- **Disclaimers**: Appropriate medical disclaimers throughout
+
+### **Evidence Level Classification**
+- **Strong Evidence**: Iron deficiency → fatigue (clinical guidelines)
+- **Moderate Evidence**: Mediterranean diet → mood improvement (observational + some RCTs)
+- **Low-Moderate Evidence**: Omega-3 EPA, magnesium, B-vitamins (mixed RCT results)
 
 ## 🔧 **Technical Improvements**
 
@@ -104,9 +222,9 @@ This document ensures that all customizations made to the SavorMe application pe
 </html>
 ```
 
-#### **2. Enhanced Nutrient Analysis Function (demo_app/static/js/recipe_result.js)**
+#### **2. Evidence-Based Nutrient Analysis Function (demo_app/static/js/recipe_result.js)**
 ```javascript
-// Generate detailed rationale with nutritional information
+// Generate evidence-based rationale with nutritional information
 function generateDetailedRationale(recipe, nutrition, rationale) {
     const calories = Math.round(recipe.nutrition?.calories || 0);
     const protein = Math.round(recipe.nutrition?.protein_g || 0);
@@ -118,6 +236,7 @@ function generateDetailedRationale(recipe, nutrition, rationale) {
     const b12 = Math.round(recipe.nutrition?.vitamin_b12_mcg || 0);
     const zinc = Math.round(recipe.nutrition?.zinc_mg || 0);
     const vitaminD = Math.round(recipe.nutrition?.vitamin_d_iu || 0);
+    const vitaminC = Math.round(recipe.nutrition?.vitamin_c_mg || 0);
     
     const targetCalories = Math.round(nutrition?.target_calories || 0);
     const targetProtein = Math.round(nutrition?.target_protein || 0);
@@ -138,33 +257,37 @@ function generateDetailedRationale(recipe, nutrition, rationale) {
     // Fiber information
     rationaleText += `The ${fiber}g of fiber (${fiberPercent}% of daily target) helps maintain stable blood sugar levels and supports digestive health. `;
     
-    // Key nutrients
+    // Evidence-based nutrient benefits
     if (magnesium > 0) {
-        rationaleText += `Rich in magnesium (${magnesium}mg), this recipe supports nervous system function and stress response. `;
+        rationaleText += `Rich in magnesium (${magnesium}mg), this recipe helps the body cope with stress. `;
     }
     
     if (omega3 > 0) {
-        rationaleText += `The ${omega3}g of omega-3 fatty acids provide anti-inflammatory benefits and support mood regulation. `;
+        rationaleText += `The ${omega3}g of EPA-rich omega-3 fatty acids may support balanced mood when included regularly. `;
     }
     
     if (iron > 0) {
-        rationaleText += `With ${iron}mg of iron, it helps maintain energy levels and cognitive function. `;
+        rationaleText += `With ${iron}mg of iron, this iron-supportive recipe helps with energy when levels are adequate. `;
+    }
+    
+    if (vitaminC > 0 && iron > 0) {
+        rationaleText += `The ${vitaminC}mg of vitamin C enhances iron absorption from plant sources. `;
     }
     
     if (folate > 0) {
-        rationaleText += `The ${folate}mcg of folate (B9) is essential for neurotransmitter synthesis and mood stability. `;
+        rationaleText += `The ${folate}mcg of folate (B9) is important for brain function and emotional balance. `;
     }
     
     if (b12 > 0) {
-        rationaleText += `Vitamin B12 (${b12}mcg) supports brain function and helps prevent depression. `;
+        rationaleText += `Vitamin B12 (${b12}mcg) is important for brain function and emotional balance. `;
     }
     
     if (zinc > 0) {
-        rationaleText += `Zinc (${zinc}mg) regulates stress response and supports immune function. `;
+        rationaleText += `Zinc (${zinc}mg) is an essential mineral for brain and nervous system support. `;
     }
     
     if (vitaminD > 0) {
-        rationaleText += `Vitamin D (${vitaminD}IU) is crucial for mood regulation and helps combat seasonal depression. `;
+        rationaleText += `Vitamin D (${vitaminD}IU) supports overall health and may play a role in mood balance. `;
     }
     
     // Mood-specific benefits
@@ -174,9 +297,9 @@ function generateDetailedRationale(recipe, nutrition, rationale) {
 }
 ```
 
-#### **3. Smart Nutrient Highlights (Non-Zero Only)**
+#### **3. Evidence-Based Nutrient Highlights (Non-Zero Only)**
 ```javascript
-// Generate nutrient highlights for only non-zero nutrients
+// Generate evidence-based nutrient highlights for only non-zero nutrients
 function generateNutrientHighlights(recipe) {
     const nutrients = [
         {
@@ -184,56 +307,64 @@ function generateNutrientHighlights(recipe) {
             value: Math.round(recipe.nutrition?.magnesium_mg || 0),
             unit: 'mg',
             target: 120,
-            benefit: 'supports nervous system and stress response'
+            benefit: 'helps the body cope with stress',
+            evidence: 'Low-Moderate evidence'
         },
         {
-            name: 'Omega 3 EPA DHA',
+            name: 'EPA-Rich Omega-3',
             value: Math.round((recipe.nutrition?.omega3_g || 0) * 10) / 10,
             unit: 'g',
-            target: 2.0,
-            benefit: 'anti-inflammatory, supports mood regulation'
+            target: 0.35,
+            benefit: 'may support balanced mood when included regularly',
+            evidence: 'Small-to-modest effects in meta-analyses'
         },
         {
             name: 'Iron',
             value: Math.round(recipe.nutrition?.iron_mg || 0),
             unit: 'mg',
-            target: 18,
-            benefit: 'prevents fatigue and supports cognitive function'
+            target: 6,
+            benefit: 'iron-supportive foods help with energy when levels are adequate',
+            evidence: 'Moderate-Strong evidence for fatigue when deficient'
         },
         {
             name: 'Folate (B9)',
             value: Math.round(recipe.nutrition?.folate_mcg || 0),
             unit: 'mcg',
-            target: 400,
-            benefit: 'essential for neurotransmitter synthesis and mood stability'
+            target: 100,
+            benefit: 'important for brain function and emotional balance',
+            evidence: 'Correlations with mood, supportive building blocks'
         },
         {
             name: 'Vitamin B12',
             value: Math.round(recipe.nutrition?.vitamin_b12_mcg || 0),
             unit: 'mcg',
-            target: 2.4,
-            benefit: 'supports brain function and prevents depression'
+            target: 1.5,
+            benefit: 'important for brain function and emotional balance',
+            evidence: 'Correlations with mood, supportive building blocks'
         },
         {
             name: 'Zinc',
             value: Math.round(recipe.nutrition?.zinc_mg || 0),
             unit: 'mg',
-            target: 11,
-            benefit: 'regulates stress response and immune function'
+            target: 3,
+            benefit: 'essential mineral for brain and nervous system support',
+            evidence: 'Emerging evidence for cognitive/emotional regulation'
         },
         {
             name: 'Vitamin D',
             value: Math.round(recipe.nutrition?.vitamin_d_iu || 0),
             unit: 'IU',
-            target: 2000,
-            benefit: 'crucial for mood regulation and seasonal depression'
+            target: 400,
+            benefit: 'supports overall health and may play a role in mood balance',
+            evidence: 'Low evidence, associations with mood'
         },
         {
             name: 'Fiber',
             value: Math.round(recipe.nutrition?.fiber_g || 0),
             unit: 'g',
-            target: 28,
-            benefit: 'stabilizes blood sugar and prevents energy crashes'
+            target: 8,
+            benefit: 'may support gut microbiome and gut-brain axis health',
+            evidence: 'Gut-brain axis research'
         }
     ];
     
@@ -245,9 +376,9 @@ function generateNutrientHighlights(recipe) {
         return '<li><em>This recipe provides essential macronutrients (calories, protein, fiber) that support your mood and energy levels.</em></li>';
     }
     
-    // Generate HTML for non-zero nutrients
+    // Generate HTML for non-zero nutrients with evidence information
     return nonZeroNutrients.map(nutrient => 
-        `<li><strong>${nutrient.name}:</strong> ${nutrient.value} ${nutrient.unit} (target: ${nutrient.target} ${nutrient.unit}) — ${nutrient.benefit}.</li>`
+        `<li><strong>${nutrient.name}:</strong> ${nutrient.value} ${nutrient.unit} (target: ${nutrient.target} ${nutrient.unit}) — ${nutrient.benefit}. <em>${nutrient.evidence}</em></li>`
     ).join('');
 }
 ```
@@ -377,18 +508,23 @@ After cloning from GitHub, verify these elements are present:
 - [ ] Recipe recommendations include full data
 - [ ] Error handling provides meaningful messages
 
-### **Comprehensive Nutrient Analysis**
-- [ ] 8 key mood-supporting nutrients displayed:
-  - [ ] Magnesium (120mg target) - nervous system and stress response
-  - [ ] Omega-3 EPA/DHA (2.0g target) - anti-inflammatory, mood regulation
-  - [ ] Iron (18mg target) - prevents fatigue, cognitive function
-  - [ ] Folate/B9 (400mcg target) - neurotransmitter synthesis, mood stability
-  - [ ] Vitamin B12 (2.4mcg target) - brain function, prevents depression
-  - [ ] Zinc (11mg target) - stress response, immune function
-  - [ ] Vitamin D (2000 IU target) - mood regulation, seasonal depression
-  - [ ] Fiber (28g target) - blood sugar stability, energy crashes
+### **Evidence-Based Nutrient Analysis (v2.2)**
+- [ ] Evidence-based mood-supporting nutrients displayed:
+  - [ ] Magnesium (120mg target) - helps the body cope with stress (Low-Moderate evidence)
+  - [ ] EPA-Rich Omega-3 (0.35g target) - may support balanced mood when included regularly (Small-to-modest effects in meta-analyses)
+  - [ ] Iron (6mg target) - iron-supportive foods help with energy when levels are adequate (Moderate-Strong evidence for fatigue when deficient)
+  - [ ] Folate/B9 (100mcg target) - important for brain function and emotional balance (Correlations with mood, supportive building blocks)
+  - [ ] Vitamin B12 (1.5mcg target) - important for brain function and emotional balance (Correlations with mood, supportive building blocks)
+  - [ ] Zinc (3mg target) - essential mineral for brain and nervous system support (Emerging evidence for cognitive/emotional regulation)
+  - [ ] Vitamin D (400 IU target) - supports overall health and may play a role in mood balance (Low evidence, associations with mood)
+  - [ ] Fiber (8g target) - may support gut microbiome and gut-brain axis health (Gut-brain axis research)
+- [ ] EPA-focused omega-3 targeting (≥60% EPA of EPA+DHA)
+- [ ] Iron-supportive recipes with heme/non-heme + vitamin C pairing
+- [ ] Mediterranean pattern with anti-inflammatory herbs/spices
+- [ ] Medically safe claim wording throughout
+- [ ] Evidence level transparency (Strong, Moderate, Low-Moderate)
 - [ ] Detailed rationale with specific nutritional percentages
-- [ ] Scientific evidence section with research backing
+- [ ] Scientific evidence section with updated research backing
 - [ ] "Another Recipe Suggestion" button functionality
 
 ### **Professional Startup**
@@ -452,17 +588,21 @@ After cloning from GitHub, verify these elements are present:
 5. **`demo_app/static/css/landing.css`** - Landing page styling
 
 ### **Critical JavaScript Functions:**
-- `generateDetailedRationale()` - Enhanced nutritional analysis
+- `generateDetailedRationale()` - Evidence-based nutritional analysis
 - `showNutrientAnalysis()` - Modal display with comprehensive data
 - `generateNewRecommendation()` - Seamless recipe exploration
 - `generatePage()` - Dynamic page generation
 - `addEventListeners()` - Button functionality
 
-### **8 Key Mood-Supporting Nutrients:**
-- Magnesium, Omega-3, Iron, Folate (B9), Vitamin B12, Zinc, Vitamin D, Fiber
-- Each with specific targets and health benefits
-- Conditional display based on recipe content
-- Scientific evidence backing
+### **Evidence-Based Mood-Supporting Nutrients (v2.2):**
+- **Primary**: Magnesium, EPA-Rich Omega-3, Iron, B-Vitamins (Folate, B6, B12), Fiber
+- **Secondary**: Vitamin D, Zinc, Selenium, Vitamin C
+- **Evidence Levels**: Strong (Iron), Moderate (Mediterranean), Low-Moderate (Omega-3, B-vitamins)
+- **EPA Focus**: ≥60% EPA of EPA+DHA for optimal mood support
+- **Iron Implementation**: Heme/non-heme sources with vitamin C pairing
+- **Mediterranean Pattern**: Anti-inflammatory herbs/spices for neuroprotection
+- **Medically Safe Claims**: Evidence-based wording throughout
+- **Conditional Display**: Based on recipe content with evidence transparency
 
 ## 📝 **Notes**
 
@@ -471,10 +611,15 @@ After cloning from GitHub, verify these elements are present:
 - Professional startup system provides reliable deployment
 - Error handling and fallback systems ensure robust operation
 - Mobile-first design provides optimal user experience across devices
-- **Comprehensive nutrient analysis provides evidence-based recommendations**
+- **Evidence-based nutrient analysis (v2.2) provides scientifically accurate recommendations**
+- **EPA-focused omega-3 targeting (≥60% EPA of EPA+DHA) based on meta-analyses**
+- **Iron-supportive recipes with heme/non-heme + vitamin C pairing**
+- **Mediterranean pattern with anti-inflammatory herbs/spices for neuroprotection**
+- **Medically safe claim wording based on evidence strength**
+- **Evidence level transparency (Strong, Moderate, Low-Moderate)**
 - **"Another Recipe Suggestion" button eliminates need to re-enter data**
-- **Enhanced modal system provides detailed nutritional insights**
+- **Enhanced modal system provides detailed nutritional insights with scientific backing**
 
 ---
 
-*This document ensures that the SavorMe application maintains its professional quality, comprehensive nutritional analysis, and consistent design across all deployments and GitHub clones.*
+*This document ensures that the SavorMe application maintains its professional quality, evidence-based nutritional analysis, scientifically accurate recommendations, and consistent design across all deployments and GitHub clones.*

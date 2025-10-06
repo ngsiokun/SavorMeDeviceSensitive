@@ -4,12 +4,25 @@
 ### Overview
 This document provides a complete, step-by-step guide for running the SavorMe application with automatic error detection, correction, and validation. The system now includes advanced recipe variety, nutrient target tracking, and comprehensive mood-based nutrition analysis.
 
-### Latest Features (v2.0)
+### 📋 **Critical Reference: Customizations Persistent File**
+**IMPORTANT**: Before starting the application, ensure you have reviewed `CUSTOMIZATIONS_PERSISTENT.md` which contains all the essential customizations, design system specifications, and verification checklists needed to properly rebuild and maintain the SavorMe pages. This file is your blueprint for ensuring consistent quality and branding across all deployments.
+
+### ⚠️ **CRITICAL: Use Command Prompt Only**
+**ALL COMMANDS IN THIS GUIDE MUST BE RUN VIA COMMAND PROMPT (cmd.exe) AND NEVER USE POWERSHELL.** PowerShell may cause compatibility issues with the batch scripts and environment setup. Always open Command Prompt (cmd.exe) before running any commands from this guide.
+
+### Latest Features (v3.1.0)
+- **Evidence-Based Mood Mapping**: Updated with latest scientific research and meta-analyses
+- **EPA-Focused Omega-3**: Targets EPA ≥ 60% of EPA+DHA for optimal mood support
+- **Anti-Inflammatory Mediterranean Pattern**: Enhanced with neuroprotective herbs/spices
+- **Iron-Supportive Implementation**: Heme/non-heme sources with vitamin C pairing
+- **Scientific Claim Accuracy**: Medically safe wording based on evidence strength
 - **Recipe Variety System**: 3x more diverse recipes with intelligent rotation
 - **Target Nutrient Values**: Shows exactly how mood needs are met with daily targets
 - **Enhanced Nutrient Analysis**: Web-based lookup for comprehensive micronutrient data
 - **Session-Based Rotation**: Avoids recipe repeats within 24 hours
 - **Mood-Specific Targeting**: Personalized nutrient goals for each mood type
+- **Recipe Match Score Transparency**: Weighted scoring system with evidence-based nutrient weights
+- **Data Source Transparency**: Clear documentation of Edamam API + built-in nutrient database
 - **Visual Progress Indicators**: ✅🟡🔴 status for nutrient target achievement
 
 ---
@@ -31,7 +44,7 @@ python3 --version
 ### Step 1.2: Create/Verify Virtual Environment
 ```bash
 # Navigate to project directory
-cd C:\Users\HP\SavorMe\SavorMe-backend-1
+cd C:\Users\HP\SavorMe\SavorMe-backend
 
 # Create virtual environment (if not exists)
 py -m venv venv
@@ -89,9 +102,9 @@ if exist .env (
 )
 ```
 
-### Step 2.2: Verify File Structure
+### Step 2.2: Verify File Structure & Customizations
 ```bash
-# Check critical files exist
+# Check critical files exist (refer to CUSTOMIZATIONS_PERSISTENT.md for complete list)
 if exist "app\main.py" (
     echo [OK] Backend main file exists
 ) else (
@@ -106,27 +119,44 @@ if exist "demo_app\app.py" (
     exit /b 1
 )
 
+# Landing Page Customizations (see CUSTOMIZATIONS_PERSISTENT.md Section 1)
 if exist "demo_app\templates\index.html" (
     echo [OK] Landing page template exists
 ) else (
-    echo [ERROR] Landing page template missing
+    echo [ERROR] Landing page template missing - see CUSTOMIZATIONS_PERSISTENT.md
     exit /b 1
 )
 
+if exist "demo_app\static\css\landing.css" (
+    echo [OK] Landing page CSS exists
+) else (
+    echo [ERROR] Landing page CSS missing - see CUSTOMIZATIONS_PERSISTENT.md
+    exit /b 1
+)
+
+# Recipe Results Page Customizations (see CUSTOMIZATIONS_PERSISTENT.md Section 2)
 if exist "demo_app\templates\recipe_result.html" (
     echo [OK] Recipe result template exists
 ) else (
-    echo [ERROR] Recipe result template missing
+    echo [ERROR] Recipe result template missing - see CUSTOMIZATIONS_PERSISTENT.md
     exit /b 1
 )
 
 if exist "demo_app\static\js\recipe_result.js" (
     echo [OK] Recipe result JavaScript exists
 ) else (
-    echo [ERROR] Recipe result JavaScript missing
+    echo [ERROR] Recipe result JavaScript missing - see CUSTOMIZATIONS_PERSISTENT.md
     exit /b 1
 )
 
+if exist "demo_app\static\css\recipe_results.css" (
+    echo [OK] Recipe results CSS exists
+) else (
+    echo [ERROR] Recipe results CSS missing - see CUSTOMIZATIONS_PERSISTENT.md
+    exit /b 1
+)
+
+# Backend Services
 if exist "app\services\recipe_rotation.py" (
     echo [OK] Recipe rotation service exists
 ) else (
@@ -140,7 +170,97 @@ if exist "app\services\nutrient_web_lookup.py" (
     echo [ERROR] Nutrient web lookup service missing
     exit /b 1
 )
+
+# Backend Cooking Directions Fix (see CUSTOMIZATIONS_PERSISTENT.md Section 4)
+if exist "app\services\openrouter_client.py" (
+    echo [OK] OpenRouter client with cooking directions exists
+) else (
+    echo [ERROR] OpenRouter client missing - see CUSTOMIZATIONS_PERSISTENT.md
+    exit /b 1
+)
+
+# Professional Startup System (see CUSTOMIZATIONS_PERSISTENT.md Section 5)
+if exist "savorme_professional_startup.bat" (
+    echo [OK] Professional startup script exists
+) else (
+    echo [ERROR] Professional startup script missing - see CUSTOMIZATIONS_PERSISTENT.md
+    exit /b 1
+)
+
+if exist "CUSTOMIZATIONS_PERSISTENT.md" (
+    echo [OK] Customizations persistent file exists
+) else (
+    echo [ERROR] CUSTOMIZATIONS_PERSISTENT.md missing - CRITICAL for proper page rebuilding
+    exit /b 1
+)
 ```
+
+---
+
+## Phase 2.5: Customization Verification (CRITICAL)
+
+### Step 2.5.1: Review Customizations Persistent File
+```bash
+# Open and review the customizations file
+type CUSTOMIZATIONS_PERSISTENT.md
+
+# This file contains:
+# - Complete design system specifications
+# - All modified file locations and changes
+# - Essential code snippets for rebuilding pages
+# - Verification checklists for each component
+# - Color palette, typography, and layout principles
+```
+
+### Step 2.5.2: Verify Design System Elements
+Based on `CUSTOMIZATIONS_PERSISTENT.md`, verify these critical design elements:
+
+#### **Color Palette Verification**
+- **Primary**: #0F766E (Dark Teal)
+- **Secondary**: #065F46 (Dark Green)  
+- **Accent**: #10B981 (Green)
+- **Background**: #F0FDF4 (Light Green)
+
+#### **Typography Verification**
+- **Font Family**: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto
+- **Hero Title**: 36px, font-weight 800
+- **Subtitle**: 16px, font-weight 600
+- **Body**: 14px, line-height 1.5
+
+#### **Layout Principles Verification**
+- **Mobile-First**: All designs start with mobile (414px width)
+- **Vertical Stacking**: Hero section above feature grid
+- **Glassmorphic Effects**: Semi-transparent cards with blur
+- **Consistent Spacing**: 20px margins, 16px gaps
+
+### Step 2.5.3: Critical JavaScript Functions Check
+Verify these essential functions exist in `demo_app/static/js/recipe_result.js`:
+- `generateDetailedRationale()` - Enhanced nutritional analysis
+- `showNutrientAnalysis()` - Modal display with comprehensive data
+- `generateNewRecommendation()` - Seamless recipe exploration
+- `generatePage()` - Dynamic page generation
+- `addEventListeners()` - Button functionality
+
+### Step 2.5.4: Evidence-Based Nutrient Targeting Verification
+Ensure the system tracks these nutrients with updated evidence-based targets (see `CUSTOMIZATIONS_PERSISTENT.md` Section 3):
+
+#### **Primary Mood-Supporting Nutrients:**
+- **Magnesium (120mg target)** - Low-Moderate evidence for stress response
+- **EPA-Rich Omega-3 (≥60% EPA of EPA+DHA)** - Small-to-modest effects in meta-analyses
+- **Iron (6mg per meal)** - Moderate-Strong evidence for fatigue when deficient
+- **B-Vitamins (Folate, B6, B12)** - Correlations with mood, supportive building blocks
+- **Fiber (8-10g per meal)** - Gut-brain axis health and blood sugar stability
+
+#### **Secondary Supportive Nutrients:**
+- **Vitamin D (400 IU per meal)** - Low evidence, associations with mood
+- **Zinc (3mg per meal)** - Essential mineral for brain and nervous system
+- **Selenium** - Emerging evidence for cognitive/emotional regulation
+- **Vitamin C (30mg per meal)** - Enhances non-heme iron absorption
+
+#### **Evidence Level Verification:**
+- **Strong Evidence**: Iron deficiency → fatigue (clinical guidelines)
+- **Moderate Evidence**: Mediterranean diet → mood improvement (observational + some RCTs)
+- **Low-Moderate Evidence**: Omega-3 EPA, magnesium, B-vitamins (mixed RCT results)
 
 ---
 
@@ -205,12 +325,14 @@ curl http://localhost:5000/
 
 ## Phase 5: Integration Testing
 
-### Step 5.1: Test Complete User Flow
+### Step 5.1: Test Complete User Flow (Refer to CUSTOMIZATIONS_PERSISTENT.md)
 1. **Landing Page**: Open http://localhost:5000
-   - Verify mobile-first vertical layout
+   - Verify mobile-first vertical layout (see CUSTOMIZATIONS_PERSISTENT.md Section 1)
    - Check hero section with SavorMe branding
    - Verify 2x2 feature grid below hero
    - Test "Start Your Journey →" button
+   - **CRITICAL**: Verify dark teal gradient background (#0F766E to #065F46)
+   - **CRITICAL**: Check glassmorphic card effects with backdrop blur
 
 2. **Profile Page**: Click "Start Your Journey →"
    - Should navigate to /profile
@@ -227,11 +349,21 @@ curl http://localhost:5000/
    - Verify loading spinner appears
    - Check recipe data displays properly
    - Verify match score, rationale, nutrition sections
-   - **NEW**: Test "Nutrient Match Score" button for detailed analysis
-   - **NEW**: Verify target nutrient values with percentages
-   - **NEW**: Check visual status indicators (✅🟡🔴)
-   - **NEW**: Test "Another Recipe Suggestion" for variety
-   - **NEW**: Verify recipe rotation (no repeats within 24 hours)
+   - **CRITICAL**: Test "Nutrient Match Score" button for detailed analysis (see CUSTOMIZATIONS_PERSISTENT.md Section 2)
+   - **CRITICAL**: Verify target nutrient values with percentages
+   - **CRITICAL**: Check visual status indicators (✅🟡🔴)
+   - **CRITICAL**: Test "Another Recipe Suggestion" for variety (replaces "Got it!" button)
+   - **CRITICAL**: Verify recipe rotation (no repeats within 24 hours)
+   - **CRITICAL**: Verify mobile smartphone design with status bar
+   - **CRITICAL**: Check evidence-based nutrient analysis with updated scientific targets
+   - **CRITICAL**: Verify EPA-focused omega-3 recommendations (≥60% EPA of EPA+DHA)
+   - **CRITICAL**: Test iron-supportive recipes with heme/non-heme + vitamin C pairing
+   - **CRITICAL**: Verify Mediterranean pattern with anti-inflammatory herbs/spices
+   - **CRITICAL**: Check medically safe claim wording throughout
+   - **CRITICAL**: Test scientific evidence section with updated research backing
+   - **CRITICAL**: Verify Recipe Match Score Transparency with weighted scoring breakdown
+   - **CRITICAL**: Check data source display (Edamam API + built-in database)
+   - **CRITICAL**: Verify nutrient contribution display with individual scores and weights
 
 ### Step 5.2: API Integration Validation
 ```bash
@@ -241,6 +373,11 @@ curl -X POST http://127.0.0.1:8000/api/v1/recipes/recommend \
   -d '{"mood_blend": {"moods": [{"mood": "stressed", "intensity": "medium"}]}, "user_profile": {"age": 32, "gender": "female", "height_cm": 165, "weight_kg": 60, "cuisine_preferences": ["Mediterranean"], "food_allergies": [], "dietary_preference": "none"}}'
 
 # Should return recipe recommendation JSON with enhanced features:
+# - Evidence-based mood mapping (v2.2)
+# - EPA-focused omega-3 targeting (≥60% EPA of EPA+DHA)
+# - Iron-supportive recipes with heme/non-heme + vitamin C
+# - Mediterranean pattern with anti-inflammatory herbs/spices
+# - Medically safe claim wording
 # - Recipe variety rotation
 # - Comprehensive nutrient data
 # - Target nutrient values
@@ -256,6 +393,11 @@ for /L %i in (1,1,3) do curl -X POST http://127.0.0.1:8000/api/v1/recipes/recomm
   -d '{"mood_blend": {"moods": [{"mood": "stressed", "intensity": "medium"}]}, "user_profile": {"age": 32, "gender": "female", "height_cm": 165, "weight_kg": 60}}'
 
 # Expected: Different recipes with variety in protein sources, cuisines, cooking methods
+# Also verify evidence-based nutrient targeting:
+# - EPA-rich omega-3 sources (salmon, mackerel, sardines)
+# - Iron-supportive combinations (heme + non-heme + vitamin C)
+# - Mediterranean pattern with anti-inflammatory herbs/spices
+# - Medically safe claim wording throughout
 ```
 
 ---
@@ -292,6 +434,9 @@ for /L %i in (1,1,3) do curl -X POST http://127.0.0.1:8000/api/v1/recipes/recomm
    - Verify web lookup service is functional
    - Check Edamam API response includes totalNutrients
    - Test fallback nutrient analysis
+   - Verify EPA-focused omega-3 targeting (≥60% EPA of EPA+DHA)
+   - Check iron-supportive combinations with vitamin C pairing
+   - Validate Mediterranean pattern with anti-inflammatory herbs/spices
 
 ### Step 6.2: Automatic Recovery Procedures
 ```bash
@@ -338,6 +483,11 @@ tasklist | findstr python
 - [ ] Frontend-backend communication working
 - [ ] Mobile-first design verified
 - [ ] Loading states and error messages working
+- [ ] **NEW**: Evidence-based mood mapping (v2.2) working correctly
+- [ ] **NEW**: EPA-focused omega-3 targeting (≥60% EPA of EPA+DHA)
+- [ ] **NEW**: Iron-supportive recipes with heme/non-heme + vitamin C
+- [ ] **NEW**: Mediterranean pattern with anti-inflammatory herbs/spices
+- [ ] **NEW**: Medically safe claim wording throughout
 - [ ] **NEW**: Recipe variety system working (no repeats)
 - [ ] **NEW**: Target nutrient values displaying correctly
 - [ ] **NEW**: Nutrient analysis with visual indicators
@@ -398,32 +548,87 @@ echo API Docs: http://127.0.0.1:8000/docs
 
 ---
 
-## Success Criteria
+## Success Criteria (Based on CUSTOMIZATIONS_PERSISTENT.md)
 
 The application is considered successfully deployed when:
+
+### **Core Functionality**
 - ✅ Backend starts without errors on port 8000
 - ✅ Frontend starts without errors on port 5000
-- ✅ Landing page displays mobile-first vertical layout
 - ✅ Complete user flow works: Landing → Profile → Mood → Results
 - ✅ API endpoints respond correctly
 - ✅ Error handling provides meaningful feedback
 - ✅ All templates render without errors
 - ✅ Session storage works correctly
 - ✅ Loading states display properly
-- ✅ **NEW**: Recipe variety system provides diverse recommendations
-- ✅ **NEW**: Target nutrient values show progress toward daily goals
-- ✅ **NEW**: Visual indicators (✅🟡🔴) display nutrient target achievement
-- ✅ **NEW**: Recipe rotation prevents repeats within 24 hours
-- ✅ **NEW**: Enhanced nutrient analysis includes micronutrients
-- ✅ **NEW**: Mood-specific nutritional targeting is accurate
-- ✅ **NEW**: "Another Recipe Suggestion" button works correctly
+
+### **Landing Page Customizations (CUSTOMIZATIONS_PERSISTENT.md Section 1)**
+- ✅ Mobile-first vertical layout (hero section on top, 2x2 feature grid below)
+- ✅ Dark teal gradient background (#0F766E to #065F46)
+- ✅ Glassmorphic cards with backdrop blur effects
+- ✅ Proper responsive design for all screen sizes
+- ✅ Consistent typography and spacing
+- ✅ "Start Your Journey →" button works correctly
+
+### **Recipe Results Page Customizations (CUSTOMIZATIONS_PERSISTENT.md Section 2)**
+- ✅ Mobile-first smartphone design with status bar
+- ✅ Pure JavaScript-driven page generation (no HTML templates needed)
+- ✅ Comprehensive nutrient analysis modal with detailed breakdown
+- ✅ Enhanced "Why This Recipe?" section with specific nutritional data
+- ✅ "Another Recipe Suggestion" button (replaces "Got it!" button)
+- ✅ Scientific evidence section with research backing
+- ✅ 8 key mood-supporting nutrients analysis
+- ✅ Proper loading states and error handling
+- ✅ Consistent color scheme and typography
+
+### **Comprehensive Nutrient Analysis System (CUSTOMIZATIONS_PERSISTENT.md Section 3)**
+- ✅ Enhanced "Why This Recipe?" section with detailed nutritional rationale
+- ✅ Comprehensive nutrient highlights with 8 key mood-supporting nutrients
+- ✅ Scientific evidence section with research backing
+- ✅ "Another Recipe Suggestion" button for seamless recipe exploration
+- ✅ Detailed nutritional breakdown with percentages and targets
+- ✅ Mood-specific nutrient benefits explanation
+
+### **Backend Cooking Directions Fix (CUSTOMIZATIONS_PERSISTENT.md Section 4)**
+- ✅ Fallback cooking directions generation
+- ✅ Intelligent ingredient analysis for cooking methods
+- ✅ Proper error handling when API keys are missing
+- ✅ Step-by-step cooking instructions instead of just links
+
+### **Enhanced Features (v2.2)**
+- ✅ Evidence-based mood mapping with latest scientific research
+- ✅ EPA-focused omega-3 targeting (≥60% EPA of EPA+DHA)
+- ✅ Iron-supportive recipes with heme/non-heme + vitamin C pairing
+- ✅ Mediterranean pattern with anti-inflammatory herbs/spices
+- ✅ Medically safe claim wording based on evidence strength
+- ✅ Recipe variety system provides diverse recommendations
+- ✅ Target nutrient values show progress toward daily goals
+- ✅ Visual indicators (✅🟡🔴) display nutrient target achievement
+- ✅ Recipe rotation prevents repeats within 24 hours
+- ✅ Enhanced nutrient analysis includes micronutrients
+- ✅ Mood-specific nutritional targeting is accurate
+- ✅ "Another Recipe Suggestion" button works correctly
+
+### **Design System Verification (CUSTOMIZATIONS_PERSISTENT.md Design System)**
+- ✅ Color palette: Primary #0F766E, Secondary #065F46, Accent #10B981, Background #F0FDF4
+- ✅ Typography: -apple-system font family, proper sizing and weights
+- ✅ Layout principles: Mobile-first, vertical stacking, glassmorphic effects
+- ✅ Consistent spacing: 20px margins, 16px gaps
 
 ---
 
-## Enhanced Features Guide (v2.0)
+## Enhanced Features Guide (v2.2)
+
+### Evidence-Based Mood Mapping
+The system now uses the latest scientific research:
+- **EPA-focused Omega-3**: Targets EPA ≥ 60% of EPA+DHA based on meta-analyses
+- **Iron-Supportive Implementation**: Heme/non-heme sources with vitamin C pairing
+- **Mediterranean Anti-Inflammatory Pattern**: Enhanced with neuroprotective herbs/spices
+- **Medically Safe Claims**: Evidence-based wording that's clinically appropriate
+- **Evidence Level Transparency**: Honest assessment of research strength
 
 ### Recipe Variety System
-The system now provides 3x more recipe variety through:
+The system provides 3x more recipe variety through:
 - **60+ keyword combinations** per mood (vs 20 previously)
 - **Intelligent rotation** that avoids repeats within 24 hours
 - **Variety boosting** that prioritizes different protein sources, cuisines, and cooking methods
@@ -431,7 +636,7 @@ The system now provides 3x more recipe variety through:
 
 ### Target Nutrient Values
 Users now see exactly how their mood needs are met:
-- **Daily targets** for all mood-supporting nutrients
+- **Evidence-based targets** for all mood-supporting nutrients
 - **Percentage achievement** (e.g., "45mg of 120mg target (38%)")
 - **Visual indicators**: ✅ (50%+), 🟡 (25-49%), 🔴 (<25%)
 - **Mood-specific targeting** with personalized nutrient goals
@@ -441,14 +646,54 @@ Users now see exactly how their mood needs are met:
 - **Ingredient analysis** that recognizes nutrient patterns
 - **Fallback system** with estimated benefits when detailed data unavailable
 - **Mood-specific explanations** for why each nutrient matters
+- **Scientific evidence backing** with appropriate disclaimers
 
 ### Testing the Enhanced Features
-1. **Recipe Variety**: Get 3-5 consecutive recommendations and verify different recipes
-2. **Nutrient Targets**: Click "Nutrient Match Score" and verify target values display
-3. **Visual Indicators**: Check that ✅🟡🔴 icons appear based on target achievement
-4. **Rotation**: Verify no recipe repeats within the same session
-5. **Mood Targeting**: Test different moods and verify appropriate nutrient focus
+1. **Evidence-Based Targeting**: Verify EPA-rich omega-3 sources and iron-supportive combinations
+2. **Recipe Variety**: Get 3-5 consecutive recommendations and verify different recipes
+3. **Nutrient Targets**: Click "Nutrient Match Score" and verify target values display
+4. **Visual Indicators**: Check that ✅🟡🔴 icons appear based on target achievement
+5. **Rotation**: Verify no recipe repeats within the same session
+6. **Mood Targeting**: Test different moods and verify appropriate nutrient focus
+7. **Mediterranean Pattern**: Check for anti-inflammatory herbs/spices in recommendations
+8. **Safe Claims**: Verify medically appropriate wording throughout
 
 ---
 
-*This guide ensures professional-grade deployment with comprehensive error handling, validation, and enhanced user experience features at every step.*
+## 🔧 **Critical Maintenance Notes**
+
+### **Before Any Deployment or Clone:**
+1. **ALWAYS** review `CUSTOMIZATIONS_PERSISTENT.md` first
+2. **VERIFY** all customized files are present and contain the correct code
+3. **TEST** the design system elements (colors, typography, layout)
+4. **VALIDATE** all JavaScript functions are working correctly
+5. **CONFIRM** evidence-based nutrient targeting is working (v2.2)
+6. **VERIFY** EPA-focused omega-3 targeting (≥60% EPA of EPA+DHA)
+7. **CHECK** iron-supportive recipes with heme/non-heme + vitamin C
+8. **VALIDATE** Mediterranean pattern with anti-inflammatory herbs/spices
+9. **ENSURE** medically safe claim wording throughout
+
+### **If Pages Don't Look Right:**
+1. Check `CUSTOMIZATIONS_PERSISTENT.md` for the exact specifications
+2. Verify all CSS files contain the correct styling
+3. Ensure JavaScript functions match the code snippets in the persistent file
+4. Test the design system elements against the documented specifications
+5. Verify evidence-based nutrient targeting is working correctly
+6. Check EPA-focused omega-3 recommendations are appearing
+7. Ensure iron-supportive combinations with vitamin C are being suggested
+8. Validate Mediterranean pattern with anti-inflammatory herbs/spices
+
+### **For New Developers:**
+- `CUSTOMIZATIONS_PERSISTENT.md` is your complete reference guide
+- It contains all the code snippets needed to rebuild pages correctly
+- Follow the verification checklists to ensure proper implementation
+- The design system ensures consistent quality across all deployments
+- **Evidence-based approach**: All recommendations are backed by scientific research
+- **EPA-focused omega-3**: Prioritize EPA ≥ 60% of EPA+DHA for mood support
+- **Iron-supportive recipes**: Combine heme/non-heme sources with vitamin C
+- **Mediterranean pattern**: Use anti-inflammatory herbs/spices for neuroprotection
+- **Medically safe claims**: All wording is clinically appropriate and evidence-based
+
+---
+
+*This guide ensures professional-grade deployment with comprehensive error handling, validation, and enhanced user experience features at every step. The CUSTOMIZATIONS_PERSISTENT.md file is your blueprint for maintaining consistent quality and branding across all SavorMe deployments.*
