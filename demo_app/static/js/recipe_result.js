@@ -462,6 +462,14 @@ function closeNutrientModal() {
                     target: 28,
                     benefit: 'stabilizes blood sugar and prevents energy crashes',
                     moodImportance: 'Prevents mood swings from blood sugar fluctuations'
+                },
+                {
+                    name: 'Plant Protein',
+                    value: Math.round(recipe.nutrition?.protein_g || 0),
+                    unit: 'g',
+                    target: 50,
+                    benefit: 'provides amino acids for neurotransmitter synthesis and sustained energy',
+                    moodImportance: 'Essential for mood-regulating neurotransmitters like serotonin and dopamine'
                 }
             ];
             
@@ -493,11 +501,7 @@ function closeNutrientModal() {
                 highlights.push(`<li><strong>Energy:</strong> ${calories} calories (${caloriePercent}% of daily target) provide sustained energy for mood stability and focus.</li>`);
             }
             
-            if (protein > 0) {
-                const proteinTarget = 50; // Daily protein target
-                const proteinPercent = Math.round((protein / proteinTarget) * 100);
-                highlights.push(`<li><strong>Protein:</strong> ${protein}g (${proteinPercent}% of daily target) supports neurotransmitter production and helps regulate blood sugar levels.</li>`);
-            }
+            // Note: Plant Protein is now handled in the main nutrient highlights above
             
             if (fiber > 0) {
                 const fiberTarget = 25; // Daily fiber target
