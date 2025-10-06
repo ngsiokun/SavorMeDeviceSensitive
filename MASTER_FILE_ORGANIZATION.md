@@ -3,6 +3,13 @@
 ## 🎯 **Purpose**
 This document provides a comprehensive overview of all files in the SavorMe project, organized by category and purpose, to ensure efficient management and avoid forgotten files.
 
+## 🚀 **Startup Workflow Integration**
+When you run `start_savorme_simple.bat`, the system automatically references this file (`MASTER_FILE_ORGANIZATION.md`) to:
+- Verify all essential files are present
+- Check file structure and organization
+- Ensure no critical files are missing
+- Validate project completeness before startup
+
 ## 📁 **File Categories & Organization**
 
 ### **1. CORE APPLICATION FILES** ⭐ (Essential - Never Delete)

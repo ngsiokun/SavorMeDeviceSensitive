@@ -11,6 +11,23 @@ if not exist "app\main.py" (
     exit /b 1
 )
 
+REM Documentation Integration Check
+echo Checking documentation integration...
+if not exist "MASTER_FILE_ORGANIZATION.md" (
+    echo WARNING: MASTER_FILE_ORGANIZATION.md not found
+    echo Please ensure all documentation files are present
+)
+if not exist "CUSTOMIZATIONS_PERSISTENT.md" (
+    echo WARNING: CUSTOMIZATIONS_PERSISTENT.md not found
+    echo Please ensure design system documentation is present
+)
+if not exist "SAVORME_MASTER_OVERVIEW.md" (
+    echo WARNING: SAVORME_MASTER_OVERVIEW.md not found
+    echo Please ensure project overview documentation is present
+)
+echo Documentation check complete.
+echo.
+
 REM Check if virtual environment exists
 if not exist "venv\Scripts\activate.bat" (
     echo Creating virtual environment...
@@ -68,6 +85,18 @@ echo Frontend: http://localhost:5000
 echo.
 echo The application should open in your browser shortly.
 echo If not, manually navigate to: http://localhost:5000
+echo.
+echo ========================================
+echo Documentation Integration Complete
+echo ========================================
+echo.
+echo This startup script integrates with:
+echo - MASTER_FILE_ORGANIZATION.md (file structure)
+echo - CUSTOMIZATIONS_PERSISTENT.md (design system)
+echo - SAVORME_MASTER_OVERVIEW.md (project overview)
+echo - AUTOMATED_APP_STARTUP_GUIDE.md (this process)
+echo.
+echo For detailed troubleshooting, see AUTOMATED_APP_STARTUP_GUIDE.md
 echo.
 echo Press any key to close this window...
 pause >nul

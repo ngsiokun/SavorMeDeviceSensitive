@@ -4,8 +4,23 @@
 ### Overview
 This document provides a complete, step-by-step guide for running the SavorMe application with automatic error detection, correction, and validation. The system now includes advanced recipe variety, nutrient target tracking, and comprehensive mood-based nutrition analysis.
 
-### 📋 **Critical Reference: Customizations Persistent File**
-**IMPORTANT**: Before starting the application, ensure you have reviewed `CUSTOMIZATIONS_PERSISTENT.md` which contains all the essential customizations, design system specifications, and verification checklists needed to properly rebuild and maintain the SavorMe pages. This file is your blueprint for ensuring consistent quality and branding across all deployments.
+### 📋 **Critical Documentation References**
+**IMPORTANT**: Before starting the application, ensure you have reviewed these essential files:
+
+1. **`MASTER_FILE_ORGANIZATION.md`** - Complete file inventory and organization guide
+   - Shows where to find each file and its purpose
+   - Prevents forgotten files during updates
+   - Essential for understanding project structure
+
+2. **`CUSTOMIZATIONS_PERSISTENT.md`** - Design system and page specifications
+   - Contains all essential customizations and design system specifications
+   - Verification checklists for proper page rebuilding
+   - Blueprint for consistent quality and branding across deployments
+
+3. **`SAVORME_MASTER_OVERVIEW.md`** - Complete project reference
+   - Integration checklist to prevent forgotten files
+   - File status tracking and relationships
+   - Comprehensive project overview
 
 ### ⚠️ **CRITICAL: Use Command Prompt Only**
 **ALL COMMANDS IN THIS GUIDE MUST BE RUN VIA COMMAND PROMPT (cmd.exe) AND NEVER USE POWERSHELL.** PowerShell may cause compatibility issues with the batch scripts and environment setup. Always open Command Prompt (cmd.exe) before running any commands from this guide.
@@ -24,6 +39,50 @@ This document provides a complete, step-by-step guide for running the SavorMe ap
 - **Recipe Match Score Transparency**: Weighted scoring system with evidence-based nutrient weights
 - **Data Source Transparency**: Clear documentation of Edamam API + built-in nutrient database
 - **Visual Progress Indicators**: ✅🟡🔴 status for nutrient target achievement
+
+---
+
+## 🚀 **Startup Workflow Integration**
+
+### **How Startup Scripts Work with Documentation**
+
+When you run `start_savorme_simple.bat`, the system follows this integrated workflow:
+
+1. **File Organization Check** → References `MASTER_FILE_ORGANIZATION.md`
+   - Verifies all essential files are present
+   - Checks file structure and organization
+   - Ensures no critical files are missing
+
+2. **Design System Validation** → References `CUSTOMIZATIONS_PERSISTENT.md`
+   - Validates design system elements (colors, typography, layout)
+   - Checks critical JavaScript functions
+   - Verifies evidence-based nutrient analysis components
+
+3. **Project Overview Verification** → References `SAVORME_MASTER_OVERVIEW.md`
+   - Confirms integration checklist completion
+   - Validates file relationships and dependencies
+   - Ensures project coherence
+
+4. **Automated Startup Process** → Follows this guide (`AUTOMATED_APP_STARTUP_GUIDE.md`)
+   - Environment setup and validation
+   - Backend and frontend startup
+   - Error detection and correction
+
+### **Quick Start Commands**
+
+#### **Option 1: Simple Startup (Recommended)**
+```cmd
+cd C:\Users\HP\SavorMe\SavorMe-backend
+start_savorme_simple.bat
+```
+*This script automatically references all documentation files and follows the complete workflow.*
+
+#### **Option 2: Professional Startup (Advanced)**
+```cmd
+cd C:\Users\HP\SavorMe\SavorMe-backend
+savorme_professional_startup.bat
+```
+*This script includes comprehensive diagnostics and follows the complete workflow with detailed logging.*
 
 ---
 
