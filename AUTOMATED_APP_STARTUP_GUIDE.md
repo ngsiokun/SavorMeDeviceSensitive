@@ -138,27 +138,151 @@ pip list | findstr "fastapi uvicorn flask requests python-dotenv"
 
 ## Phase 2: Configuration Setup
 
-### Step 2.1: Environment File Setup
+### ⚠️ **CRITICAL: .env File Setup (Required for API Keys)**
+
+**IMPORTANT**: The `.env` file is **NOT** included in GitHub repositories for security reasons. You must create this file manually after cloning from GitHub.
+
+#### **Step 2.1: Locate and Create .env File**
+
+**File Location**: `C:\Users\HP\SavorMe\SavorMe-backend\.env`
+
 ```bash
+# Navigate to project root directory
+cd C:\Users\HP\SavorMe\SavorMe-backend
+
 # Check if .env exists
 if exist .env (
-    echo .env file exists
+    echo [OK] .env file found
+    echo Checking .env file contents...
+    type .env
 ) else (
+    echo [WARNING] .env file NOT FOUND
+    echo This is normal when cloning from GitHub
     echo Creating .env template...
+    
+    # Create .env file with template
     echo # SavorMe Backend Environment Variables > .env
-    echo # Copy this file and add your actual API keys >> .env
+    echo # IMPORTANT: Replace the placeholder values with your actual API keys >> .env
+    echo # Get your API keys from: >> .env
+    echo # - Edamam: https://developer.edamam.com/ >> .env
+    echo # - OpenRouter: https://openrouter.ai/ >> .env
     echo. >> .env
-    echo # Edamam Recipe API >> .env
-    echo EDAMAM_APP_ID=your_edamam_app_id >> .env
-    echo EDAMAM_APP_KEY=your_edamam_app_key >> .env
+    echo # Edamam Recipe API (Required for recipe data) >> .env
+    echo EDAMAM_APP_ID=your_edamam_app_id_here >> .env
+    echo EDAMAM_APP_KEY=your_edamam_app_key_here >> .env
     echo. >> .env
-    echo # OpenRouter AI API >> .env
-    echo OPENROUTER_API_KEY=your_openrouter_api_key >> .env
+    echo # OpenRouter AI API (Required for cooking directions) >> .env
+    echo OPENROUTER_API_KEY=your_openrouter_api_key_here >> .env
     echo. >> .env
-    echo # CORS Origins >> .env
+    echo # CORS Origins (Frontend access) >> .env
     echo CORS_ORIGINS=http://localhost:5000,http://127.0.0.1:5000 >> .env
-    echo [OK] .env template created
+    
+    echo [SUCCESS] .env template created
+    echo.
+    echo ⚠️  CRITICAL: You must now edit .env file and add your actual API keys
+    echo.
+    echo To edit the .env file:
+    echo 1. Open .env in any text editor (Notepad, VS Code, etc.)
+    echo 2. Replace "your_edamam_app_id_here" with your actual Edamam App ID
+    echo 3. Replace "your_edamam_app_key_here" with your actual Edamam App Key
+    echo 4. Replace "your_openrouter_api_key_here" with your actual OpenRouter API Key
+    echo 5. Save the file
+    echo.
+    echo Press any key to continue after you have added your API keys...
+    pause
 )
+```
+
+#### **Step 2.2: Verify .env File Contents**
+
+```bash
+# Verify .env file has required variables
+echo Checking .env file configuration...
+
+# Check for Edamam credentials
+findstr "EDAMAM_APP_ID=" .env | findstr /v "your_edamam_app_id_here" >nul
+if %errorlevel% equ 0 (
+    echo [OK] EDAMAM_APP_ID is configured
+) else (
+    echo [ERROR] EDAMAM_APP_ID not properly configured
+    echo Please edit .env file and add your actual Edamam App ID
+    pause
+    exit /b 1
+)
+
+findstr "EDAMAM_APP_KEY=" .env | findstr /v "your_edamam_app_key_here" >nul
+if %errorlevel% equ 0 (
+    echo [OK] EDAMAM_APP_KEY is configured
+) else (
+    echo [ERROR] EDAMAM_APP_KEY not properly configured
+    echo Please edit .env file and add your actual Edamam App Key
+    pause
+    exit /b 1
+)
+
+# Check for OpenRouter credentials
+findstr "OPENROUTER_API_KEY=" .env | findstr /v "your_openrouter_api_key_here" >nul
+if %errorlevel% equ 0 (
+    echo [OK] OPENROUTER_API_KEY is configured
+) else (
+    echo [ERROR] OPENROUTER_API_KEY not properly configured
+    echo Please edit .env file and add your actual OpenRouter API Key
+    pause
+    exit /b 1
+)
+
+echo [SUCCESS] All API keys are properly configured
+```
+
+#### **Step 2.3: API Key Setup Instructions**
+
+**If you need to get API keys:**
+
+1. **Edamam Recipe API** (Required for recipe data):
+   - Go to: https://developer.edamam.com/
+   - Sign up for a free account
+   - Create a new application
+   - Copy your App ID and App Key
+
+2. **OpenRouter AI API** (Required for cooking directions):
+   - Go to: https://openrouter.ai/
+   - Sign up for an account
+   - Get your API key from the dashboard
+
+3. **Edit .env file**:
+   - Open `C:\Users\HP\SavorMe\SavorMe-backend\.env` in any text editor
+   - Replace the placeholder values with your actual API keys
+   - Save the file
+
+#### **Step 2.4: Test API Connectivity**
+
+```bash
+# Test if API keys work (optional but recommended)
+echo Testing API connectivity...
+python -c "
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+edamam_id = os.getenv('EDAMAM_APP_ID')
+edamam_key = os.getenv('EDAMAM_APP_KEY')
+openrouter_key = os.getenv('OPENROUTER_API_KEY')
+
+if edamam_id and edamam_id != 'your_edamam_app_id_here':
+    print('[OK] Edamam App ID is configured')
+else:
+    print('[WARNING] Edamam App ID not configured')
+
+if edamam_key and edamam_key != 'your_edamam_app_key_here':
+    print('[OK] Edamam App Key is configured')
+else:
+    print('[WARNING] Edamam App Key not configured')
+
+if openrouter_key and openrouter_key != 'your_openrouter_api_key_here':
+    print('[OK] OpenRouter API Key is configured')
+else:
+    print('[WARNING] OpenRouter API Key not configured')
+"
 ```
 
 ### Step 2.2: Verify File Structure & Customizations

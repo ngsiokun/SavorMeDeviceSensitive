@@ -208,6 +208,26 @@ start_savorme_simple.bat
 3. **Evidence-Based**: All nutrition claims must be evidence-based and medically safe
 4. **Scoring Transparency**: All recipe scores must be explainable and transparent
 5. **File Integration**: Use this overview to ensure no files are forgotten
+6. **⚠️ .env File Critical**: The `.env` file is NOT in GitHub - must be created manually after cloning
+
+## 🔑 **Critical .env File Issue (GitHub Cloning)**
+
+**IMPORTANT**: When cloning from GitHub, the `.env` file will be missing because it contains sensitive API keys and is excluded from the repository.
+
+### **What Happens When .env is Missing:**
+- ❌ Backend cannot connect to Edamam API (no recipe data)
+- ❌ Backend cannot connect to OpenRouter API (no cooking directions)
+- ❌ Application will start but show errors when trying to get recommendations
+
+### **How to Fix:**
+1. **Run startup script**: `start_savorme_simple.bat` will detect missing .env and provide instructions
+2. **Follow AUTOMATED_APP_STARTUP_GUIDE.md Phase 2**: Complete .env setup instructions
+3. **Get API keys**:
+   - Edamam: https://developer.edamam.com/
+   - OpenRouter: https://openrouter.ai/
+4. **Create .env file** in project root with your actual API keys
+
+### **File Location**: `C:\Users\HP\SavorMe\SavorMe-backend\.env`
 
 ---
 

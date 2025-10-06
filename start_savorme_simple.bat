@@ -28,6 +28,50 @@ if not exist "SAVORME_MASTER_OVERVIEW.md" (
 echo Documentation check complete.
 echo.
 
+REM Critical .env File Check
+echo Checking .env file for API keys...
+if not exist ".env" (
+    echo ERROR: .env file not found!
+    echo.
+    echo This is normal when cloning from GitHub.
+    echo The .env file contains your API keys and is not included in the repository.
+    echo.
+    echo Please follow these steps:
+    echo 1. See AUTOMATED_APP_STARTUP_GUIDE.md Phase 2 for detailed instructions
+    echo 2. Create .env file with your API keys
+    echo 3. Get Edamam API keys from: https://developer.edamam.com/
+    echo 4. Get OpenRouter API key from: https://openrouter.ai/
+    echo.
+    echo Press any key to exit and set up your .env file...
+    pause >nul
+    exit /b 1
+) else (
+    echo .env file found, checking configuration...
+    findstr "EDAMAM_APP_ID=" .env | findstr /v "your_edamam_app_id_here" >nul
+    if %errorlevel% neq 0 (
+        echo ERROR: EDAMAM_APP_ID not properly configured in .env file
+        echo Please edit .env file and add your actual Edamam App ID
+        pause
+        exit /b 1
+    )
+    findstr "EDAMAM_APP_KEY=" .env | findstr /v "your_edamam_app_key_here" >nul
+    if %errorlevel% neq 0 (
+        echo ERROR: EDAMAM_APP_KEY not properly configured in .env file
+        echo Please edit .env file and add your actual Edamam App Key
+        pause
+        exit /b 1
+    )
+    findstr "OPENROUTER_API_KEY=" .env | findstr /v "your_openrouter_api_key_here" >nul
+    if %errorlevel% neq 0 (
+        echo ERROR: OPENROUTER_API_KEY not properly configured in .env file
+        echo Please edit .env file and add your actual OpenRouter API Key
+        pause
+        exit /b 1
+    )
+    echo API keys configuration verified.
+)
+echo.
+
 REM Check if virtual environment exists
 if not exist "venv\Scripts\activate.bat" (
     echo Creating virtual environment...
