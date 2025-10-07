@@ -8,7 +8,14 @@ from app.core.config import settings
 from app.models.recipe import Recipe, Ingredient, NutritionInfo
 from app.models.user import UserProfile, NutritionTargets
 from app.services.nutrient_web_lookup import nutrient_web_lookup
-from typing import Dict, Any
+from app.data.edamam_constants import (
+    PRIMARY_NUTRIENTS, SECONDARY_NUTRIENTS, ALL_NUTRIENTS,
+    ENERC_KCAL, PROCNT, CHOCDF, FAT, FIBTG, FIBER, NA,
+    FE, MG, VITB12, FOLDFE, VITD, ZN, VITC, CA, K, P,
+    HIGH_FIBER_INGREDIENTS, is_high_fiber_ingredient,
+    convert_vitamin_d_to_iu, get_nutrient_code
+)
+from app.services.web_image_search import web_image_search
 
 
 class EdamamClient:
@@ -82,7 +89,7 @@ class EdamamClient:
             params.append(("calories", calories_range))
         
         if protein_range:
-            params.append(("nutrients[PROCNT]", protein_range))
+            params.append((f"nutrients[{PROCNT}]", protein_range))
         
         # Ensure we get detailed nutritional data including micronutrients
         # The 'field' parameter specifies which fields to include in the response
@@ -106,7 +113,7 @@ class EdamamClient:
         recipes = []
         for hit in data.get("hits", [])[:max_results]:
             recipe_data = hit.get("recipe", {})
-            recipe = self._parse_recipe(recipe_data)
+            recipe = await self._parse_recipe_with_image_fallback(recipe_data)
             
             # Enhance nutrition data with web lookup
             print(f"DEBUG: Recipe '{recipe.name}' has {len(recipe.ingredients) if recipe.ingredients else 0} ingredients")
@@ -161,7 +168,7 @@ class EdamamClient:
                 # Parse flexible results
                 for hit in data.get("hits", [])[:max_results]:
                     recipe_data = hit.get("recipe", {})
-                    recipe = self._parse_recipe(recipe_data)
+                    recipe = await self._parse_recipe_with_image_fallback(recipe_data)
                     recipes.append(recipe)
                     
                 print(f"Flexible search found {len(recipes)} recipes")
@@ -192,7 +199,7 @@ class EdamamClient:
                             
                             for hit in data.get("hits", [])[:max_results]:
                                 recipe_data = hit.get("recipe", {})
-                                recipe = self._parse_recipe(recipe_data)
+                                recipe = await self._parse_recipe_with_image_fallback(recipe_data)
                                 recipes.append(recipe)
                                 
                             print(f"Generic search '{generic_query}' found {len(recipes)} recipes")
@@ -209,7 +216,20 @@ class EdamamClient:
         """Parse Edamam recipe response into Recipe model"""
         
         # Validate and potentially filter image URL
-        image_url = self._validate_recipe_image(recipe_data.get("image"), recipe_data.get("label", ""))
+        original_image_url = recipe_data.get("image")
+        recipe_name = recipe_data.get("label", "Unknown Recipe")
+        
+        print(f"DEBUG: Processing recipe '{recipe_name}'")
+        print(f"DEBUG: Original image URL: {original_image_url}")
+        
+        image_url = self._validate_recipe_image(original_image_url, recipe_name)
+        
+        print(f"DEBUG: Final image URL after validation: {image_url}")
+        
+        # If image was filtered out, try to get a fallback (async call)
+        if not image_url and original_image_url:
+            # Note: This will be handled in the calling async method
+            print(f"DEBUG: Image was filtered out for '{recipe_name}', will try fallback")
         
         # Parse ingredients
         ingredients = []
@@ -225,14 +245,31 @@ class EdamamClient:
         nutrients = recipe_data.get("totalNutrients", {})
         servings = float(recipe_data.get("yield", 1))
         
-        # Calculate per-serving values
+        # Calculate per-serving values using constants
+        fiber_from_api = nutrients.get(FIBTG, {}).get("quantity", 0) / servings or nutrients.get(FIBER, {}).get("quantity", 0) / servings
+        
+        # If fiber is 0, try to get it from nutrient lookup for high-fiber ingredients
+        if fiber_from_api == 0:
+            fiber_from_lookup = 0
+            for ingredient in ingredients:
+                if is_high_fiber_ingredient(ingredient.name):
+                    # Use nutrient lookup to get fiber for high-fiber ingredients
+                    try:
+                        # Note: nutrient_web_lookup is async, but we can't await here in sync method
+                        # This is a fallback - the main nutrition enhancement happens in async methods
+                        pass
+                    except:
+                        pass
+            
+            fiber_from_api = fiber_from_lookup
+        
         nutrition = NutritionInfo(
-            calories=nutrients.get("ENERC_KCAL", {}).get("quantity", 0) / servings,
-            protein_g=nutrients.get("PROCNT", {}).get("quantity", 0) / servings,
-            fiber_g=nutrients.get("FIBTG", {}).get("quantity", 0) / servings,
-            carbs_g=nutrients.get("CHOCDF", {}).get("quantity", 0) / servings,
-            fat_g=nutrients.get("FAT", {}).get("quantity", 0) / servings,
-            sodium_mg=nutrients.get("NA", {}).get("quantity", 0) / servings
+            calories=nutrients.get(ENERC_KCAL, {}).get("quantity", 0) / servings,
+            protein_g=nutrients.get(PROCNT, {}).get("quantity", 0) / servings,
+            fiber_g=fiber_from_api,
+            carbs_g=nutrients.get(CHOCDF, {}).get("quantity", 0) / servings,
+            fat_g=nutrients.get(FAT, {}).get("quantity", 0) / servings,
+            sodium_mg=nutrients.get(NA, {}).get("quantity", 0) / servings
         )
         
         # Note: Edamam doesn't always provide cooking directions
@@ -262,6 +299,55 @@ class EdamamClient:
         
         return recipe
     
+    async def _parse_recipe_with_image_fallback(self, recipe_data: Dict[str, Any]) -> Recipe:
+        """
+        Parse Edamam recipe response into Recipe model with image fallback
+        
+        Args:
+            recipe_data: Raw recipe data from Edamam API
+            
+        Returns:
+            Recipe object with enhanced image handling
+        """
+        # First, parse the recipe normally
+        recipe = self._parse_recipe(recipe_data)
+        
+        # Only try fallback if no image was found AND the original was filtered out
+        if not recipe.image_url:
+            # Check if the original image was filtered out (not just missing)
+            original_image_url = recipe_data.get("image")
+            if original_image_url:
+                recipe_name = recipe.name
+                ingredients = recipe.ingredients
+                
+                print(f"DEBUG: Original image was filtered out for {recipe_name}, trying web search...")
+                fallback_image = await self._get_fallback_image_url(recipe_name, ingredients)
+                if fallback_image:
+                    # Update the recipe with the fallback image
+                    recipe = Recipe(
+                        recipe_id=recipe.recipe_id,
+                        name=recipe.name,
+                        image_url=fallback_image,
+                        ingredients=recipe.ingredients,
+                        cooking_directions=recipe.cooking_directions,
+                        prep_time=recipe.prep_time,
+                        cook_time=recipe.cook_time,
+                        servings=recipe.servings,
+                        nutrition=recipe.nutrition,
+                        source_url=recipe.source_url,
+                        source_name=recipe.source_name,
+                        cuisine_type=recipe.cuisine_type,
+                        meal_type=recipe.meal_type,
+                        dish_type=recipe.dish_type
+                    )
+                    print(f"DEBUG: Updated {recipe_name} with fallback image")
+                else:
+                    print(f"DEBUG: No fallback image found for {recipe_name}")
+            else:
+                print(f"DEBUG: No original image from Edamam for {recipe.name}")
+        
+        return recipe
+    
     def _enhance_recipe_nutrition(self, recipe: Recipe, canonical_nutrients: Dict[str, float]) -> Recipe:
         """
         Enhance recipe nutrition data with secondary nutrients from canonical nutrients
@@ -287,7 +373,7 @@ class EdamamClient:
             magnesium_mg=canonical_nutrients.get("magnesium", 0),
             vitamin_b12_mcg=canonical_nutrients.get("vitamin_b12", 0),
             folate_mcg=canonical_nutrients.get("folate", 0),
-            vitamin_d_iu=canonical_nutrients.get("vitamin_d", 0),
+            vitamin_d_iu=convert_vitamin_d_to_iu(canonical_nutrients.get("vitamin_d", 0)),
             omega3_g=canonical_nutrients.get("omega_3_epa_dha", 0),
             zinc_mg=canonical_nutrients.get("zinc", 0),
             vitamin_c_mg=canonical_nutrients.get("vitamin_c", 0)
@@ -337,33 +423,81 @@ class EdamamClient:
         if not image_url:
             return None
         
-        # Only filter out obvious non-food images
+        # Extract just the path part of the URL (before query parameters)
+        # to avoid false matches in URL parameters like "SignedHeaders"
+        try:
+            url_path = image_url.split('?')[0].lower()
+        except Exception:
+            return None
+        
+        # Very conservative filtering - only filter out obvious non-food images
+        # Check if the filename/path contains decorative image indicators
         generic_patterns = [
             "placeholder",
-            "default",
-            "abstract",
+            "default", 
             "heart",  # Like the heart shape you saw
-            "metallic",
-            "decorative",
-            "ornament",
-            "artistic"
+            "icon",
+            "symbol",
+            "logo",
+            "banner",
+            "sprite",
+            "avatar",
+            "social",
+            "share",
+            "footer",
+            "bg",
+            "background"
         ]
         
-        # Check URL and recipe name for generic indicators
-        image_url_lower = image_url.lower()
-        recipe_name_lower = recipe_name.lower()
-        
-        # Skip if URL contains generic patterns
+        # Skip if URL path contains generic patterns
         for pattern in generic_patterns:
-            if pattern in image_url_lower:
+            if pattern in url_path:
+                print(f"DEBUG: Filtered out image with pattern '{pattern}': {image_url}")
                 return None
         
         # Skip if recipe name suggests the image might be generic
         # (This is a heuristic - in practice, you might want to be more specific)
         
-        # Be more permissive with Edamam images - they usually have food photos
-        # Only filter out the most obvious non-food patterns
+        # Be very permissive with Edamam images - they usually have good food photos
+        # Only filter out the most obvious non-food patterns like hearts, icons, etc.
+        print(f"DEBUG: Keeping Edamam image for {recipe_name}: {image_url}")
         return image_url
+    
+    async def _get_fallback_image_url(self, recipe_name: str, ingredients: list = None) -> str:
+        """
+        Get a fallback food image URL when the original image is filtered out
+        
+        Args:
+            recipe_name: Name of the recipe for context
+            ingredients: List of ingredients for better search
+            
+        Returns:
+            Fallback image URL or None
+        """
+        try:
+            print(f"DEBUG: Starting fallback image search for '{recipe_name}'")
+            
+            # Try to find a food image from web sources
+            image_url = await web_image_search.search_food_image(recipe_name, ingredients)
+            if image_url:
+                print(f"DEBUG: Found web image for recipe '{recipe_name}': {image_url}")
+                return image_url
+            else:
+                print(f"DEBUG: No web image found for recipe '{recipe_name}'")
+            
+            # If no web image found, generate a simple placeholder
+            placeholder_url = await web_image_search.generate_simple_food_placeholder(recipe_name)
+            if placeholder_url:
+                print(f"DEBUG: Generated placeholder for recipe '{recipe_name}': {placeholder_url}")
+                return placeholder_url
+            else:
+                print(f"DEBUG: No placeholder generated for recipe '{recipe_name}'")
+                
+        except Exception as e:
+            print(f"ERROR: Failed to get fallback image for {recipe_name}: {e}")
+        
+        print(f"DEBUG: No fallback image available for '{recipe_name}'")
+        return None
     
     def extract_full_nutrients_per_serving(self, recipe_data: Dict[str, Any]) -> Dict[str, float]:
         """
@@ -379,35 +513,35 @@ class EdamamClient:
         print(f"DEBUG: Available nutrients from Edamam: {list(total_nutrients.keys())}")
         print(f"DEBUG: Recipe yield: {servings}")
         
-        # Edamam nutrient code mapping - Complete micronutrient coverage
+        # Use constants for nutrient mapping - Complete micronutrient coverage
         nutrient_map = {
             # Macronutrients
-            "ENERC_KCAL": "calories",
-            "PROCNT": "protein",
-            "CHOCDF": "carbohydrate_by_difference",
-            "FIBTG": "fiber",
-            "FAT": "total_fat",
+            ENERC_KCAL: "calories",
+            PROCNT: "protein",
+            CHOCDF: "carbohydrate_by_difference",
+            FIBTG: "fiber",
+            FAT: "total_fat",
             "SUGAR": "sugars_total",
             "SUGAR.added": "added_sugars",
             
             # Minerals
-            "FE": "iron",
-            "MG": "magnesium",
-            "CA": "calcium",
-            "K": "potassium",
-            "NA": "sodium",
-            "ZN": "zinc",
-            "P": "phosphorus",
+            FE: "iron",
+            MG: "magnesium",
+            CA: "calcium",
+            K: "potassium",
+            NA: "sodium",
+            ZN: "zinc",
+            P: "phosphorus",
             "CU": "copper",
             "MN": "manganese",
             "SE": "selenium",
             
             # Vitamins
-            "VITC": "vitamin_c",
-            "VITD": "vitamin_d",
+            VITC: "vitamin_c",
+            VITD: "vitamin_d",
             "VITB6A": "vitamin_b6",
-            "VITB12": "vitamin_b12",
-            "FOLDFE": "folate",  # Folate (B9)
+            VITB12: "vitamin_b12",
+            FOLDFE: "folate",  # Folate (B9)
             "THIA": "thiamin",   # B1
             "RIBF": "riboflavin", # B2
             "NIA": "niacin",     # B3

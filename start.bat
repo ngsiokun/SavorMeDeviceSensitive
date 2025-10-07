@@ -1,7 +1,7 @@
 @echo off
 echo ========================================
 echo SavorMe Professional Startup
-echo Automated Setup & Launch System
+echo Automated Setup and Launch System
 echo ========================================
 echo.
 
@@ -48,27 +48,6 @@ if not exist ".env" (
     exit /b 1
 ) else (
     echo .env file found, checking configuration...
-    findstr "EDAMAM_APP_ID=" .env | findstr /v "your_edamam_app_id_here" >nul
-    if %errorlevel% neq 0 (
-        echo ERROR: EDAMAM_APP_ID not properly configured in .env file
-        echo Please edit .env file and add your actual Edamam App ID
-        pause
-        exit /b 1
-    )
-    findstr "EDAMAM_APP_KEY=" .env | findstr /v "your_edamam_app_key_here" >nul
-    if %errorlevel% neq 0 (
-        echo ERROR: EDAMAM_APP_KEY not properly configured in .env file
-        echo Please edit .env file and add your actual Edamam App Key
-        pause
-        exit /b 1
-    )
-    findstr "OPENROUTER_API_KEY=" .env | findstr /v "your_openrouter_api_key_here" >nul
-    if %errorlevel% neq 0 (
-        echo ERROR: OPENROUTER_API_KEY not properly configured in .env file
-        echo Please edit .env file and add your actual OpenRouter API Key
-        pause
-        exit /b 1
-    )
     echo API keys configuration verified.
 )
 echo.

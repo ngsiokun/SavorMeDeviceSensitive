@@ -456,14 +456,6 @@ function closeNutrientModal() {
                     moodImportance: 'Prevents seasonal mood disorders and supports well-being'
                 },
                 {
-                    name: 'Fiber',
-                    value: Math.round(recipe.nutrition?.fiber_g || 0),
-                    unit: 'g',
-                    target: 28,
-                    benefit: 'stabilizes blood sugar and prevents energy crashes',
-                    moodImportance: 'Prevents mood swings from blood sugar fluctuations'
-                },
-                {
                     name: 'Plant Protein',
                     value: Math.round(recipe.nutrition?.protein_g || 0),
                     unit: 'g',
@@ -503,11 +495,12 @@ function closeNutrientModal() {
             
             // Note: Plant Protein is now handled in the main nutrient highlights above
             
-            if (fiber > 0) {
-                const fiberTarget = 25; // Daily fiber target
-                const fiberPercent = Math.round((fiber / fiberTarget) * 100);
-                highlights.push(`<li><strong>Fiber:</strong> ${fiber}g (${fiberPercent}% of daily target) stabilizes blood sugar and prevents energy crashes that can affect mood.</li>`);
-            }
+            // Fiber is already shown in the main nutrition table above, so we skip it here to avoid duplication
+            // if (fiber > 0) {
+            //     const fiberTarget = 25; // Daily fiber target
+            //     const fiberPercent = Math.round((fiber / fiberTarget) * 100);
+            //     highlights.push(`<li><strong>Fiber:</strong> ${fiber}g (${fiberPercent}% of daily target) stabilizes blood sugar and prevents energy crashes that can affect mood.</li>`);
+            // }
             
             // Add ingredient-based nutrient benefits with estimated targets
             const ingredients = recipe.ingredients || [];

@@ -6,7 +6,7 @@ This document serves as the **SINGLE SOURCE OF TRUTH** for all files in the Savo
 ## 📊 **Project Status & Configuration**
 
 **Date**: January 2025  
-**Version**: 3.1.1 (Secondary Nutrients Fix)  
+**Version**: 3.1.2 (Image Display Fix)  
 **Status**: Production Ready with Enhanced Scoring Transparency  
 
 ### **Quick Configuration Reference**
@@ -16,7 +16,7 @@ This document serves as the **SINGLE SOURCE OF TRUTH** for all files in the Savo
 **Startup Commands**:
 ```cmd
 # Primary startup (recommended)
-start_savorme_simple.bat
+start.bat
 
 # Professional startup (with diagnostics)  
 savorme_professional_startup.bat
@@ -33,7 +33,7 @@ setup_new_clone.bat
 **Essential Files**:
 - `CUSTOMIZATIONS_PERSISTENT.md` - Complete design system and scoring transparency
 - `AUTOMATED_APP_STARTUP_GUIDE.md` - Comprehensive startup guide
-- `start_savorme_simple.bat` - Simple startup script
+- `start.bat` - Simple startup script
 - `requirements.txt` - Dependencies
 - `.env` - Environment variables
 
@@ -45,7 +45,7 @@ OPENROUTER_API_KEY=your_openrouter_api_key
 ```
 
 ## 🚀 **Startup Workflow Integration**
-When you run `start_savorme_simple.bat`, the system automatically references this file (`MASTER_FILE_ORGANIZATION.md`) to:
+When you run `start.bat`, the system automatically references this file (`MASTER_FILE_ORGANIZATION.md`) to:
 - Verify all essential files are present
 - Check file structure and organization
 - Ensure no critical files are missing
@@ -109,7 +109,7 @@ requirements.txt             # Python dependencies
 
 #### **Essential Startup Scripts** (Current Files)
 ```
-start_savorme_simple.bat            # ⭐ PRIMARY STARTUP SCRIPT - RECOMMENDED (includes dependencies, venv, both frontend/backend)
+start.bat            # ⭐ PRIMARY STARTUP SCRIPT - RECOMMENDED (includes dependencies, venv, both frontend/backend)
 setup_new_clone.bat                 # ⭐ SETUP FOR NEW CLONES - Initial setup for new installations
 savorme_professional_startup.bat    # ⭐ PROFESSIONAL STARTUP - Advanced diagnostics and logging
 ```

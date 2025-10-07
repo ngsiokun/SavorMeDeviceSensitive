@@ -109,11 +109,17 @@ This document ensures that all customizations made to the SavorMe application pe
   - Proper loading states and error handling
   - Consistent color scheme and typography
 
-### 4. **Evidence-Based Nutrient Analysis System (v2.3)**
+### 4. **Evidence-Based Nutrient Analysis System (v3.1.2)**
 - **File**: `demo_app/static/js/recipe_result.js`
-- **Backend Files**: `app/models/recipe.py`, `app/services/edamam_client.py`, `app/api/routes.py`
+- **Backend Files**: `app/models/recipe.py`, `app/services/edamam_client.py`, `app/api/routes.py`, `app/services/web_image_search.py`
 - **Changes**:
-  - **✅ Secondary Nutrients Fix**: Fixed issue where secondary nutrients were showing as 0mg/0g instead of actual calculated values
+  - **✅ Image Display Fix (v3.1.2)**: Fixed critical bug where recipe images weren't displaying
+    - Root cause: AWS signed URLs contain `X-Amz-SignedHeaders=host`, which was matching the "header" pattern filter
+    - Solution: Updated `_validate_recipe_image()` to only check URL path (before `?`), not query parameters
+    - Enhanced with expanded generic patterns (sprite, avatar, social, share, footer, bg, background)
+    - Added try-except for robust URL parsing
+    - Frontend already has `onerror` fallback to placeholder image
+  - **✅ Secondary Nutrients Fix (v3.1.1)**: Fixed issue where secondary nutrients were showing as 0mg/0g instead of actual calculated values
   - **Enhanced Nutrition Model**: Updated NutritionInfo model to include all secondary nutrients (magnesium, iron, B12, folate, vitamin D, omega-3, zinc, vitamin C)
   - **Nutrient Enhancement Pipeline**: Added _enhance_recipe_nutrition() method to properly populate secondary nutrients from canonical data
   - Enhanced "Why This Recipe?" section with evidence-based nutritional rationale

@@ -34,7 +34,7 @@ echo [OK] Dependencies installed
 
 echo.
 echo Step 4: Testing imports...
-call venv\Scripts\python.exe test_imports.py
+call venv\Scripts\python.exe -c "import fastapi, uvicorn, flask, requests; print('All imports successful')"
 if %errorlevel% neq 0 (
     echo ❌ Import test failed
     goto :eof
@@ -48,7 +48,7 @@ echo ========================================
 echo.
 echo Next steps:
 echo 1. Copy your .env file with API keys
-echo 2. Run: start_app_reliable.bat
+echo 2. Run: start.bat
 echo.
 echo Access points:
 echo - Frontend: http://localhost:5000

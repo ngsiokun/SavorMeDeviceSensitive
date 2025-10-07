@@ -19,8 +19,12 @@ This document provides a complete, step-by-step guide for running the SavorMe ap
 ### ⚠️ **CRITICAL: Use Command Prompt Only**
 **ALL COMMANDS IN THIS GUIDE MUST BE RUN VIA COMMAND PROMPT (cmd.exe) AND NEVER USE POWERSHELL.** PowerShell may cause compatibility issues with the batch scripts and environment setup. Always open Command Prompt (cmd.exe) before running any commands from this guide.
 
-### Latest Features (v3.1.1)
-- **✅ Secondary Nutrients Fix**: Fixed issue where secondary nutrients (magnesium, iron, B12, folate, vitamin D, omega-3, zinc, vitamin C) were showing as 0mg/0g instead of actual calculated values
+### Latest Features (v3.1.2)
+- **✅ Image Display Fix**: Fixed critical bug where Edamam recipe images were incorrectly filtered out due to "SignedHeaders" in AWS URLs being matched by the "header" pattern
+- **Enhanced Image Validation**: Updated to only check URL path (before query parameters) for generic image patterns, preventing false positives
+- **Expanded Generic Patterns**: Added more decorative image indicators (sprite, avatar, social, share, footer, bg, background) for better filtering
+- **Robust Error Handling**: Added try-except block for safer URL parsing in image validation
+- **✅ Secondary Nutrients Fix (v3.1.1)**: Fixed issue where secondary nutrients (magnesium, iron, B12, folate, vitamin D, omega-3, zinc, vitamin C) were showing as 0mg/0g instead of actual calculated values
 - **Enhanced Nutrition Model**: Updated NutritionInfo model to include all secondary nutrients for mood-based scoring
 - **Nutrient Enhancement Pipeline**: Added _enhance_recipe_nutrition() method to properly populate secondary nutrients from canonical data
 - **Evidence-Based Mood Mapping**: Updated with latest scientific research and meta-analyses
