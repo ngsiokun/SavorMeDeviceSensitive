@@ -348,6 +348,9 @@ async def get_recipe_recommendation(
         
         recipe = edamam_client._parse_recipe(best["recipe_data"])
         
+        # Enhance recipe with secondary nutrients from canonical data
+        recipe = edamam_client._enhance_recipe_nutrition(recipe, best["nutrients"])
+        
         # Record this recipe as used for future rotation
         recipe_rotation_service.record_recipe_used(recipe, session_id)
         

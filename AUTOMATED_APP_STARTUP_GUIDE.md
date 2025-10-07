@@ -4,28 +4,25 @@
 ### Overview
 This document provides a complete, step-by-step guide for running the SavorMe application with automatic error detection, correction, and validation. The system now includes advanced recipe variety, nutrient target tracking, and comprehensive mood-based nutrition analysis.
 
-### 📋 **Critical Documentation References**
-**IMPORTANT**: Before starting the application, ensure you have reviewed these essential files:
+### 📋 **Critical Documentation Reference**
+**IMPORTANT**: Before starting the application, ensure you have reviewed the essential documentation:
 
-1. **`MASTER_FILE_ORGANIZATION.md`** - Complete file inventory and organization guide
+**`MASTER_FILE_ORGANIZATION.md`** - **SINGLE SOURCE OF TRUTH** for all project files and configuration
+   - Complete file inventory and organization guide
+   - Project status, configuration, and startup commands
    - Shows where to find each file and its purpose
+   - Contains all essential documentation references
    - Prevents forgotten files during updates
    - Essential for understanding project structure
-
-2. **`CUSTOMIZATIONS_PERSISTENT.md`** - Design system and page specifications
-   - Contains all essential customizations and design system specifications
-   - Verification checklists for proper page rebuilding
-   - Blueprint for consistent quality and branding across deployments
-
-3. **`SAVORME_MASTER_OVERVIEW.md`** - Complete project reference
-   - Integration checklist to prevent forgotten files
-   - File status tracking and relationships
-   - Comprehensive project overview
+   - **This file contains all the information from other documentation files**
 
 ### ⚠️ **CRITICAL: Use Command Prompt Only**
 **ALL COMMANDS IN THIS GUIDE MUST BE RUN VIA COMMAND PROMPT (cmd.exe) AND NEVER USE POWERSHELL.** PowerShell may cause compatibility issues with the batch scripts and environment setup. Always open Command Prompt (cmd.exe) before running any commands from this guide.
 
-### Latest Features (v3.1.0)
+### Latest Features (v3.1.1)
+- **✅ Secondary Nutrients Fix**: Fixed issue where secondary nutrients (magnesium, iron, B12, folate, vitamin D, omega-3, zinc, vitamin C) were showing as 0mg/0g instead of actual calculated values
+- **Enhanced Nutrition Model**: Updated NutritionInfo model to include all secondary nutrients for mood-based scoring
+- **Nutrient Enhancement Pipeline**: Added _enhance_recipe_nutrition() method to properly populate secondary nutrients from canonical data
 - **Evidence-Based Mood Mapping**: Updated with latest scientific research and meta-analyses
 - **EPA-Focused Omega-3**: Targets EPA ≥ 60% of EPA+DHA for optimal mood support
 - **Anti-Inflammatory Mediterranean Pattern**: Enhanced with neuroprotective herbs/spices
@@ -47,34 +44,28 @@ This document provides a complete, step-by-step guide for running the SavorMe ap
 
 ### **How Startup Scripts Work with Documentation**
 
-When you run `start_savorme_simple.bat`, the system follows this integrated workflow:
+When you run `start.bat`, the system follows this integrated workflow:
 
-1. **File Organization Check** → References `MASTER_FILE_ORGANIZATION.md`
-   - Verifies all essential files are present
-   - Checks file structure and organization
-   - Ensures no critical files are missing
+**All documentation is now consolidated into `MASTER_FILE_ORGANIZATION.md`** - the single source of truth that contains:
+- Complete file inventory and organization
+- Project status, configuration, and startup commands
+- Design system and customization references
+- Evidence-based moods system documentation
+- Technical workflow and user journey information
+- System architecture and data flow details
 
-2. **Design System Validation** → References `CUSTOMIZATIONS_PERSISTENT.md`
-   - Validates design system elements (colors, typography, layout)
-   - Checks critical JavaScript functions
-   - Verifies evidence-based nutrient analysis components
-
-3. **Project Overview Verification** → References `SAVORME_MASTER_OVERVIEW.md`
-   - Confirms integration checklist completion
-   - Validates file relationships and dependencies
-   - Ensures project coherence
-
-4. **Automated Startup Process** → Follows this guide (`AUTOMATED_APP_STARTUP_GUIDE.md`)
+**Automated Startup Process** → Follows this guide (`AUTOMATED_APP_STARTUP_GUIDE.md`)
    - Environment setup and validation
    - Backend and frontend startup
    - Error detection and correction
+   - References `MASTER_FILE_ORGANIZATION.md` for all file information
 
 ### **Quick Start Commands**
 
 #### **Option 1: Simple Startup (Recommended)**
 ```cmd
 cd C:\Users\HP\SavorMe\SavorMe-backend
-start_savorme_simple.bat
+start.bat
 ```
 *This script automatically references all documentation files and follows the complete workflow.*
 

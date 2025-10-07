@@ -1,6 +1,7 @@
 @echo off
 echo ========================================
-echo SavorMe Simple Startup
+echo SavorMe Professional Startup
+echo Automated Setup & Launch System
 echo ========================================
 echo.
 
@@ -105,15 +106,31 @@ REM Start backend
 echo Starting backend server...
 start "SavorMe Backend" /min cmd /c "venv\Scripts\activate.bat && python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
 
-REM Wait a moment for backend to start
-timeout /t 3 /nobreak >nul
+REM Wait for backend to start and verify
+echo Waiting for backend to initialize...
+timeout /t 5 /nobreak >nul
+curl -s http://127.0.0.1:8000/api/v1/health >nul 2>&1
+if %errorlevel% neq 0 (
+    echo WARNING: Backend health check failed, but continuing...
+    echo Backend may still be starting up
+) else (
+    echo Backend health check passed
+)
 
 REM Start frontend
 echo Starting frontend server...
 start "SavorMe Frontend" /min cmd /c "cd demo_app && ..\venv\Scripts\activate.bat && python app.py"
 
-REM Wait a moment for frontend to start
-timeout /t 3 /nobreak >nul
+REM Wait for frontend to start and verify
+echo Waiting for frontend to initialize...
+timeout /t 5 /nobreak >nul
+curl -s http://localhost:5000/ >nul 2>&1
+if %errorlevel% neq 0 (
+    echo WARNING: Frontend health check failed, but continuing...
+    echo Frontend may still be starting up
+) else (
+    echo Frontend health check passed
+)
 
 REM Open browser
 echo Opening browser...
@@ -121,14 +138,27 @@ start http://localhost:5000
 
 echo.
 echo ========================================
-echo SavorMe is starting up!
+echo SavorMe Professional Startup Complete!
 echo ========================================
 echo.
-echo Backend: http://127.0.0.1:8000
-echo Frontend: http://localhost:5000
+echo Backend URL: http://127.0.0.1:8000
+echo Frontend URL: http://localhost:5000
+echo API Docs: http://127.0.0.1:8000/docs
 echo.
+echo Both servers are running in minimized windows.
 echo The application should open in your browser shortly.
-echo If not, manually navigate to: http://localhost:5000
+echo.
+echo ========================================
+echo NEXT STEPS:
+echo ========================================
+echo 1. Test the complete user flow:
+echo    - Landing page (mobile-first vertical layout)
+echo    - Click "Start Your Journey"
+echo    - Complete profile form
+echo    - Select mood preferences
+echo    - View recipe recommendations
+echo.
+echo 2. Check API documentation: http://127.0.0.1:8000/docs
 echo.
 echo ========================================
 echo Documentation Integration Complete

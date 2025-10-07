@@ -20,6 +20,16 @@ class NutritionInfo(BaseModel):
     carbs_g: Optional[float] = None
     fat_g: Optional[float] = None
     sodium_mg: Optional[float] = None
+    
+    # Secondary nutrients for mood-based nutrition scoring
+    iron_mg: Optional[float] = None
+    magnesium_mg: Optional[float] = None
+    vitamin_b12_mcg: Optional[float] = None
+    folate_mcg: Optional[float] = None
+    vitamin_d_iu: Optional[float] = None
+    omega3_g: Optional[float] = None
+    zinc_mg: Optional[float] = None
+    vitamin_c_mg: Optional[float] = None
 
 
 class Recipe(BaseModel):

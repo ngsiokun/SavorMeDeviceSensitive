@@ -3,11 +3,75 @@
 ## 🎯 **Purpose**
 This document ensures that all customizations made to the SavorMe application persist through GitHub clones and maintain consistent quality, branding, evidence-based scientific accuracy, and comprehensive cooking instructions.
 
+## 📊 **Evidence-Based Moods System (v2.1.0)**
+
+### **Major Change: 12 Moods → 4 Evidence-Based Moods**
+
+**Scientific Credibility**: The original 12 moods included states like "dreamy", "playful", and "charismatic" that lack scientific evidence linking them to specific nutrient needs. This reduced credibility and made medical/legal defensibility challenging.
+
+**Solution**: Focus exclusively on 4 moods with the strongest scientific support.
+
+### **The 4 Evidence-Based Moods**
+
+#### 1. 😰 **Stressed / Anxious**
+**Evidence Level**: ⭐⭐⭐ Moderate - Mixed but trending positive
+
+**Key Nutrients**:
+- Magnesium (120mg+) - supports nervous system
+- Omega-3 EPA/DHA (0.3g+) - anti-inflammatory
+- Fiber (8g+) - gut-brain axis
+- Low added sugar (<10g) - prevents spikes
+
+**User Aliases**: anxious, wired, restless, overwhelmed, tense
+
+#### 2. 😴 **Fatigued / Low Energy**
+**Evidence Level**: ⭐⭐⭐⭐ Strong - Well-established clinical relationship
+
+**Key Nutrients**:
+- Iron (6mg+) - oxygen transport and energy
+- Vitamin C (30mg+) - enhances iron absorption
+- Complex carbs (30g+) - sustained energy
+- Protein (20g+) - stable blood sugar
+- Fiber (8g+) - prevents crashes
+
+**User Aliases**: tired, exhausted, drained, sluggish, low energy
+
+#### 3. 😔 **Low Mood / Sad**
+**Evidence Level**: ⭐⭐⭐ Moderate - Observational and some RCT support
+
+**Key Nutrients**:
+- Omega-3 EPA/DHA (0.5g+) - brain health
+- Folate (100mcg+) - neurotransmitter synthesis
+- Vitamin B12 (1mcg+) - nerve function
+- Protein (20g+) - amino acids for serotonin
+- Mediterranean pattern - anti-inflammatory
+
+**User Aliases**: sad, down, blue, melancholy, low spirits
+
+#### 4. 😠 **Irritable / Cranky**
+**Evidence Level**: ⭐⭐⭐ Moderate - Blood sugar and inflammation links
+
+**Key Nutrients**:
+- Stable blood sugar (protein + fiber)
+- Low added sugar (<10g)
+- Magnesium (80mg+) - muscle relaxation
+- Omega-3 (0.3g+) - anti-inflammatory
+- Hydration support
+
+**User Aliases**: angry, cranky, snappy, grumpy, irritable
+
 ## 📁 **Files Modified/Created**
 
 ### 1. **Landing Page Customizations**
 - **File**: `demo_app/templates/index.html`
 - **CSS**: `demo_app/static/css/landing.css`
+- **Design**: Dark teal hero section with 2x2 feature grid
+- **Key Elements**:
+  - Hero section with gradient background
+  - Main heading: "Discover Recipes That Match Your Mood"
+  - Subheading: "Get personalized recipe recommendations based on your emotional state and nutritional needs"
+  - 2x2 feature grid: Mood-Based Recommendations, Nutritional Intelligence, Personalized Profiles, Evidence-Based Science
+  - "Get Started" button linking to `/profile`
 - **Changes**: 
   - Mobile-first vertical layout (hero section on top, 2x2 feature grid below)
   - Dark teal gradient background (#0F766E to #065F46)
@@ -15,7 +79,22 @@ This document ensures that all customizations made to the SavorMe application pe
   - Proper responsive design for all screen sizes
   - Consistent typography and spacing
 
-### 2. **Recipe Results Page Customizations**
+### 2. **Mood Selection Page Customizations**
+- **File**: `demo_app/templates/mood_selection.html`
+- **CSS**: `demo_app/static/css/mood_selection.css`
+- **JavaScript**: `demo_app/static/js/mood_selection.js`
+- **Design**: 2x2 mood card grid with intensity selection
+- **Key Elements**:
+  - Header: "How are you feeling?"
+  - Subtitle: "Select 1-3 moods that resonate with you"
+  - Evidence banner: "✨ All moods backed by scientific research" (GREEN THEME)
+  - 2x2 mood grid: Stressed (blue), Fatigued (red), Low Mood (purple), Irritable (orange)
+  - Selection counter: "X moods selected (max 3)"
+  - Intensity section: "How intense is this feeling?" with A little/Medium/Very buttons
+  - Generate button: "🍽️ Get My Recipe Recommendation"
+  - Version badge: "v2.1 • Evidence-Based System"
+
+### 3. **Recipe Results Page Customizations**
 - **File**: `demo_app/templates/recipe_result.html`
 - **CSS**: `demo_app/static/css/recipe_results.css`
 - **JavaScript**: `demo_app/static/js/recipe_result.js`
@@ -30,9 +109,13 @@ This document ensures that all customizations made to the SavorMe application pe
   - Proper loading states and error handling
   - Consistent color scheme and typography
 
-### 3. **Evidence-Based Nutrient Analysis System (v2.2)**
+### 4. **Evidence-Based Nutrient Analysis System (v2.3)**
 - **File**: `demo_app/static/js/recipe_result.js`
+- **Backend Files**: `app/models/recipe.py`, `app/services/edamam_client.py`, `app/api/routes.py`
 - **Changes**:
+  - **✅ Secondary Nutrients Fix**: Fixed issue where secondary nutrients were showing as 0mg/0g instead of actual calculated values
+  - **Enhanced Nutrition Model**: Updated NutritionInfo model to include all secondary nutrients (magnesium, iron, B12, folate, vitamin D, omega-3, zinc, vitamin C)
+  - **Nutrient Enhancement Pipeline**: Added _enhance_recipe_nutrition() method to properly populate secondary nutrients from canonical data
   - Enhanced "Why This Recipe?" section with evidence-based nutritional rationale
   - EPA-focused omega-3 targeting (≥60% EPA of EPA+DHA)
   - Iron-supportive recipes with heme/non-heme + vitamin C pairing
@@ -48,7 +131,7 @@ This document ensures that all customizations made to the SavorMe application pe
   - **Evidence-based weighting** (1.0 = strongest evidence, 0.5 = emerging evidence)
   - **Data source transparency** (Edamam API + built-in nutrient database)
 
-### 4. **Enhanced Cooking Directions System (v3.1.0)**
+### 5. **Enhanced Cooking Directions System (v3.1.0)**
 - **File**: `app/services/openrouter_client.py`
 - **Changes**:
   - **Comprehensive AI-Generated Directions**: Increased token limit from 500 to 1200 for detailed instructions

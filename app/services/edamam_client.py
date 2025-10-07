@@ -109,7 +109,9 @@ class EdamamClient:
             recipe = self._parse_recipe(recipe_data)
             
             # Enhance nutrition data with web lookup
+            print(f"DEBUG: Recipe '{recipe.name}' has {len(recipe.ingredients) if recipe.ingredients else 0} ingredients")
             if recipe.ingredients:
+                print(f"DEBUG: Ingredients: {[ing.name for ing in recipe.ingredients[:3]]}...")  # Show first 3 ingredients
                 try:
                     web_nutrients = await nutrient_web_lookup.get_detailed_nutrients(
                         recipe.name, recipe.ingredients
@@ -119,6 +121,9 @@ class EdamamClient:
                     if web_nutrients:
                         recipe.nutrition = self._merge_nutrition_data(recipe.nutrition, web_nutrients)
                         print(f"Enhanced {recipe.name} with web nutrients: {list(web_nutrients.keys())}")
+                        print(f"Web nutrient values: {web_nutrients}")
+                    else:
+                        print(f"No web nutrients found for {recipe.name}")
                         
                 except Exception as e:
                     print(f"Error enhancing nutrients for {recipe.name}: {e}")
@@ -256,6 +261,67 @@ class EdamamClient:
         )
         
         return recipe
+    
+    def _enhance_recipe_nutrition(self, recipe: Recipe, canonical_nutrients: Dict[str, float]) -> Recipe:
+        """
+        Enhance recipe nutrition data with secondary nutrients from canonical nutrients
+        
+        Args:
+            recipe: Recipe object with basic nutrition
+            canonical_nutrients: Dictionary of canonical nutrient names to values
+            
+        Returns:
+            Enhanced recipe with secondary nutrients
+        """
+        # Create enhanced nutrition info with secondary nutrients
+        enhanced_nutrition = NutritionInfo(
+            calories=recipe.nutrition.calories,
+            protein_g=recipe.nutrition.protein_g,
+            fiber_g=recipe.nutrition.fiber_g,
+            carbs_g=recipe.nutrition.carbs_g,
+            fat_g=recipe.nutrition.fat_g,
+            sodium_mg=recipe.nutrition.sodium_mg,
+            
+            # Secondary nutrients from canonical data
+            iron_mg=canonical_nutrients.get("iron", 0),
+            magnesium_mg=canonical_nutrients.get("magnesium", 0),
+            vitamin_b12_mcg=canonical_nutrients.get("vitamin_b12", 0),
+            folate_mcg=canonical_nutrients.get("folate", 0),
+            vitamin_d_iu=canonical_nutrients.get("vitamin_d", 0),
+            omega3_g=canonical_nutrients.get("omega_3_epa_dha", 0),
+            zinc_mg=canonical_nutrients.get("zinc", 0),
+            vitamin_c_mg=canonical_nutrients.get("vitamin_c", 0)
+        )
+        
+        # Create new recipe with enhanced nutrition
+        enhanced_recipe = Recipe(
+            recipe_id=recipe.recipe_id,
+            name=recipe.name,
+            image_url=recipe.image_url,
+            ingredients=recipe.ingredients,
+            cooking_directions=recipe.cooking_directions,
+            prep_time=recipe.prep_time,
+            cook_time=recipe.cook_time,
+            servings=recipe.servings,
+            nutrition=enhanced_nutrition,
+            source_url=recipe.source_url,
+            source_name=recipe.source_name,
+            cuisine_type=recipe.cuisine_type,
+            meal_type=recipe.meal_type,
+            dish_type=recipe.dish_type
+        )
+        
+        print(f"DEBUG: Enhanced {recipe.name} nutrition with secondary nutrients:")
+        print(f"  Iron: {enhanced_nutrition.iron_mg}mg")
+        print(f"  Magnesium: {enhanced_nutrition.magnesium_mg}mg")
+        print(f"  Vitamin B12: {enhanced_nutrition.vitamin_b12_mcg}mcg")
+        print(f"  Folate: {enhanced_nutrition.folate_mcg}mcg")
+        print(f"  Vitamin D: {enhanced_nutrition.vitamin_d_iu}IU")
+        print(f"  Omega-3: {enhanced_nutrition.omega3_g}g")
+        print(f"  Zinc: {enhanced_nutrition.zinc_mg}mg")
+        print(f"  Vitamin C: {enhanced_nutrition.vitamin_c_mg}mg")
+        
+        return enhanced_recipe
     
     def _validate_recipe_image(self, image_url: str, recipe_name: str) -> str:
         """

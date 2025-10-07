@@ -4,6 +4,44 @@
 
 This document describes the complete workflow of the SavorMe application, showing how user input flows through various systems to generate personalized, mood-based recipe recommendations.
 
+## 📍 **Mapping Data Sources**
+
+### **Primary Source: `app/data/mood_mapping.json`**
+
+**File Path**: `C:\Users\HP\SavorMe\SavorMe-backend\app\data\mood_mapping.json`
+
+This JSON file is the **single source of truth** for all mood-to-nutrient mappings and contains:
+- Evidence-based mood definitions
+- Nutrient targets and weights
+- Scientific evidence levels
+- Nutrient alias mappings
+- Dietary patterns and contraindications
+
+### **Key Components in mood_mapping.json**:
+```json
+{
+  "version": "2.1.0",
+  "moods": [
+    {
+      "id": "stressed",
+      "display_name": "Stressed / Anxious", 
+      "targets": {
+        "nutrients": [
+          {"name": "magnesium", "min_per_meal": 120, "weight": 1.0}
+        ]
+      },
+      "evidence_level": "Moderate - Mixed but trending positive"
+    }
+    // ... 3 more evidence-based moods
+  ],
+  "nutrient_aliases": {
+    "magnesium": ["MG", "Magnesium, Mg", "magnesium"],
+    "iron": ["iron", "iron_fe", "Iron, Fe", "FE"]
+    // ... complete alias mappings
+  }
+}
+```
+
 ---
 
 ## 📊 Workflow Overview
@@ -11,6 +49,67 @@ This document describes the complete workflow of the SavorMe application, showin
 ```
 User Input → Profile Processing → Mood Selection → Backend Processing → API Calls → Recipe Scoring → Response Display
 ```
+
+## 🔄 **Detailed Technical Flow: Mood → Nutrients → Recipe**
+
+### **Step 1: User Input Processing**
+```json
+{
+  "mood_blend": {
+    "moods": [
+      {"mood": "stressed", "intensity": "very"}
+    ]
+  },
+  "user_profile": {
+    "age": 32,
+    "gender": "female", 
+    "height_cm": 165,
+    "weight_kg": 60,
+    "cuisine_preferences": ["Mediterranean"],
+    "dietary_preference": "none"
+  }
+}
+```
+
+### **Step 2: Mood → Nutrient Targets** 
+*[MoodNutritionEngine loads mood_mapping.json]*
+
+For "stressed" mood, system extracts:
+- Magnesium: ≥120mg (weight: 1.0)
+- Omega-3 EPA/DHA: ≥0.3g (weight: 0.9) 
+- Fiber: ≥8g (weight: 0.7)
+- Added Sugar: ≤10g (weight: 0.6)
+
+### **Step 3: User Nutrition Needs Calculation**
+*[NutritionCalculator using Harris-Benedict]*
+
+- BMR: 1,375 kcal/day
+- TDEE: 2,131 kcal/day (moderate activity)
+- Protein: 72g/day (1.2g/kg)
+- Fiber: 25g/day
+
+### **Step 4: Recipe Search & Nutrient Extraction**
+*[EdamamClient searches recipes and extracts nutrients]*
+
+- Searches Edamam API for Mediterranean recipes
+- Extracts full nutrient data from `totalNutrients`
+- Converts to per-serving values
+- Canonicalizes nutrient names using aliases
+
+### **Step 5: Recipe Scoring & Enhancement**
+*[MoodNutritionEngine scores recipes and enhances with secondary nutrients]*
+
+- Scores each recipe against mood nutrient targets
+- Enhances recipes with secondary nutrients (magnesium, iron, B12, folate, vitamin D, omega-3, zinc, vitamin C)
+- Applies variety rotation logic
+- Selects best-scoring recipe
+
+### **Step 6: Response Generation**
+*[OpenRouterClient generates cooking directions and emotional rationale]*
+
+- Generates detailed cooking instructions
+- Creates emotional rationale explaining mood-nutrition connection
+- Returns complete recipe recommendation with enhanced nutrition data
 
 ---
 

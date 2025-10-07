@@ -26,7 +26,10 @@ class NutrientWebLookup:
         Returns:
             Dictionary of nutrients with values
         """
+        print(f"DEBUG: get_detailed_nutrients called for '{recipe_name}' with {len(ingredients)} ingredients")
+        
         if not ingredients:
+            print("DEBUG: No ingredients provided")
             return {}
         
         # Initialize session if needed
@@ -37,8 +40,10 @@ class NutrientWebLookup:
         
         # Process each ingredient
         for ingredient in ingredients:
+            print(f"DEBUG: Processing ingredient: {ingredient.name} ({ingredient.amount})")
             try:
                 ingredient_nutrients = await self._lookup_ingredient_nutrients(ingredient)
+                print(f"DEBUG: Found nutrients for {ingredient.name}: {ingredient_nutrients}")
                 
                 # Add to total nutrients
                 for nutrient, value in ingredient_nutrients.items():
@@ -51,6 +56,7 @@ class NutrientWebLookup:
                 print(f"Error looking up nutrients for {ingredient.name}: {e}")
                 continue
         
+        print(f"DEBUG: Total nutrients found: {nutrients}")
         return nutrients
     
     async def _lookup_ingredient_nutrients(self, ingredient: Ingredient) -> Dict[str, float]:
@@ -155,6 +161,14 @@ class NutrientWebLookup:
                 'vitamin_k_mcg': 126,
                 'calcium_mg': 36
             },
+            'artichoke': {  # Add Jerusalem artichoke
+                'magnesium_mg': 60,
+                'iron_mg': 3.4,
+                'folate_mcg': 68,
+                'vitamin_c_mg': 4,
+                'potassium_mg': 429,
+                'fiber_g': 1.6
+            },
             
             # Fish and seafood
             'salmon': {
@@ -195,6 +209,14 @@ class NutrientWebLookup:
                 'protein_g': 25.0,
                 'fiber_g': 10.7
             },
+            'lentil': {  # Add singular form
+                'folate_mcg': 479,
+                'iron_mg': 6.5,
+                'magnesium_mg': 47,
+                'zinc_mg': 3.3,
+                'protein_g': 25.0,
+                'fiber_g': 10.7
+            },
             'chickpeas': {
                 'folate_mcg': 557,
                 'iron_mg': 4.3,
@@ -203,7 +225,23 @@ class NutrientWebLookup:
                 'protein_g': 19.0,
                 'fiber_g': 17.0
             },
+            'chickpea': {  # Add singular form
+                'folate_mcg': 557,
+                'iron_mg': 4.3,
+                'magnesium_mg': 48,
+                'zinc_mg': 2.8,
+                'protein_g': 19.0,
+                'fiber_g': 17.0
+            },
             'beans': {
+                'folate_mcg': 394,
+                'iron_mg': 5.1,
+                'magnesium_mg': 120,
+                'zinc_mg': 2.8,
+                'protein_g': 21.0,
+                'fiber_g': 15.0
+            },
+            'bean': {  # Add singular form
                 'folate_mcg': 394,
                 'iron_mg': 5.1,
                 'magnesium_mg': 120,
@@ -243,6 +281,14 @@ class NutrientWebLookup:
                 'zinc_mg': 3.1,
                 'protein_g': 14.0,
                 'fiber_g': 7.0
+            },
+            'orzo': {  # Add orzo (pasta-like grain)
+                'magnesium_mg': 50,
+                'iron_mg': 2.0,
+                'folate_mcg': 50,
+                'zinc_mg': 1.5,
+                'protein_g': 12.0,
+                'fiber_g': 2.0
             },
             'oats': {
                 'magnesium_mg': 177,
@@ -285,16 +331,38 @@ class NutrientWebLookup:
             }
         }
         
-        # Find matching ingredient
+        # Find matching ingredient with improved matching
         query_lower = query.lower()
         nutrients = {}
         
+        # Extract the main ingredient name (before "nutrition facts")
+        main_ingredient = query_lower.split(" nutrition facts")[0].strip()
+        
         for ingredient_key, nutrient_data in nutrient_database.items():
-            if ingredient_key in query_lower:
+            # Check if the ingredient key is in the main ingredient name
+            if ingredient_key in main_ingredient:
                 # Scale by amount (assuming 100g base)
                 for nutrient, value in nutrient_data.items():
                     nutrients[nutrient] = value * (amount / 100.0)
+                print(f"DEBUG: Matched '{ingredient_key}' for '{main_ingredient}' with nutrients: {list(nutrient_data.keys())}")
                 break
+            else:
+                # Try partial matching for common variations
+                if ingredient_key == "lentils" and any(word in main_ingredient for word in ["lentil", "dal", "dahl"]):
+                    for nutrient, value in nutrient_data.items():
+                        nutrients[nutrient] = value * (amount / 100.0)
+                    print(f"DEBUG: Partial matched 'lentils' for '{main_ingredient}' with nutrients: {list(nutrient_data.keys())}")
+                    break
+                elif ingredient_key == "chickpeas" and any(word in main_ingredient for word in ["chickpea", "garbanzo", "ceci"]):
+                    for nutrient, value in nutrient_data.items():
+                        nutrients[nutrient] = value * (amount / 100.0)
+                    print(f"DEBUG: Partial matched 'chickpeas' for '{main_ingredient}' with nutrients: {list(nutrient_data.keys())}")
+                    break
+                elif ingredient_key == "beans" and any(word in main_ingredient for word in ["bean", "legume", "pulse"]):
+                    for nutrient, value in nutrient_data.items():
+                        nutrients[nutrient] = value * (amount / 100.0)
+                    print(f"DEBUG: Partial matched 'beans' for '{main_ingredient}' with nutrients: {list(nutrient_data.keys())}")
+                    break
         
         return nutrients
     

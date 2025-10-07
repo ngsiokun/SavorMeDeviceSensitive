@@ -1,7 +1,48 @@
 # SavorMe Master File Organization
 
 ## 🎯 **Purpose**
-This document provides a comprehensive overview of all files in the SavorMe project, organized by category and purpose, to ensure efficient management and avoid forgotten files.
+This document serves as the **SINGLE SOURCE OF TRUTH** for all files in the SavorMe project, organized by category and purpose, to ensure efficient management and avoid forgotten files. It contains all configuration information, file relationships, and project status in one comprehensive reference.
+
+## 📊 **Project Status & Configuration**
+
+**Date**: January 2025  
+**Version**: 3.1.1 (Secondary Nutrients Fix)  
+**Status**: Production Ready with Enhanced Scoring Transparency  
+
+### **Quick Configuration Reference**
+
+**Active Project Directory**: `C:\Users\HP\SavorMe\SavorMe-backend\`
+
+**Startup Commands**:
+```cmd
+# Primary startup (recommended)
+start_savorme_simple.bat
+
+# Professional startup (with diagnostics)  
+savorme_professional_startup.bat
+
+# Setup for new clones
+setup_new_clone.bat
+```
+
+**Access Points**:
+- **Frontend**: http://localhost:5000
+- **Backend**: http://127.0.0.1:8000  
+- **API Docs**: http://127.0.0.1:8000/docs
+
+**Essential Files**:
+- `CUSTOMIZATIONS_PERSISTENT.md` - Complete design system and scoring transparency
+- `AUTOMATED_APP_STARTUP_GUIDE.md` - Comprehensive startup guide
+- `start_savorme_simple.bat` - Simple startup script
+- `requirements.txt` - Dependencies
+- `.env` - Environment variables
+
+**API Keys Required**:
+```env
+EDAMAM_APP_ID=your_edamam_app_id
+EDAMAM_APP_KEY=your_edamam_app_key  
+OPENROUTER_API_KEY=your_openrouter_api_key
+```
 
 ## 🚀 **Startup Workflow Integration**
 When you run `start_savorme_simple.bat`, the system automatically references this file (`MASTER_FILE_ORGANIZATION.md`) to:
@@ -23,9 +64,9 @@ app/
 ├── models/                    # Data models
 │   ├── user.py               # User profile models
 │   ├── mood.py               # Mood mapping models
-│   └── recipe.py             # Recipe data models
+│   └── recipe.py             # Recipe data models (includes secondary nutrients)
 ├── services/                  # Business logic services
-│   ├── edamam_client.py      # Recipe search service
+│   ├── edamam_client.py      # Recipe search service (includes nutrient enhancement)
 │   ├── openrouter_client.py  # AI cooking directions
 │   ├── mood_nutrition_engine.py # Mood-to-nutrition mapping
 │   ├── fusion_engine.py      # Recipe recommendation logic
@@ -66,69 +107,28 @@ requirements.txt             # Python dependencies
 
 ### **2. STARTUP & DEPLOYMENT SCRIPTS** 🚀 (Essential for Operation)
 
-#### **Primary Startup Scripts** (Use These)
+#### **Essential Startup Scripts** (Current Files)
 ```
-start_savorme_simple.bat            # ⭐ SIMPLE STARTUP SCRIPT - RECOMMENDED
-savorme_professional_startup.bat    # ⭐ PROFESSIONAL STARTUP - Advanced diagnostics
-start_savorme_reliable.bat          # ⭐ RELIABLE STARTUP - Backup option
-```
-
-#### **Legacy/Backup Scripts** (Keep but Don't Use)
-```
-setup_new_clone.bat                # Environment setup
-start_savorme_auto.bat             # Auto startup
-start_backend.bat                  # Backend only
-start_demo.bat                     # Frontend only
-start_app_reliable.bat             # Alternative startup
-start_with_setup.py                # Python startup script
+start_savorme_simple.bat            # ⭐ PRIMARY STARTUP SCRIPT - RECOMMENDED (includes dependencies, venv, both frontend/backend)
+setup_new_clone.bat                 # ⭐ SETUP FOR NEW CLONES - Initial setup for new installations
+savorme_professional_startup.bat    # ⭐ PROFESSIONAL STARTUP - Advanced diagnostics and logging
 ```
 
 ### **3. DOCUMENTATION FILES** 📚 (Organized by Priority)
 
-#### **Master Documentation** (Essential Reading)
+#### **Master Documentation** (Essential Reading - Current Files)
 ```
-SAVORME_MASTER_OVERVIEW.md             # ⭐ COMPLETE PROJECT REFERENCE (NEW)
-CUSTOMIZATIONS_PERSISTENT.md           # ⭐ DESIGN SYSTEM & SCORING TRANSPARENCY (CRITICAL)
 AUTOMATED_APP_STARTUP_GUIDE.md         # ⭐ COMPREHENSIVE STARTUP GUIDE
-MASTER_FILE_ORGANIZATION.md            # ⭐ FILE ORGANIZATION & PRIORITIES
-TECHNICAL_SPECIFICATION_COMPLETE.md    # ⭐ COMPLETE TECHNICAL BLUEPRINT
-QUICK_IMPLEMENTATION_GUIDE.md          # ⭐ QUICK START GUIDE
+CUSTOMIZATIONS_PERSISTENT.md           # ⭐ DESIGN SYSTEM, PAGE LAYOUTS, SCORING TRANSPARENCY & EVIDENCE-BASED MOODS
+MASTER_FILE_ORGANIZATION.md            # ⭐ SINGLE SOURCE OF TRUTH - THIS FILE
+SAVORME_MASTER_OVERVIEW.md             # ⭐ PROJECT OVERVIEW AND INTEGRATION CHECKLIST
+SYSTEM_WORKFLOW.md                     # ⭐ COMPLETE USER JOURNEY, TECHNICAL WORKFLOW, MAPPING SOURCES & MOOD-TO-RECIPE FLOW
 README.md                              # ⭐ PROJECT OVERVIEW
 ```
 
-#### **Setup & Deployment Guides** (Important)
+#### **Reference Documentation** (Keep for Reference)
 ```
-CONFIGURATION_SUMMARY.md               # Quick configuration reference (NEW)
-SAVORME_PROJECT_STATUS.md              # Project status overview (NEW)
-DIRECTORY_CLEANUP_ANALYSIS.md          # Directory organization analysis (NEW)
-STARTUP_GUIDE.md                       # General startup instructions
-RUN_DEMO_INSTRUCTIONS.md               # Demo running instructions
-```
-
-#### **System Design & Architecture** (Reference)
-```
-SYSTEM_DESIGN_FINAL.md                 # System architecture
-SYSTEM_WORKFLOW.md                     # Application workflow
-PAGE_LAYOUTS_REFERENCE.md              # Page layout specifications
-MOOD_TO_RECIPE_FLOW.md                 # Mood-to-recipe process
-```
-
-#### **Legacy Documentation** (Archive - Can be Consolidated)
-```
-AUTOMATED_REVIEW_IMPLEMENTATION_GUIDE.md
-AUTOMATIC_SETUP_IMPLEMENTATION.md
-CLONE_SETUP_GUIDE.md
-COMPREHENSIVE_UPDATE_SUMMARY.md
-DIRECTORY_CLEANUP_ANALYSIS.md
-documentation_fix_report.md
-DOCUMENTATION_REVIEW_CHECKLIST.md
-documentation_review_report.md
-EVIDENCE_BASED_MOODS_v2.md
-FINAL_VERIFICATION_CHECKLIST.md
-MAPPING_DATA_SOURCES.md
-QUICK_START_COMMANDS.md
-REVIEW_PROCESS_IMPROVEMENT_SUMMARY.md
-CLEANUP_COMPLETION_REPORT.md
+CLONE_SETUP_GUIDE.md                   # Guide for setting up from GitHub clone
 ```
 
 ### **4. UTILITY & TESTING FILES** 🔧 (Development Tools)
@@ -156,7 +156,7 @@ venv/                                  # Python virtual environment
 - All files in `demo_app/` directory
 - `requirements.txt`
 - `.env`
-- `savorme_professional_startup.bat`
+- `start.bat`
 - `TECHNICAL_SPECIFICATION_COMPLETE.md`
 - `QUICK_IMPLEMENTATION_GUIDE.md`
 - `CUSTOMIZATIONS_PERSISTENT.md` ⚠️ **CRITICAL FOR PAGE REBUILDING**
