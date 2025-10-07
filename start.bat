@@ -1,35 +1,73 @@
 @echo off
 setlocal enabledelayedexpansion
 
+REM ⚠️  CRITICAL: This script MUST be run in Command Prompt (cmd.exe), NOT PowerShell!
+REM    PowerShell causes compatibility issues with batch scripts and environment setup.
+REM    Always use: cmd.exe or Command Prompt
+
 REM === Resolve script directory and move there ===
 pushd %~dp0
 
 echo ========================================
-echo SavorMe Startup (v2 - robust)
+echo SavorMe Startup (v3.1.3 - AWS S3 Image Fix)
 echo ========================================
+echo.
+echo ⚠️  REMINDER: Run this in Command Prompt (cmd.exe), NOT PowerShell!
 echo.
 
 REM ---- Sanity: must be repo root ----
 if not exist "app\main.py" (
-  echo [ERROR] Run this from the project root (where app\main.py exists).
+  echo [ERROR] Run this from the project root where app\main.py exists.
   echo         Expected: C:\Users\HP\SavorMe\SavorMe-backend
-  pause & exit /b 1
+  pause
+  exit /b 1
 )
 
 REM ---- Check .env ----
 if not exist ".env" (
-  echo [ERROR] .env missing. Create it first (Edamam / OpenRouter keys).
-  pause & exit /b 1
+  echo [INFO] .env not found in project directory.
+  echo [INFO] Checking parent directory for .env...
+  if exist "..\.env" (
+    echo [INFO] Found .env in parent directory. Copying...
+    copy "..\.env" ".env" >nul
+    if errorlevel 1 (
+      echo [ERROR] Failed to copy .env from parent directory
+      pause
+      exit /b 1
+    )
+    echo [OK] .env copied successfully.
+  ) else (
+    echo [ERROR] .env missing. Please:
+    echo        1. Copy .env from C:\Users\HP\SavorMe to this directory, OR
+    echo        2. Create .env with your API keys
+    echo.
+    echo        Required API keys:
+    echo        - EDAMAM_APP_ID=your_edamam_app_id
+    echo        - EDAMAM_APP_KEY=your_edamam_app_key  
+    echo        - OPENROUTER_API_KEY=your_openrouter_key
+    pause
+    exit /b 1
+  )
 )
 
 REM ---- Create venv if needed ----
 if not exist "venv\Scripts\python.exe" (
   echo [INFO] Creating virtual environment...
-  py -3 -m venv venv || (echo [ERROR] venv create failed & pause & exit /b 1)
+  py -3 -m venv venv
+  if errorlevel 1 (
+    echo [ERROR] venv create failed
+    pause
+    exit /b 1
+  )
 )
 
 REM ---- Activate venv ----
-call venv\Scripts\activate.bat || (echo [ERROR] Failed to activate venv & pause & exit /b 1)
+call venv\Scripts\activate.bat
+if errorlevel 1 (
+  echo [ERROR] Failed to activate venv
+  pause
+  exit /b 1
+)
 set PYTHONUNBUFFERED=1
 
 REM ---- Pin python/pip to venv explicitly ----
@@ -38,7 +76,12 @@ set PIP=venv\Scripts\pip.exe
 
 REM ---- Install deps (idempotent) ----
 echo [INFO] Installing requirements...
-%PIP% install -r requirements.txt || (echo [ERROR] pip install failed & pause & exit /b 1)
+%PIP% install -r requirements.txt
+if errorlevel 1 (
+  echo [ERROR] pip install failed
+  pause
+  exit /b 1
+)
 
 REM ---- Kill anything on our ports (optional but helpful) ----
 for /f "tokens=5" %%p in ('netstat -aon ^| find ":8000" ^| find "LISTENING"') do taskkill /PID %%p /F >nul 2>&1

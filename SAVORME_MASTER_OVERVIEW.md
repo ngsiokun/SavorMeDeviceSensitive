@@ -1,7 +1,10 @@
 # SavorMe Master Overview - Complete Project Reference
 
+⚠️ **CRITICAL**: Always use Command Prompt (cmd.exe), NEVER PowerShell when running SavorMe!
+PowerShell causes compatibility issues with batch scripts and environment setup.
+
 **Date**: October 6, 2025  
-**Version**: 3.1.0  
+**Version**: 3.1.3 (AWS S3 Image Validation Fix)  
 **Status**: Production Ready with Enhanced Scoring Transparency
 
 ## 🎯 **Project Overview**
@@ -70,7 +73,7 @@ SavorMe is a comprehensive mood-based recipe recommendation system that provides
 ### **🚀 STARTUP SCRIPTS (Critical for Deployment)**
 
 #### **Primary Startup Scripts**
-1. **`start_savorme_simple.bat`** ⭐ **RECOMMENDED**
+1. **`start.bat`** ⭐ **RECOMMENDED**
    - Simple, reliable startup
    - Minimal error handling
    - **Status**: New, untracked
@@ -171,8 +174,7 @@ SavorMe is a comprehensive mood-based recipe recommendation system that provides
 - **Medically Safe Claim Wording**: Evidence-based, appropriate language
 
 ### **Technical Excellence**
-- **Simple Startup**: `start_savorme_simple.bat` for easy deployment
-- **Professional Startup**: `savorme_professional_startup.bat` for diagnostics
+- **Simple Startup**: `start.bat` for easy deployment
 - **Command Prompt Only**: No PowerShell compatibility issues
 - **Comprehensive Documentation**: Master guides prevent forgotten files
 
@@ -181,7 +183,7 @@ SavorMe is a comprehensive mood-based recipe recommendation system that provides
 ### **Recommended Startup**
 ```cmd
 cd C:\Users\HP\SavorMe\SavorMe-backend
-start_savorme_simple.bat
+start.bat
 ```
 
 ### **Access Points**
@@ -197,7 +199,7 @@ start_savorme_simple.bat
 - `CUSTOMIZATIONS_PERSISTENT.md` - Updated with scoring transparency
 
 ### **New Files (Need Git Add)**
-- `start_savorme_simple.bat` - New simple startup script
+- `start.bat` - New simple startup script
 - `SAVORME_PROJECT_STATUS.md` - New project status overview
 - `CONFIGURATION_SUMMARY.md` - New configuration reference
 - `DIRECTORY_CLEANUP_ANALYSIS.md` - New cleanup analysis
@@ -228,7 +230,7 @@ start_savorme_simple.bat
 - ❌ Application will start but show errors when trying to get recommendations
 
 ### **How to Fix:**
-1. **Run startup script**: `start_savorme_simple.bat` will detect missing .env and provide instructions
+1. **Run startup script**: `start.bat` will detect missing .env and provide instructions
 2. **Follow AUTOMATED_APP_STARTUP_GUIDE.md Phase 2**: Complete .env setup instructions
 3. **Get API keys**:
    - Edamam: https://developer.edamam.com/

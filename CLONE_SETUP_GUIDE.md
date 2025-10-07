@@ -1,5 +1,8 @@
 # SavorMe Clone Setup Guide
 
+⚠️ **CRITICAL**: Always use Command Prompt (cmd.exe), NEVER PowerShell when running setup scripts!
+PowerShell causes compatibility issues with batch scripts and environment setup.
+
 **Date**: October 5, 2025  
 **Purpose**: Guide for setting up SavorMe from GitHub clone
 
@@ -89,7 +92,7 @@ CANVA_CLIENT_SECRET=your_canva_client_secret
 ├── STARTUP_GUIDE.md              # Startup instructions
 ├── QUICK_START_COMMANDS.md       # Quick commands
 ├── FINAL_VERIFICATION_CHECKLIST.md # Verification checklist
-├── PAGE_LAYOUTS_REFERENCE.md     # UI reference
+├── PAGE_LAYOUTS_REFERENCE.md     # *(Merged into CUSTOMIZATIONS_PERSISTENT.md)*
 ├── EVIDENCE_BASED_MOODS_v2.md    # Scientific foundation
 ├── SYSTEM_DESIGN_FINAL.md        # System architecture
 ├── SYSTEM_WORKFLOW.md            # Workflow documentation
@@ -132,6 +135,8 @@ cd [your-clone-directory]
 
 # Run automated setup
 setup_new_clone.bat
+
+⚠️ **CRITICAL**: Run in Command Prompt (cmd.exe), NOT PowerShell!
 
 # Copy your API configuration
 copy C:\Users\HP\SavorMe\SavorMe-backend\.env .env

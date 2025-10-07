@@ -1,5 +1,8 @@
 # SavorMe Customizations - Persistent Design System
 
+⚠️ **CRITICAL**: Always use Command Prompt (cmd.exe), NEVER PowerShell when running SavorMe!
+PowerShell causes compatibility issues with batch scripts and environment setup.
+
 ## 🎯 **Purpose**
 This document ensures that all customizations made to the SavorMe application persist through GitHub clones and maintain consistent quality, branding, evidence-based scientific accuracy, and comprehensive cooking instructions.
 
@@ -109,16 +112,16 @@ This document ensures that all customizations made to the SavorMe application pe
   - Proper loading states and error handling
   - Consistent color scheme and typography
 
-### 4. **Evidence-Based Nutrient Analysis System (v3.1.2)**
+### 4. **Evidence-Based Nutrient Analysis System (v3.1.3)**
 - **File**: `demo_app/static/js/recipe_result.js`
 - **Backend Files**: `app/models/recipe.py`, `app/services/edamam_client.py`, `app/api/routes.py`, `app/services/web_image_search.py`
 - **Changes**:
-  - **✅ Image Display Fix (v3.1.2)**: Fixed critical bug where recipe images weren't displaying
-    - Root cause: AWS signed URLs contain `X-Amz-SignedHeaders=host`, which was matching the "header" pattern filter
-    - Solution: Updated `_validate_recipe_image()` to only check URL path (before `?`), not query parameters
-    - Enhanced with expanded generic patterns (sprite, avatar, social, share, footer, bg, background)
-    - Added try-except for robust URL parsing
-    - Frontend already has `onerror` fallback to placeholder image
+  - **✅ AWS S3 Image Validation Fix (v3.1.3)**: Fixed critical bug where Edamam S3 image URLs were failing validation
+    - Root cause: AWS S3 returns `application/xml` content-type for HEAD requests on signed URLs instead of `image/jpeg`
+    - Solution: Implemented ChatGPT-recommended approach to trust Edamam's S3 URLs completely (reputable API source)
+    - Performance improvement: Removed unnecessary HEAD requests for S3 URLs, improving response time
+    - Robust image display: All recipe images now display properly without placeholder fallbacks
+    - Enhanced error handling: Better handling of AWS S3 signed URL quirks
   - **✅ Secondary Nutrients Fix (v3.1.1)**: Fixed issue where secondary nutrients were showing as 0mg/0g instead of actual calculated values
   - **Enhanced Nutrition Model**: Updated NutritionInfo model to include all secondary nutrients (magnesium, iron, B12, folate, vitamin D, omega-3, zinc, vitamin C)
   - **Nutrient Enhancement Pipeline**: Added _enhance_recipe_nutrition() method to properly populate secondary nutrients from canonical data

@@ -8,6 +8,9 @@ function generatePage() {
     // Get recipe data from session storage
     const resultData = sessionStorage.getItem('recipeResult');
     
+    console.log('🔍 DEBUG: Loading recipe from sessionStorage');
+    console.log('📦 Recipe data exists:', !!resultData);
+    
     if (!resultData) {
         container.innerHTML = generateErrorPage();
         return;
@@ -15,6 +18,9 @@ function generatePage() {
     
     try {
     const result = JSON.parse(resultData);
+        console.log('🍽️ Recipe name:', result.recipe?.name);
+        console.log('🖼️ Image URL:', result.recipe?.image_url);
+        console.log('📸 Image URL length:', result.recipe?.image_url?.length || 0);
         container.innerHTML = generateRecipePage(result);
         addEventListeners();
     } catch (error) {

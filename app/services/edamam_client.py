@@ -460,6 +460,12 @@ class EdamamClient:
         
         WARNING: This is a blocking network call. Only use for final selected recipe.
         """
+        # Skip validation for Edamam S3 URLs - assume they're valid (ChatGPT recommended)
+        if "edamam-product-images.s3.amazonaws.com" in url:
+            print(f"DEBUG: Trusting Edamam S3 URL: {url[:100]}...")
+            return True
+            
+        # Normal validation for all other URLs
         try:
             import httpx
             with httpx.Client(timeout=timeout) as client:

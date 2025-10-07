@@ -1,9 +1,15 @@
 @echo off
 setlocal
 
+REM ⚠️  CRITICAL: This script MUST be run in Command Prompt (cmd.exe), NOT PowerShell!
+REM    PowerShell causes compatibility issues with batch scripts and environment setup.
+REM    Always use: cmd.exe or Command Prompt
+
 echo ========================================
 echo SavorMe Clone Setup Script
 echo ========================================
+echo.
+echo ⚠️  REMINDER: Run this in Command Prompt (cmd.exe), NOT PowerShell!
 echo.
 
 echo Step 1: Creating virtual environment...
@@ -47,8 +53,11 @@ echo Setup Complete!
 echo ========================================
 echo.
 echo Next steps:
-echo 1. Copy your .env file with API keys
+echo 1. Copy .env from C:\Users\HP\SavorMe to this directory, OR
+echo    Create .env with your API keys
 echo 2. Run: start.bat
+echo.
+echo Note: start.bat will automatically copy .env from parent directory if found
 echo.
 echo Access points:
 echo - Frontend: http://localhost:5000

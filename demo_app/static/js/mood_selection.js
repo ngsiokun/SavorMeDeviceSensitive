@@ -148,7 +148,11 @@ async function generateRecommendation() {
         }
         
         const result = await response.json();
-        console.log('Recommendation:', result);
+        console.log('✅ Recommendation received:', result);
+        console.log('🍽️ Recipe name:', result.recipe?.name);
+        console.log('🖼️ Image URL from backend:', result.recipe?.image_url);
+        console.log('📏 Image URL length:', result.recipe?.image_url?.length || 0);
+        console.log('🔗 Full image URL:', result.recipe?.image_url || 'NO IMAGE URL');
         
         // Store result and navigate to results page
         sessionStorage.setItem('recipeResult', JSON.stringify(result));

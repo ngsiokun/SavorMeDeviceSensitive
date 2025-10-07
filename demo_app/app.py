@@ -1,6 +1,9 @@
 """
 SavorMe Functional Demo App
 Beautiful web interface that connects to the backend API
+
+⚠️  IMPORTANT: This app should be started via Command Prompt (cmd.exe), NOT PowerShell!
+   Use: start.bat or run manually in Command Prompt for proper environment setup.
 """
 from flask import Flask, render_template, jsonify, request
 import requests
@@ -15,7 +18,7 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 
 # Backend API URL
-BACKEND_URL = os.getenv("BACKEND_URL", "http://127.0.0.1:8000").rstrip("/")
+BACKEND_URL = os.getenv("BACKEND_URL", "http://127.0.0.1:8000").strip().rstrip("/")
 
 
 @app.route('/config')

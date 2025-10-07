@@ -1,6 +1,9 @@
 """
 SavorMe Backend - Main FastAPI Application
 Mood-Based Recipe Companion Backend
+
+⚠️  IMPORTANT: This backend should be started via Command Prompt (cmd.exe), NOT PowerShell!
+   Use: start.bat or run manually in Command Prompt for proper environment setup.
 """
 import os
 import sys

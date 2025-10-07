@@ -17,13 +17,22 @@ This document provides a complete, step-by-step guide for running the SavorMe ap
    - **This file contains all the information from other documentation files**
 
 ### ⚠️ **CRITICAL: Use Command Prompt Only**
-**ALL COMMANDS IN THIS GUIDE MUST BE RUN VIA COMMAND PROMPT (cmd.exe) AND NEVER USE POWERSHELL.** PowerShell may cause compatibility issues with the batch scripts and environment setup. Always open Command Prompt (cmd.exe) before running any commands from this guide.
+**ALL COMMANDS IN THIS GUIDE MUST BE RUN VIA COMMAND PROMPT (cmd.exe) AND NEVER USE POWERSHELL.** 
 
-### Latest Features (v3.1.2)
-- **✅ Image Display Fix**: Fixed critical bug where Edamam recipe images were incorrectly filtered out due to "SignedHeaders" in AWS URLs being matched by the "header" pattern
-- **Enhanced Image Validation**: Updated to only check URL path (before query parameters) for generic image patterns, preventing false positives
-- **Expanded Generic Patterns**: Added more decorative image indicators (sprite, avatar, social, share, footer, bg, background) for better filtering
-- **Robust Error Handling**: Added try-except block for safer URL parsing in image validation
+🚨 **POWERSHELL WILL CAUSE FAILURES** - PowerShell compatibility issues include:
+- Batch script syntax errors
+- Environment variable problems  
+- Path resolution issues
+- Virtual environment activation failures
+
+**ALWAYS USE**: Command Prompt (cmd.exe) - Never PowerShell!
+
+### Latest Features (v3.1.3)
+- **✅ AWS S3 Image Validation Fix**: Fixed critical bug where Edamam S3 image URLs were failing validation due to AWS returning `application/xml` content-type for HEAD requests
+- **Trusted Source Validation**: Implemented ChatGPT-recommended solution to trust Edamam's S3 URLs completely (from reputable API source)
+- **Performance Optimization**: Removed unnecessary HEAD requests for S3 URLs, improving response time
+- **Robust Image Display**: All recipe images now display properly without placeholder fallbacks
+- **Enhanced Error Handling**: Better handling of AWS S3 signed URL quirks
 - **✅ Secondary Nutrients Fix (v3.1.1)**: Fixed issue where secondary nutrients (magnesium, iron, B12, folate, vitamin D, omega-3, zinc, vitamin C) were showing as 0mg/0g instead of actual calculated values
 - **Enhanced Nutrition Model**: Updated NutritionInfo model to include all secondary nutrients for mood-based scoring
 - **Nutrient Enhancement Pipeline**: Added _enhance_recipe_nutrition() method to properly populate secondary nutrients from canonical data
@@ -71,14 +80,43 @@ When you run `start.bat`, the system follows this integrated workflow:
 cd C:\Users\HP\SavorMe\SavorMe-backend
 start.bat
 ```
+⚠️ **CRITICAL**: Run in Command Prompt (cmd.exe), NOT PowerShell!
 *This script automatically references all documentation files and follows the complete workflow.*
 
-#### **Option 2: Professional Startup (Advanced)**
+#### **Option 2: New Clone Setup**
 ```cmd
 cd C:\Users\HP\SavorMe\SavorMe-backend
-savorme_professional_startup.bat
+setup_new_clone.bat
 ```
-*This script includes comprehensive diagnostics and follows the complete workflow with detailed logging.*
+⚠️ **CRITICAL**: Run in Command Prompt (cmd.exe), NOT PowerShell!
+*Use this for fresh GitHub clones - sets up venv, installs dependencies, then runs start.bat*
+*Note: start.bat will automatically find and copy .env from C:\Users\HP\SavorMe if needed*
+
+#### **Option 3: Manual Startup (Debugging)**
+```cmd
+cd C:\Users\HP\SavorMe\SavorMe-backend
+# Manual backend start
+venv\Scripts\activate && python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+# Manual frontend start (in new terminal)
+cd demo_app && ..\venv\Scripts\activate && set BACKEND_URL=http://127.0.0.1:8000 && python app.py
+```
+⚠️ **CRITICAL**: Run in Command Prompt (cmd.exe), NOT PowerShell!
+*Use this for debugging - manual control over each component*
+
+### **🔧 Automatic .env File Handling**
+
+**For GitHub Clones**: The `start.bat` script now automatically handles `.env` file location:
+
+1. **First Check**: Looks for `.env` in the project directory (`SavorMe-backend\.env`)
+2. **Fallback**: If not found, checks parent directory (`C:\Users\HP\SavorMe\.env`)
+3. **Auto-Copy**: Automatically copies `.env` from parent directory if found
+4. **Helpful Error**: Provides clear instructions if `.env` is missing entirely
+
+**This means after a GitHub clone:**
+- ✅ No manual `.env` copying required
+- ✅ Automatic detection and setup
+- ✅ Clear error messages if API keys are missing
+- ✅ Works seamlessly with existing configuration
 
 ---
 

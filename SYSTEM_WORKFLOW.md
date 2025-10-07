@@ -1,5 +1,8 @@
 # SavorMe System Workflow
 
+⚠️ **CRITICAL**: Always use Command Prompt (cmd.exe), NEVER PowerShell when running SavorMe!
+PowerShell causes compatibility issues with batch scripts and environment setup.
+
 ## Complete User Journey: From Profile to Recipe Recommendation
 
 This document describes the complete workflow of the SavorMe application, showing how user input flows through various systems to generate personalized, mood-based recipe recommendations.

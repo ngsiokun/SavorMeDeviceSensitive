@@ -1,5 +1,8 @@
 # SavorMe Backend - Mood-Based Recipe Companion
 
+⚠️ **CRITICAL**: Always use Command Prompt (cmd.exe), NEVER PowerShell when running this application!
+PowerShell causes compatibility issues with batch scripts and environment setup.
+
 Backend API for SavorMe, an emotionally intelligent recipe recommendation system that curates recipes based on user's mood, nutritional needs, and culinary preferences.
 
 ## 🎯 Overview
@@ -63,8 +66,9 @@ app/
 # Clone and start with automatic setup
 git clone https://github.com/ngsiokun/SavorMe-backend.git
 cd SavorMe-backend
-start_savorme_auto.bat
+start.bat
 ```
+⚠️ **CRITICAL**: Run in Command Prompt (cmd.exe), NOT PowerShell!
 
 #### **Option 2: Python Direct Start**
 ```bash
@@ -316,7 +320,7 @@ This project is licensed under the MIT License.
 - **[STARTUP_GUIDE.md](STARTUP_GUIDE.md)** - Comprehensive startup and troubleshooting guide
 - **[QUICK_START_COMMANDS.md](QUICK_START_COMMANDS.md)** - Copy-paste commands for quick setup
 - **[FINAL_VERIFICATION_CHECKLIST.md](FINAL_VERIFICATION_CHECKLIST.md)** - Complete verification checklist
-- **[PAGE_LAYOUTS_REFERENCE.md](PAGE_LAYOUTS_REFERENCE.md)** - Complete layout and file structure reference
+- **[PAGE_LAYOUTS_REFERENCE.md](PAGE_LAYOUTS_REFERENCE.md)** - *(Merged into CUSTOMIZATIONS_PERSISTENT.md)*
 - **[EVIDENCE_BASED_MOODS_v2.md](EVIDENCE_BASED_MOODS_v2.md)** - Scientific foundation and mood mapping
 
 ## 🙏 Acknowledgments

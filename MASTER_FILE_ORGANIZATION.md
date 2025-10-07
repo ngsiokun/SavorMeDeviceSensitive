@@ -6,8 +6,8 @@ This document serves as the **SINGLE SOURCE OF TRUTH** for all files in the Savo
 ## 📊 **Project Status & Configuration**
 
 **Date**: January 2025  
-**Version**: 3.1.2 (Image Display Fix)  
-**Status**: Production Ready with Enhanced Scoring Transparency  
+**Version**: 3.1.3 (AWS S3 Image Validation Fix)  
+**Status**: Production Ready with Robust Image Display  
 
 ### **Quick Configuration Reference**
 
@@ -18,12 +18,10 @@ This document serves as the **SINGLE SOURCE OF TRUTH** for all files in the Savo
 # Primary startup (recommended)
 start.bat
 
-# Professional startup (with diagnostics)  
-savorme_professional_startup.bat
-
 # Setup for new clones
 setup_new_clone.bat
 ```
+⚠️ **CRITICAL**: Always use Command Prompt (cmd.exe), NEVER PowerShell!
 
 **Access Points**:
 - **Frontend**: http://localhost:5000
@@ -33,9 +31,9 @@ setup_new_clone.bat
 **Essential Files**:
 - `CUSTOMIZATIONS_PERSISTENT.md` - Complete design system and scoring transparency
 - `AUTOMATED_APP_STARTUP_GUIDE.md` - Comprehensive startup guide
-- `start.bat` - Simple startup script
+- `start.bat` - Simple startup script (auto-detects .env from parent directory)
 - `requirements.txt` - Dependencies
-- `.env` - Environment variables
+- `.env` - Environment variables (auto-copied from C:\Users\HP\SavorMe if needed)
 
 **API Keys Required**:
 ```env
@@ -45,11 +43,16 @@ OPENROUTER_API_KEY=your_openrouter_api_key
 ```
 
 ## 🚀 **Startup Workflow Integration**
-When you run `start.bat`, the system automatically references this file (`MASTER_FILE_ORGANIZATION.md`) to:
-- Verify all essential files are present
-- Check file structure and organization
-- Ensure no critical files are missing
-- Validate project completeness before startup
+⚠️ **CRITICAL**: Always run `start.bat` in Command Prompt (cmd.exe), NEVER PowerShell!
+
+When you run `start.bat`, the system automatically:
+- **Auto-detects .env**: Looks for `.env` in project directory, falls back to `C:\Users\HP\SavorMe\.env`
+- **Auto-copies configuration**: Copies `.env` from parent directory if found
+- **References this file** (`MASTER_FILE_ORGANIZATION.md`) to:
+  - Verify all essential files are present
+  - Check file structure and organization
+  - Ensure no critical files are missing
+  - Validate project completeness before startup
 
 ## 📁 **File Categories & Organization**
 
@@ -111,7 +114,6 @@ requirements.txt             # Python dependencies
 ```
 start.bat            # ⭐ PRIMARY STARTUP SCRIPT - RECOMMENDED (includes dependencies, venv, both frontend/backend)
 setup_new_clone.bat                 # ⭐ SETUP FOR NEW CLONES - Initial setup for new installations
-savorme_professional_startup.bat    # ⭐ PROFESSIONAL STARTUP - Advanced diagnostics and logging
 ```
 
 ### **3. DOCUMENTATION FILES** 📚 (Organized by Priority)
@@ -274,12 +276,12 @@ Based on `CUSTOMIZATIONS_PERSISTENT.md`, these files are essential for proper pa
 1. Read `README.md` first
 2. Read `TECHNICAL_SPECIFICATION_COMPLETE.md`
 3. **CRITICAL**: Review `CUSTOMIZATIONS_PERSISTENT.md` for design system
-4. Use `savorme_professional_startup.bat` to start
+4. Use `start.bat` to start
 5. Follow `AUTOMATED_APP_STARTUP_GUIDE.md` for complete setup
 
 ### **For Deployment**
 1. **ALWAYS** review `CUSTOMIZATIONS_PERSISTENT.md` first
-2. Use `savorme_professional_startup.bat`
+2. Use `start.bat`
 3. Follow `AUTOMATED_APP_STARTUP_GUIDE.md` (includes Command Prompt requirement)
 4. Reference `QUICK_IMPLEMENTATION_GUIDE.md` for setup
 5. Verify all customization files are present and correct
