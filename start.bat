@@ -1,155 +1,117 @@
 @echo off
+setlocal enabledelayedexpansion
+
+REM === Resolve script directory and move there ===
+pushd %~dp0
+
 echo ========================================
-echo SavorMe Professional Startup
-echo Automated Setup and Launch System
+echo SavorMe Startup (v2 - robust)
 echo ========================================
 echo.
 
-REM Check if we're in the right directory
+REM ---- Sanity: must be repo root ----
 if not exist "app\main.py" (
-    echo ERROR: Not in SavorMe directory. Please run from C:\Users\HP\SavorMe\SavorMe-backend
-    pause
-    exit /b 1
+  echo [ERROR] Run this from the project root (where app\main.py exists).
+  echo         Expected: C:\Users\HP\SavorMe\SavorMe-backend
+  pause & exit /b 1
 )
 
-REM Documentation Integration Check
-echo Checking documentation integration...
-if not exist "MASTER_FILE_ORGANIZATION.md" (
-    echo WARNING: MASTER_FILE_ORGANIZATION.md not found
-    echo Please ensure all documentation files are present
-)
-if not exist "CUSTOMIZATIONS_PERSISTENT.md" (
-    echo WARNING: CUSTOMIZATIONS_PERSISTENT.md not found
-    echo Please ensure design system documentation is present
-)
-if not exist "SAVORME_MASTER_OVERVIEW.md" (
-    echo WARNING: SAVORME_MASTER_OVERVIEW.md not found
-    echo Please ensure project overview documentation is present
-)
-echo Documentation check complete.
-echo.
-
-REM Critical .env File Check
-echo Checking .env file for API keys...
+REM ---- Check .env ----
 if not exist ".env" (
-    echo ERROR: .env file not found!
-    echo.
-    echo This is normal when cloning from GitHub.
-    echo The .env file contains your API keys and is not included in the repository.
-    echo.
-    echo Please follow these steps:
-    echo 1. See AUTOMATED_APP_STARTUP_GUIDE.md Phase 2 for detailed instructions
-    echo 2. Create .env file with your API keys
-    echo 3. Get Edamam API keys from: https://developer.edamam.com/
-    echo 4. Get OpenRouter API key from: https://openrouter.ai/
-    echo.
-    echo Press any key to exit and set up your .env file...
-    pause >nul
-    exit /b 1
-) else (
-    echo .env file found, checking configuration...
-    echo API keys configuration verified.
-)
-echo.
-
-REM Check if virtual environment exists
-if not exist "venv\Scripts\activate.bat" (
-    echo Creating virtual environment...
-    python -m venv venv
-    if %errorlevel% neq 0 (
-        echo ERROR: Failed to create virtual environment
-        pause
-        exit /b 1
-    )
+  echo [ERROR] .env missing. Create it first (Edamam / OpenRouter keys).
+  pause & exit /b 1
 )
 
-REM Activate virtual environment
-echo Activating virtual environment...
-call venv\Scripts\activate.bat
-if %errorlevel% neq 0 (
-    echo ERROR: Failed to activate virtual environment
-    pause
-    exit /b 1
+REM ---- Create venv if needed ----
+if not exist "venv\Scripts\python.exe" (
+  echo [INFO] Creating virtual environment...
+  py -3 -m venv venv || (echo [ERROR] venv create failed & pause & exit /b 1)
 )
 
-REM Install dependencies
-echo Installing dependencies...
-pip install -r requirements.txt
-if %errorlevel% neq 0 (
-    echo ERROR: Failed to install dependencies
-    pause
-    exit /b 1
-)
+REM ---- Activate venv ----
+call venv\Scripts\activate.bat || (echo [ERROR] Failed to activate venv & pause & exit /b 1)
+set PYTHONUNBUFFERED=1
 
-REM Start backend
-echo Starting backend server...
-start "SavorMe Backend" /min cmd /c "venv\Scripts\activate.bat && python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
+REM ---- Pin python/pip to venv explicitly ----
+set PYTHON=venv\Scripts\python.exe
+set PIP=venv\Scripts\pip.exe
 
-REM Wait for backend to start and verify
-echo Waiting for backend to initialize...
-timeout /t 5 /nobreak >nul
+REM ---- Install deps (idempotent) ----
+echo [INFO] Installing requirements...
+%PIP% install -r requirements.txt || (echo [ERROR] pip install failed & pause & exit /b 1)
+
+REM ---- Kill anything on our ports (optional but helpful) ----
+for /f "tokens=5" %%p in ('netstat -aon ^| find ":8000" ^| find "LISTENING"') do taskkill /PID %%p /F >nul 2>&1
+for /f "tokens=5" %%p in ('netstat -aon ^| find ":5000" ^| find "LISTENING"') do taskkill /PID %%p /F >nul 2>&1
+
+REM ---- Log files ----
+if not exist logs mkdir logs
+
+REM ---- Start backend (FastAPI/Uvicorn) ----
+echo [INFO] Starting backend on 127.0.0.1:8000 ...
+start "SavorMe Backend" cmd /c ^
+  "call venv\Scripts\activate.bat && ^
+   %PYTHON% -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload ^
+   1>logs\backend.out.log 2>logs\backend.err.log"
+
+REM ---- Wait for backend health (retry up to 30s) ----
+set /a tries=0
+:wait_backend
+timeout /t 2 /nobreak >nul
+set /a tries+=1
 curl -s http://127.0.0.1:8000/api/v1/health >nul 2>&1
-if %errorlevel% neq 0 (
-    echo WARNING: Backend health check failed, but continuing...
-    echo Backend may still be starting up
-) else (
-    echo Backend health check passed
+if errorlevel 1 (
+  if !tries! lss 15 goto wait_backend
+  echo [ERROR] Backend did not become healthy.
+  echo         See logs\backend.err.log and logs\backend.out.log
+  goto end_fail
 )
+echo [OK] Backend healthy.
 
-REM Start frontend
-echo Starting frontend server...
-start "SavorMe Frontend" /min cmd /c "cd demo_app && ..\venv\Scripts\activate.bat && python app.py"
+REM ---- Export BACKEND_URL for the frontend (keeps URL consistent) ----
+set BACKEND_URL=http://127.0.0.1:8000
 
-REM Wait for frontend to start and verify
-echo Waiting for frontend to initialize...
-timeout /t 5 /nobreak >nul
-curl -s http://localhost:5000/ >nul 2>&1
-if %errorlevel% neq 0 (
-    echo WARNING: Frontend health check failed, but continuing...
-    echo Frontend may still be starting up
-) else (
-    echo Frontend health check passed
+REM ---- Start frontend (Flask) from demo_app ----
+echo [INFO] Starting frontend on http://localhost:5000 ...
+start "SavorMe Frontend" cmd /c ^
+  "cd /d %~dp0demo_app && ^
+   call ..\venv\Scripts\activate.bat && ^
+   set BACKEND_URL=%BACKEND_URL% && ^
+   %PYTHON% app.py 1>..\logs\frontend.out.log 2>..\logs\frontend.err.log"
+
+REM ---- Wait for frontend root (retry up to 30s) ----
+set /a ftries=0
+:wait_frontend
+timeout /t 2 /nobreak >nul
+set /a ftries+=1
+curl -s http://127.0.0.1:5000/ >nul 2>&1
+if errorlevel 1 (
+  if !ftries! lss 15 goto wait_frontend
+  echo [ERROR] Frontend did not start.
+  echo         See logs\frontend.err.log and logs\frontend.out.log
+  goto end_fail
 )
+echo [OK] Frontend reachable.
 
-REM Open browser
-echo Opening browser...
+REM ---- Open browser ----
 start http://localhost:5000
+echo.
+echo ========================================
+echo All set. Backend: %BACKEND_URL%
+echo Frontend: http://localhost:5000
+echo Logs in .\logs\
+echo ========================================
+goto end_ok
 
+:end_fail
 echo.
-echo ========================================
-echo SavorMe Professional Startup Complete!
-echo ========================================
-echo.
-echo Backend URL: http://127.0.0.1:8000
-echo Frontend URL: http://localhost:5000
-echo API Docs: http://127.0.0.1:8000/docs
-echo.
-echo Both servers are running in minimized windows.
-echo The application should open in your browser shortly.
-echo.
-echo ========================================
-echo NEXT STEPS:
-echo ========================================
-echo 1. Test the complete user flow:
-echo    - Landing page (mobile-first vertical layout)
-echo    - Click "Start Your Journey"
-echo    - Complete profile form
-echo    - Select mood preferences
-echo    - View recipe recommendations
-echo.
-echo 2. Check API documentation: http://127.0.0.1:8000/docs
-echo.
-echo ========================================
-echo Documentation Integration Complete
-echo ========================================
-echo.
-echo This startup script integrates with:
-echo - MASTER_FILE_ORGANIZATION.md (file structure)
-echo - CUSTOMIZATIONS_PERSISTENT.md (design system)
-echo - SAVORME_MASTER_OVERVIEW.md (project overview)
-echo - AUTOMATED_APP_STARTUP_GUIDE.md (this process)
-echo.
-echo For detailed troubleshooting, see AUTOMATED_APP_STARTUP_GUIDE.md
-echo.
-echo Press any key to close this window...
-pause >nul
+echo [HINTS]
+echo - If the backend crashes immediately, open logs\backend.err.log
+echo - Ensure your frontend code uses BACKEND_URL env (or same URL hardcoded).
+echo - If you changed ports/hosts, keep both sides in sync.
+pause
+exit /b 1
+
+:end_ok
+popd
+endlocal

@@ -30,25 +30,25 @@ class WebImageSearch:
             Image URL or None if no suitable image found
         """
         try:
-                # High-quality, well-framed food images (front/side view, not top-down)
-                # Selected for clear visibility and appetizing presentation
-                reliable_food_images = [
-                    "https://images.unsplash.com/photo-1546554137-f86b9593a222?w=600&h=400&fit=crop&auto=format",  # Delicious plated meal - side view
-                    "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=600&h=400&fit=crop&auto=format",  # Pasta - appetizing angle
-                    "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&h=400&fit=crop&auto=format",  # Pizza - clear view
-                    "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&h=400&fit=crop&auto=format",  # Burger - side angle
-                    "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&h=400&fit=crop&auto=format",  # Salad - visible ingredients
-                    "https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=600&h=400&fit=crop&auto=format",  # Soup - inviting bowl
-                    "https://images.unsplash.com/photo-1574484284002-952d92456975?w=600&h=400&fit=crop&auto=format",  # Fish - plated nicely
-                    "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=600&h=400&fit=crop&auto=format",  # Chicken - good presentation
-                    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop&auto=format",  # Colorful healthy bowl
-                    "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=400&fit=crop&auto=format",  # Vegetable dish
-                    "https://images.unsplash.com/photo-1547592180-85f173990554?w=600&h=400&fit=crop&auto=format",  # Meat dish - good angle
-                    "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=600&h=400&fit=crop&auto=format",  # Mediterranean plate
-                ]
+            # High-quality, well-framed food images (front/side view, not top-down)
+            # Selected for clear visibility and appetizing presentation
+            import random
+            reliable_food_images = [
+                "https://images.unsplash.com/photo-1546554137-f86b9593a222?w=600&h=400&fit=crop&auto=format",  # Delicious plated meal - side view
+                "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=600&h=400&fit=crop&auto=format",  # Pasta - appetizing angle
+                "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&h=400&fit=crop&auto=format",  # Pizza - clear view
+                "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&h=400&fit=crop&auto=format",  # Burger - side angle
+                "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&h=400&fit=crop&auto=format",  # Salad - visible ingredients
+                "https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=600&h=400&fit=crop&auto=format",  # Soup - inviting bowl
+                "https://images.unsplash.com/photo-1574484284002-952d92456975?w=600&h=400&fit=crop&auto=format",  # Fish - plated nicely
+                "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=600&h=400&fit=crop&auto=format",  # Chicken - good presentation
+                "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop&auto=format",  # Colorful healthy bowl
+                "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=400&fit=crop&auto=format",  # Vegetable dish
+                "https://images.unsplash.com/photo-1547592180-85f173990554?w=600&h=400&fit=crop&auto=format",  # Meat dish - good angle
+                "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=600&h=400&fit=crop&auto=format",  # Mediterranean plate
+            ]
             
             # Pick an image based on recipe name for some variety
-            import random
             seed = hash(recipe_name) % len(reliable_food_images)
             selected_image = reliable_food_images[seed]
             

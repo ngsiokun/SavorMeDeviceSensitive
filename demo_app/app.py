@@ -15,7 +15,13 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 
 # Backend API URL
-BACKEND_URL = os.getenv("BACKEND_URL", "http://127.0.0.1:8000")
+BACKEND_URL = os.getenv("BACKEND_URL", "http://127.0.0.1:8000").rstrip("/")
+
+
+@app.route('/config')
+def config():
+    """Frontend config endpoint - provides backend URL to JavaScript"""
+    return jsonify({"BACKEND_URL": BACKEND_URL})
 
 
 @app.route('/')
