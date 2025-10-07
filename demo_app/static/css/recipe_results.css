@@ -68,24 +68,28 @@ body {
     font-weight: 500;
 }
 
-/* Recipe Image */
+/* Recipe Image - Fixed for better food visibility */
 .recipe-image-container {
     margin-bottom: 20px;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    aspect-ratio: 16 / 9;  /* Consistent aspect ratio */
+    background: #E9F4EA;   /* Subtle skeleton color while loading */
 }
 
 .recipe-image {
     width: 100%;
-    height: 200px;
-    object-fit: cover;
+    height: 100%;
+    object-fit: cover;        /* Fill the box, crop edges if needed */
+    object-position: 50% 40%; /* Focus slightly down from center - avoids bowl rims */
     display: block;
 }
 
 .recipe-image-placeholder {
     width: 100%;
-    height: 200px;
+    height: 100%;
     background: linear-gradient(135deg, #065F46, #0F766E);
     display: flex;
     flex-direction: column;

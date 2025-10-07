@@ -215,21 +215,11 @@ class EdamamClient:
     def _parse_recipe(self, recipe_data: Dict[str, Any]) -> Recipe:
         """Parse Edamam recipe response into Recipe model"""
         
-        # Validate and potentially filter image URL
-        original_image_url = recipe_data.get("image")
         recipe_name = recipe_data.get("label", "Unknown Recipe")
-        
         print(f"DEBUG: Processing recipe '{recipe_name}'")
-        print(f"DEBUG: Original image URL: {original_image_url}")
         
-        image_url = self._validate_recipe_image(original_image_url, recipe_name)
-        
-        print(f"DEBUG: Final image URL after validation: {image_url}")
-        
-        # If image was filtered out, try to get a fallback (async call)
-        if not image_url and original_image_url:
-            # Note: This will be handled in the calling async method
-            print(f"DEBUG: Image was filtered out for '{recipe_name}', will try fallback")
+        # Choose best image with intelligent selection and validation
+        image_url = self._choose_recipe_image(recipe_data, recipe_name)
         
         # Parse ingredients
         ingredients = []
@@ -409,59 +399,129 @@ class EdamamClient:
         
         return enhanced_recipe
     
-    def _validate_recipe_image(self, image_url: str, recipe_name: str) -> str:
+    def _pick_best_edamam_image(self, images_dict: dict) -> str:
         """
-        Validate recipe image URL and provide fallback if image appears generic/abstract
+        Select the best image variant from Edamam's images object
+        Prefers larger images with aspect ratio close to 16:9
         
         Args:
-            image_url: Original image URL from Edamam
-            recipe_name: Recipe name for context
+            images_dict: Edamam's images object with THUMB/SMALL/REGULAR/LARGE variants
             
         Returns:
-            Validated image URL or None if image appears generic
+            Best image URL or None
         """
-        if not image_url:
+        if not images_dict:
             return None
+            
+        from math import inf
         
-        # Extract just the path part of the URL (before query parameters)
-        # to avoid false matches in URL parameters like "SignedHeaders"
+        PREFERRED_AR = 16 / 9  # Target aspect ratio for hero images
+        best_url, best_score = None, -inf
+        
+        for variant_name, meta in images_dict.items():
+            w = meta.get("width")
+            h = meta.get("height")
+            url = meta.get("url")
+            
+            if not w or not h or not url:
+                continue
+                
+            # Score based on area and aspect ratio proximity
+            area = w * h
+            ar_penalty = abs((w / h) - PREFERRED_AR)
+            score = area - 200_000 * ar_penalty  # Weight AR fairly strongly
+            
+            if score > best_score:
+                best_score = score
+                best_url = url
+                print(f"DEBUG: Found better image variant '{variant_name}' ({w}x{h}, AR={(w/h):.2f}, score={score:.0f})")
+        
+        return best_url
+    
+    def _is_generic_path(self, url: str) -> bool:
+        """Check if URL path contains generic/decorative image indicators"""
         try:
-            url_path = image_url.split('?')[0].lower()
+            from urllib.parse import urlsplit
+            path = urlsplit(url).path.lower()
         except Exception:
-            return None
+            return True
+            
+        generic_parts = (
+            "/logo", "/icon", "/sprite", "/placeholder", "/default",
+            "/avatar", "/social", "/share", "/banner", "/header",
+            "/footer", "/bg", "/background", "heart"
+        )
+        return any(p in path for p in generic_parts)
+    
+    def _looks_like_valid_image(self, url: str, timeout: int = 5) -> bool:
+        """
+        Lightweight HEAD request to validate image
+        Checks content-type and minimum file size
+        """
+        try:
+            import httpx
+            with httpx.Client(timeout=timeout) as client:
+                response = client.head(url, follow_redirects=True)
+                
+                # Must be image/*
+                content_type = response.headers.get("Content-Type", "").lower()
+                if not content_type.startswith("image/"):
+                    print(f"DEBUG: Invalid content-type '{content_type}' for {url}")
+                    return False
+                
+                # Must be larger than 5KB (avoid tiny placeholders)
+                content_length = response.headers.get("Content-Length")
+                if content_length and content_length.isdigit():
+                    size_bytes = int(content_length)
+                    if size_bytes < 5_000:
+                        print(f"DEBUG: Image too small ({size_bytes} bytes) for {url}")
+                        return False
+                
+                return True
+        except Exception as e:
+            print(f"DEBUG: HEAD request failed for {url}: {e}")
+            return False
+    
+    def _choose_recipe_image(self, recipe_data: dict, recipe_name: str) -> str:
+        """
+        Choose the best image for a recipe with validation
         
-        # Very conservative filtering - only filter out obvious non-food images
-        # Check if the filename/path contains decorative image indicators
-        generic_patterns = [
-            "placeholder",
-            "default", 
-            "heart",  # Like the heart shape you saw
-            "icon",
-            "symbol",
-            "logo",
-            "banner",
-            "sprite",
-            "avatar",
-            "social",
-            "share",
-            "footer",
-            "bg",
-            "background"
-        ]
+        Strategy:
+        1. Try best variant from images dict (REGULAR/LARGE preferred)
+        2. Validate with HEAD check + generic path filter
+        3. Fallback to legacy single 'image' field if available
+        4. Return None if all fail (frontend will use placeholder)
         
-        # Skip if URL path contains generic patterns
-        for pattern in generic_patterns:
-            if pattern in url_path:
-                print(f"DEBUG: Filtered out image with pattern '{pattern}': {image_url}")
-                return None
+        Args:
+            recipe_data: Raw recipe data from Edamam
+            recipe_name: Recipe name for logging
+            
+        Returns:
+            Best validated image URL or None
+        """
+        # 1) Try best variant from images object
+        images_dict = recipe_data.get("images")
+        if images_dict:
+            candidate = self._pick_best_edamam_image(images_dict)
+            if candidate:
+                if not self._is_generic_path(candidate) and self._looks_like_valid_image(candidate):
+                    print(f"DEBUG: Using best Edamam variant for '{recipe_name}': {candidate}")
+                    return candidate
+                else:
+                    print(f"DEBUG: Best variant failed validation for '{recipe_name}'")
         
-        # Skip if recipe name suggests the image might be generic
-        # (This is a heuristic - in practice, you might want to be more specific)
+        # 2) Fallback to legacy single 'image' field
+        legacy_image = recipe_data.get("image")
+        if legacy_image:
+            if not self._is_generic_path(legacy_image) and self._looks_like_valid_image(legacy_image):
+                print(f"DEBUG: Using legacy image for '{recipe_name}': {legacy_image}")
+                return legacy_image
+            else:
+                print(f"DEBUG: Legacy image failed validation for '{recipe_name}'")
         
-        # Be very permissive with Edamam images - they usually have good food photos
-        # Only filter out the most obvious non-food patterns like hearts, icons, etc.
-        print(f"DEBUG: Keeping Edamam image for {recipe_name}: {image_url}")
-        return image_url
+        # 3) No valid image found
+        print(f"DEBUG: No valid image found for '{recipe_name}', frontend will use placeholder")
+        return None
     
     async def _get_fallback_image_url(self, recipe_name: str, ingredients: list = None) -> str:
         """
