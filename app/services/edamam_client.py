@@ -457,6 +457,8 @@ class EdamamClient:
         """
         Lightweight HEAD request to validate image
         Checks content-type and minimum file size
+        
+        WARNING: This is a blocking network call. Only use for final selected recipe.
         """
         try:
             import httpx
@@ -482,19 +484,60 @@ class EdamamClient:
             print(f"DEBUG: HEAD request failed for {url}: {e}")
             return False
     
-    def _choose_recipe_image(self, recipe_data: dict, recipe_name: str) -> str:
+    def validate_final_recipe_image(self, recipe: Recipe) -> Recipe:
         """
-        Choose the best image for a recipe with validation
+        Validate the image of the final selected recipe (only called once per recommendation)
+        
+        Args:
+            recipe: The selected recipe to validate
+            
+        Returns:
+            Recipe with validated image (or None if invalid)
+        """
+        if not recipe.image_url:
+            return recipe
+        
+        print(f"DEBUG: Validating final recipe image for '{recipe.name}'")
+        
+        # Perform HEAD validation on the final image only
+        if not self._looks_like_valid_image(recipe.image_url):
+            print(f"DEBUG: Final recipe image failed validation, setting to None")
+            # Create new recipe with image_url = None (frontend will use placeholder)
+            recipe = Recipe(
+                recipe_id=recipe.recipe_id,
+                name=recipe.name,
+                image_url=None,  # Clear invalid image
+                ingredients=recipe.ingredients,
+                cooking_directions=recipe.cooking_directions,
+                prep_time=recipe.prep_time,
+                cook_time=recipe.cook_time,
+                servings=recipe.servings,
+                nutrition=recipe.nutrition,
+                source_url=recipe.source_url,
+                source_name=recipe.source_name,
+                cuisine_type=recipe.cuisine_type,
+                meal_type=recipe.meal_type,
+                dish_type=recipe.dish_type
+            )
+        else:
+            print(f"DEBUG: Final recipe image validated successfully")
+        
+        return recipe
+    
+    def _choose_recipe_image(self, recipe_data: dict, recipe_name: str, validate: bool = False) -> str:
+        """
+        Choose the best image for a recipe with optional validation
         
         Strategy:
         1. Try best variant from images dict (REGULAR/LARGE preferred)
-        2. Validate with HEAD check + generic path filter
+        2. Filter by path only (fast, no network calls)
         3. Fallback to legacy single 'image' field if available
-        4. Return None if all fail (frontend will use placeholder)
+        4. Optionally validate with HEAD check (only for final selected recipe)
         
         Args:
             recipe_data: Raw recipe data from Edamam
             recipe_name: Recipe name for logging
+            validate: If True, perform HEAD request validation (slow, only use for final recipe)
             
         Returns:
             Best validated image URL or None
@@ -503,21 +546,23 @@ class EdamamClient:
         images_dict = recipe_data.get("images")
         if images_dict:
             candidate = self._pick_best_edamam_image(images_dict)
-            if candidate:
-                if not self._is_generic_path(candidate) and self._looks_like_valid_image(candidate):
-                    print(f"DEBUG: Using best Edamam variant for '{recipe_name}': {candidate}")
-                    return candidate
+            if candidate and not self._is_generic_path(candidate):
+                # Only validate if explicitly requested (for final recipe only)
+                if validate and not self._looks_like_valid_image(candidate):
+                    print(f"DEBUG: Best variant failed HEAD validation for '{recipe_name}'")
                 else:
-                    print(f"DEBUG: Best variant failed validation for '{recipe_name}'")
+                    print(f"DEBUG: Using best Edamam variant for '{recipe_name}'")
+                    return candidate
         
         # 2) Fallback to legacy single 'image' field
         legacy_image = recipe_data.get("image")
-        if legacy_image:
-            if not self._is_generic_path(legacy_image) and self._looks_like_valid_image(legacy_image):
-                print(f"DEBUG: Using legacy image for '{recipe_name}': {legacy_image}")
-                return legacy_image
+        if legacy_image and not self._is_generic_path(legacy_image):
+            # Only validate if explicitly requested (for final recipe only)
+            if validate and not self._looks_like_valid_image(legacy_image):
+                print(f"DEBUG: Legacy image failed HEAD validation for '{recipe_name}'")
             else:
-                print(f"DEBUG: Legacy image failed validation for '{recipe_name}'")
+                print(f"DEBUG: Using legacy image for '{recipe_name}'")
+                return legacy_image
         
         # 3) No valid image found
         print(f"DEBUG: No valid image found for '{recipe_name}', frontend will use placeholder")
