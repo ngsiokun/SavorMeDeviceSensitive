@@ -20,19 +20,19 @@ def check_and_setup_environment():
     """
     Check if the environment is properly set up and run setup if needed
     """
-    print("🔍 Checking SavorMe environment setup...")
+    print("Checking SavorMe environment setup...")
     
     # Check if .env file exists
     env_file = Path(".env")
     if not env_file.exists():
-        print("⚠️  .env file not found. Running setup...")
+        print("WARNING: .env file not found. Running setup...")
         run_setup_script()
         return
     
     # Check if virtual environment is activated
     if not hasattr(sys, 'real_prefix') and not (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix):
-        print("⚠️  Virtual environment not detected. Please activate venv first.")
-        print("💡 Run: venv\\Scripts\\activate.bat (Windows) or source venv/bin/activate (Linux/Mac)")
+        print("WARNING: Virtual environment not detected. Please activate venv first.")
+        print("HINT: Run: venv\\Scripts\\activate.bat (Windows) or source venv/bin/activate (Linux/Mac)")
         return
     
     # Check if required packages are installed
@@ -40,10 +40,10 @@ def check_and_setup_environment():
         import fastapi
         import uvicorn
         import requests
-        print("✅ Environment setup verified successfully!")
+        print("Environment setup verified successfully!")
     except ImportError as e:
-        print(f"⚠️  Missing required package: {e}")
-        print("💡 Run: pip install -r requirements.txt")
+        print(f"WARNING: Missing required package: {e}")
+        print("HINT: Run: pip install -r requirements.txt")
         return
 
 
@@ -51,7 +51,7 @@ def run_setup_script():
     """
     Run the automated setup script
     """
-    print("🚀 Running automated setup...")
+    print("Running automated setup...")
     
     setup_script = Path("setup_new_clone.bat")
     if setup_script.exists():
@@ -64,14 +64,14 @@ def run_setup_script():
                                   encoding='utf-8',
                                   errors='ignore')
             if result.returncode == 0:
-                print("✅ Setup completed successfully!")
-                print("💡 Please restart the application after setup.")
+                print("Setup completed successfully!")
+                print("HINT: Please restart the application after setup.")
             else:
-                print(f"❌ Setup failed: {result.stderr}")
+                print(f"ERROR: Setup failed: {result.stderr}")
         except Exception as e:
-            print(f"❌ Error running setup: {e}")
+            print(f"ERROR: Error running setup: {e}")
     else:
-        print("⚠️  Setup script not found. Please run setup manually:")
+        print("WARNING: Setup script not found. Please run setup manually:")
         print("1. Create virtual environment: py -m venv venv")
         print("2. Activate venv: venv\\Scripts\\activate.bat")
         print("3. Install dependencies: pip install -r requirements.txt")
@@ -93,9 +93,9 @@ async def startup_event():
     """
     Application startup event - environment should be pre-configured
     """
-    print("✅ SavorMe Backend API started successfully!")
-    print("📍 Backend URL: http://127.0.0.1:8000")
-    print("📚 API Docs: http://127.0.0.1:8000/docs")
+    print("SavorMe Backend API started successfully!")
+    print("Backend URL: http://127.0.0.1:8000")
+    print("API Docs: http://127.0.0.1:8000/docs")
 
 # Add CORS middleware
 cors_origins = settings.CORS_ORIGINS.split(",") if "," in settings.CORS_ORIGINS else [settings.CORS_ORIGINS]
