@@ -317,11 +317,18 @@ This project is licensed under the MIT License.
 
 ## 📚 Additional Documentation
 
+### Local Development
 - **[STARTUP_GUIDE.md](STARTUP_GUIDE.md)** - Comprehensive startup and troubleshooting guide
 - **[QUICK_START_COMMANDS.md](QUICK_START_COMMANDS.md)** - Copy-paste commands for quick setup
 - **[FINAL_VERIFICATION_CHECKLIST.md](FINAL_VERIFICATION_CHECKLIST.md)** - Complete verification checklist
-- **[PAGE_LAYOUTS_REFERENCE.md](PAGE_LAYOUTS_REFERENCE.md)** - *(Merged into CUSTOMIZATIONS_PERSISTENT.md)*
 - **[EVIDENCE_BASED_MOODS_v2.md](EVIDENCE_BASED_MOODS_v2.md)** - Scientific foundation and mood mapping
+
+### Cloud Deployment
+- **[DEPLOY_FROM_BROWSER.md](DEPLOY_FROM_BROWSER.md)** - 🌐 Deploy without installing anything (Cloud Shell)
+- **[DEPLOY_NOW.md](DEPLOY_NOW.md)** - ⚡ Quickest deployment guide
+- **[QUICK_FIX_COMMANDS.md](QUICK_FIX_COMMANDS.md)** - Copy-paste commands for manual deployment
+- **[CLOUD_BUILD_TROUBLESHOOTING.md](CLOUD_BUILD_TROUBLESHOOTING.md)** - Complete troubleshooting guide
+- **[fix-cloud-build.sh](fix-cloud-build.sh)** / **[fix-cloud-build.bat](fix-cloud-build.bat)** - Automated scripts (requires gcloud CLI)
 
 ## 🙏 Acknowledgments
 
