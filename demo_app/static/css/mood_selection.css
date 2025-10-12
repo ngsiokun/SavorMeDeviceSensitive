@@ -115,19 +115,16 @@
     margin-bottom: 24px;
 }
 
+/* Base mood card styles - let main.css handle comprehensive styling */
 .mood-card {
-    background: white;
-    border: 2px solid #E5E7EB;
-    border-radius: 12px;
-    padding: 16px;
-    text-align: center;
+    /* Only essential non-conflicting styles */
     cursor: pointer;
     transition: all 0.3s ease;
-    position: relative;
     min-height: 120px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    /* Let main.css handle: background, border, border-radius, padding, text-align, position */
 }
 
 .mood-card.stressed {
@@ -151,11 +148,8 @@
     box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 
-.mood-card.selected {
-    border-color: #10B981;
-    background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-}
+/* Mood card selection styles are now handled by main.css */
+/* This file no longer overrides the comprehensive selection styles */
 
 .mood-emoji {
     font-size: 32px;
@@ -256,6 +250,31 @@
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
+}
+
+/* Back Button */
+.back-btn {
+    width: 100%;
+    background: #F3F4F6;
+    color: #374151;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 16px;
+}
+
+.back-btn:hover {
+    background: #E5E7EB;
+    border-color: #D1D5DB;
+    transform: translateY(-1px);
+}
+
+.back-btn:active {
+    transform: translateY(0);
 }
 
 .loading-indicator {

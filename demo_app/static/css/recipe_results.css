@@ -1,5 +1,5 @@
-/* SavorMe Recipe Results Page - Mobile-First Design */
-/* Matching the beautiful design from the first screenshot */
+/* SavorMe Recipe Results Page - Responsive Design */
+/* Updated to work with the responsive design system */
 
 /* Mobile-first smartphone design for results page */
 * {
@@ -10,20 +10,44 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background: #F0FDF4;
+    background: var(--background-light);
     min-height: 100vh;
     overflow-x: hidden;
 }
 
+/* Mobile layout - phone mockup style */
 .app-container {
-    max-width: 414px; /* iPhone width */
+    max-width: var(--container-mobile);
     margin: 0 auto;
     min-height: 100vh;
-    background: #F0FDF4;
+    background: var(--background-light);
     position: relative;
-    border-left: 8px solid #065F46;
-    border-right: 8px solid #065F46;
-    border-top: 32px solid #065F46;
+    border-left: 8px solid var(--primary-dark);
+    border-right: 8px solid var(--primary-dark);
+    border-top: 32px solid var(--primary-dark);
+}
+
+/* Tablet layout */
+@media (min-width: 768px) {
+    .app-container {
+        max-width: 600px;
+        border-left: 12px solid var(--primary-dark);
+        border-right: 12px solid var(--primary-dark);
+        border-top: 40px solid var(--primary-dark);
+    }
+}
+
+/* Desktop layout - remove phone mockup styling */
+@media (min-width: 1024px) {
+    .app-container {
+        max-width: var(--container-desktop);
+        border: none;
+        background: var(--surface-white);
+        border-radius: var(--radius-2xl);
+        box-shadow: var(--shadow-xl);
+        margin: var(--spacing-xl) auto;
+        min-height: auto;
+    }
 }
 
 .status-bar {
@@ -32,14 +56,21 @@ body {
     left: 8px;
     right: 8px;
     height: 32px;
-    background: #065F46;
+    background: var(--primary-dark);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 16px;
+    padding: 0 var(--spacing-md);
     color: white;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* Hide status bar on desktop */
+@media (min-width: 1024px) {
+    .status-bar {
+        display: none;
+    }
 }
 
 .content-area {
@@ -251,6 +282,31 @@ body {
 .nutrient-match-section {
     margin-top: auto;
     padding-top: 20px;
+}
+
+/* Back Button */
+.back-btn {
+    width: 100%;
+    background: #F3F4F6;
+    color: #374151;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.back-btn:hover {
+    background: #E5E7EB;
+    border-color: #D1D5DB;
+    transform: translateY(-1px);
+}
+
+.back-btn:active {
+    transform: translateY(0);
 }
 
 .nutrient-match-btn {
@@ -640,6 +696,42 @@ body {
     font-size: 10px;
     color: #6B7280;
     line-height: 1.3;
+}
+
+/* Modal Footer Buttons */
+.modal-footer {
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    border-top: 1px solid #E5E7EB;
+}
+
+.modal-footer .back-btn {
+    background: #F3F4F6;
+    color: #374151;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 0 0 auto;
+    min-width: 100px;
+}
+
+.modal-footer .back-btn:hover {
+    background: #E5E7EB;
+    border-color: #D1D5DB;
+    transform: translateY(-1px);
+}
+
+.modal-footer .back-btn:active {
+    transform: translateY(0);
+}
+
+.modal-footer .btn {
+    flex: 1;
 }
 
 .modal-footer {

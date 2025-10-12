@@ -62,38 +62,91 @@ function generateRecipePage(data) {
         `;
     }
     
-    // Generate image HTML with fallback
+    // Generate image HTML with smart validation and contextual placeholders
     let imageHTML = '';
-    if (recipe.image_url) {
+    if (recipe.image_url && !isImageMismatched(recipe)) {
         imageHTML = `
             <img src="${recipe.image_url}" class="recipe-image" alt="${recipe.name}" 
                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                      <div class="recipe-image-placeholder" style="display: none;">
-                         <div class="placeholder-icon">🥘</div>
-                         <div class="placeholder-text">${recipe.name}</div>
-                         <div class="placeholder-subtitle">Delicious Recipe</div>
+                         ${generateContextualPlaceholder(recipe)}
             </div>
         `;
     } else {
         imageHTML = `
             <div class="recipe-image-placeholder">
-                         <div class="placeholder-icon">🥘</div>
-                         <div class="placeholder-text">${recipe.name}</div>
-                         <div class="placeholder-subtitle">Delicious Recipe</div>
+                ${generateContextualPlaceholder(recipe)}
             </div>
         `;
     }
     
     return `
+        <!-- Mobile/Tablet Layout (Phone Mockup) -->
         <div class="app-container">
-            <!-- Status Bar -->
-            <div class="status-bar">
-                <span>9:41</span>
-                <span>🔋 100%</span>
+            <div class="phone-mockup">
+                <!-- Status Bar -->
+                <div class="status-bar">
+                    <span>9:41</span>
+                    <span>🔋 100%</span>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="content-area">
+                    <!-- Header -->
+                    <div class="page-header">
+                        <h1 class="page-title">Your Perfect Recipe</h1>
+                        <p class="page-subtitle">Based on your mood and profile</p>
+                    </div>
+
+                <!-- Recipe Image -->
+                <div class="recipe-image-container">
+                    ${imageHTML}
+                </div>
+
+                <!-- Recipe Info -->
+                <div class="recipe-info">
+                    <h2 class="recipe-name">${recipe.name}</h2>
+                    <div class="recipe-servings">${recipe.servings || 4} servings</div>
+                </div>
+
+                <!-- Nutrition Summary -->
+                <div class="nutrition-summary">
+                    <div class="nutrition-item">
+                        <span class="nutrition-value">${Math.round(recipe.nutrition?.calories || 0)}</span>
+                        <span class="nutrition-label">CALORIES</span>
+                    </div>
+                    <div class="nutrition-item">
+                        <span class="nutrition-value">${Math.round(recipe.nutrition?.protein_g || 0)}g</span>
+                        <span class="nutrition-label">PROTEIN</span>
+                    </div>
+                    <div class="nutrition-item">
+                        <span class="nutrition-value">${Math.round(recipe.nutrition?.fiber_g || 0)}g</span>
+                        <span class="nutrition-label">FIBER</span>
+                    </div>
+                </div>
+
+                ${ingredientsHTML}
+                ${directionsHTML}
+
+                <!-- Nutrient Match Score Section -->
+                <div class="nutrient-match-section">
+                    <button class="nutrient-match-btn">
+                        <span class="nutrient-match-icon">📊</span>
+                        <span class="nutrient-match-text">Nutrient Match Score</span>
+                    </button>
+                </div>
+                
+                <!-- Go Back Button -->
+                <button class="back-btn" onclick="goBack()">
+                    ← Go Back
+                </button>
+                </div>
             </div>
-            
-            <!-- Main Content -->
-            <div class="content-area">
+        </div>
+
+        <!-- Desktop Layout (Full Web Layout) -->
+        <div class="desktop-layout">
+            <div class="desktop-content">
                 <!-- Header -->
                 <div class="page-header">
                     <h1 class="page-title">Your Perfect Recipe</h1>
@@ -137,6 +190,11 @@ function generateRecipePage(data) {
                         <span class="nutrient-match-text">Nutrient Match Score</span>
                     </button>
                 </div>
+                
+                <!-- Go Back Button -->
+                <button class="back-btn" onclick="goBack()">
+                    ← Go Back
+                </button>
             </div>
         </div>
     `;
@@ -189,6 +247,104 @@ function addEventListeners() {
         retryBtn.addEventListener('click', () => {
             window.location.href = '/mood-selection';
         });
+    }
+}
+
+// Go back to mood selection page
+function goBack() {
+    window.location.href = '/mood-selection';
+}
+
+// Go back from modal (close modal first, stay on recipe page)
+function goBackFromModal() {
+    closeNutrientModal();
+    // Stay on the current recipe page - don't navigate away
+}
+
+// Image validation logic to detect only OBVIOUS mismatched recipe images
+function isImageMismatched(recipe) {
+    if (!recipe.image_url) return true;
+    
+    const imageUrl = recipe.image_url.toLowerCase();
+    
+    // Only flag EXTREMELY obvious mismatches - be very conservative
+    // Check for logo/brand images instead of food
+    const logoKeywords = ['logo', 'brand', 'food network', 'allrecipes', 'tasteofhome'];
+    const hasLogoKeywords = logoKeywords.some(keyword => 
+        imageUrl.includes(keyword)
+    );
+    
+    if (hasLogoKeywords) {
+        console.log('🚨 Flagged logo image:', recipe.name);
+        return true;
+    }
+    
+    // Only flag if it's a single ingredient photo for a complex recipe
+    const singleIngredientKeywords = ['garlic-cloves', 'rosemary-sprigs', 'single-carrot'];
+    const hasSingleIngredient = singleIngredientKeywords.some(keyword => 
+        imageUrl.includes(keyword)
+    );
+    
+    // Only flag if it's clearly a single ingredient AND a complex multi-ingredient recipe
+    if (hasSingleIngredient && recipe.ingredients && recipe.ingredients.length > 5) {
+        console.log('🚨 Flagged single ingredient image for complex recipe:', recipe.name);
+        return true;
+    }
+    
+    // For now, let most images through - only catch the most obvious mismatches
+    return false;
+}
+
+// Generate contextual placeholder based on recipe type
+function generateContextualPlaceholder(recipe) {
+    const recipeTitle = recipe.name.toLowerCase();
+    const ingredients = (recipe.ingredients || []).map(ing => ing.name.toLowerCase()).join(' ');
+    
+    // Determine recipe category
+    if (recipeTitle.includes('beef') || recipeTitle.includes('chicken') || 
+        recipeTitle.includes('pork') || recipeTitle.includes('meat') ||
+        ingredients.includes('beef') || ingredients.includes('chicken')) {
+        return `
+            <div class="placeholder-icon">🍖</div>
+            <div class="placeholder-text">${recipe.name}</div>
+            <div class="placeholder-subtitle">Meat Dish</div>
+        `;
+    } else if (recipeTitle.includes('dessert') || recipeTitle.includes('cake') || 
+               recipeTitle.includes('cookie') || recipeTitle.includes('sweet') ||
+               ingredients.includes('sugar') || ingredients.includes('chocolate')) {
+        return `
+            <div class="placeholder-icon">🍰</div>
+            <div class="placeholder-text">${recipe.name}</div>
+            <div class="placeholder-subtitle">Dessert</div>
+        `;
+    } else if (recipeTitle.includes('salad') || ingredients.includes('lettuce') || 
+               ingredients.includes('vegetables')) {
+        return `
+            <div class="placeholder-icon">🥗</div>
+            <div class="placeholder-text">${recipe.name}</div>
+            <div class="placeholder-subtitle">Fresh Salad</div>
+        `;
+    } else if (recipeTitle.includes('soup') || recipeTitle.includes('stew') || 
+               ingredients.includes('broth')) {
+        return `
+            <div class="placeholder-icon">🍲</div>
+            <div class="placeholder-text">${recipe.name}</div>
+            <div class="placeholder-subtitle">Hearty Soup</div>
+        `;
+    } else if (recipeTitle.includes('pasta') || ingredients.includes('pasta') || 
+               ingredients.includes('noodles')) {
+        return `
+            <div class="placeholder-icon">🍝</div>
+            <div class="placeholder-text">${recipe.name}</div>
+            <div class="placeholder-subtitle">Pasta Dish</div>
+        `;
+    } else {
+        // Generic fallback
+        return `
+            <div class="placeholder-icon">🥘</div>
+            <div class="placeholder-text">${recipe.name}</div>
+            <div class="placeholder-subtitle">Delicious Recipe</div>
+        `;
     }
 }
 
@@ -384,6 +540,7 @@ function showNutrientAnalysis() {
                 </div>
                 
                         <div class="modal-footer">
+                            <button class="back-btn" onclick="goBackFromModal()">← Go Back</button>
                             <button class="btn btn-primary" onclick="generateNewRecommendation()">Another Recipe Suggestion</button>
                         </div>
             </div>

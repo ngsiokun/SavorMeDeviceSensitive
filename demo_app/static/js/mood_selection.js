@@ -56,33 +56,88 @@ function toggleMood(element) {
 
 // Select intensity (called from HTML onclick)
 function selectIntensity(intensity) {
-    // Remove selected from all
-    document.querySelectorAll('.intensity-btn').forEach(btn => {
+    console.log('Selecting intensity:', intensity); // Debug log
+    
+    // Remove selected from all intensity buttons
+    const allIntensityButtons = document.querySelectorAll('.intensity-btn');
+    console.log('Found intensity buttons:', allIntensityButtons.length);
+    
+    allIntensityButtons.forEach(btn => {
         btn.classList.remove('selected');
+        console.log('Removed selected from:', btn.textContent.trim());
     });
     
-    // Add selected to clicked
+    // Add selected to clicked button
     const element = document.querySelector(`[data-intensity="${intensity}"]`);
-    element.classList.add('selected');
-    selectedIntensity = intensity;
+    console.log('Looking for element with data-intensity:', intensity, 'Found:', element);
+    
+    if (element) {
+        element.classList.add('selected');
+        selectedIntensity = intensity;
+        console.log('✅ Intensity selected:', selectedIntensity);
+        console.log('Element classes after selection:', element.className);
+    } else {
+        console.error('❌ Could not find intensity button for:', intensity);
+        console.log('Available intensity buttons:');
+        allIntensityButtons.forEach((btn, index) => {
+            console.log(`  ${index}: ${btn.textContent.trim()} (data-intensity: ${btn.getAttribute('data-intensity')})`);
+        });
+    }
 }
 
 // Update mood counter
 function updateCounter() {
     const counter = document.getElementById('moodCounter');
+    const counterDesktop = document.getElementById('moodCounterDesktop');
     const count = selectedMoods.length;
-    counter.textContent = `${count} mood${count !== 1 ? 's' : ''} selected (max 3)`;
+    const counterText = `${count} mood${count !== 1 ? 's' : ''} selected (max 3)`;
+    
+    if (counter) {
+        counter.textContent = counterText;
+    }
+    if (counterDesktop) {
+        counterDesktop.textContent = counterText;
+    }
 }
 
 // Update generate button state
 function updateGenerateButton() {
     const btn = document.getElementById('generateBtn');
-    btn.disabled = selectedMoods.length === 0;
+    const btnDesktop = document.getElementById('generateBtnDesktop');
+    const isDisabled = selectedMoods.length === 0;
+    
+    if (btn) {
+        btn.disabled = isDisabled;
+    }
+    if (btnDesktop) {
+        btnDesktop.disabled = isDisabled;
+    }
 }
 
 // Show error message
 function showError(message) {
-    alert(message);  // Simple for now, could be a toast notification
+    const errorElement = document.getElementById('errorMessage');
+    const errorElementDesktop = document.getElementById('errorMessageDesktop');
+    
+    if (errorElement) {
+        errorElement.textContent = message;
+        errorElement.classList.add('show');
+        setTimeout(() => {
+            errorElement.classList.remove('show');
+        }, 3000);
+    }
+    if (errorElementDesktop) {
+        errorElementDesktop.textContent = message;
+        errorElementDesktop.classList.add('show');
+        setTimeout(() => {
+            errorElementDesktop.classList.remove('show');
+        }, 3000);
+    }
+}
+
+// Go back to profile page
+function goBack() {
+    window.location.href = '/profile';
 }
 
 // Generate recommendation
@@ -94,11 +149,25 @@ async function generateRecommendation() {
     
     // Show loading with cute animations
     const loadingIndicator = document.getElementById('loadingIndicator');
+    const loadingIndicatorDesktop = document.getElementById('loadingIndicatorDesktop');
     const generateBtn = document.getElementById('generateBtn');
-    const loadingText = loadingIndicator.querySelector('div:last-child');
+    const generateBtnDesktop = document.getElementById('generateBtnDesktop');
     
-    loadingIndicator.style.display = 'block';
-    generateBtn.disabled = true;
+    const loadingElement = loadingIndicator || loadingIndicatorDesktop;
+    const loadingText = loadingElement ? loadingElement.querySelector('div:last-child') : null;
+    
+    if (loadingIndicator) {
+        loadingIndicator.style.display = 'block';
+    }
+    if (loadingIndicatorDesktop) {
+        loadingIndicatorDesktop.style.display = 'block';
+    }
+    if (generateBtn) {
+        generateBtn.disabled = true;
+    }
+    if (generateBtnDesktop) {
+        generateBtnDesktop.disabled = true;
+    }
     
     // Cute loading messages with extended timing
     const loadingMessages = [
@@ -166,11 +235,26 @@ async function generateRecommendation() {
         alert(`Error: ${error.message}\n\nMake sure the backend is running at http://127.0.0.1:8000`);
     } finally {
         clearInterval(messageInterval);
-        loadingIndicator.style.display = 'none';
-        generateBtn.disabled = false;
+        if (loadingIndicator) {
+            loadingIndicator.style.display = 'none';
+        }
+        if (loadingIndicatorDesktop) {
+            loadingIndicatorDesktop.style.display = 'none';
+        }
+        if (generateBtn) {
+            generateBtn.disabled = false;
+        }
+        if (generateBtnDesktop) {
+            generateBtnDesktop.disabled = false;
+        }
     }
 }
 
 // Initialize
 updateGenerateButton();
+
+// Test function availability
+console.log('Mood selection JavaScript loaded');
+console.log('selectIntensity function available:', typeof selectIntensity === 'function');
+console.log('selectMood function available:', typeof selectMood === 'function');
 
