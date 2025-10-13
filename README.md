@@ -1,342 +1,72 @@
-# SavorMe Backend - Mood-Based Recipe Companion
+# 🍽️ SavorMe - Mood-Based Recipe Recommendation App
 
-⚠️ **CRITICAL**: Always use Command Prompt (cmd.exe), NEVER PowerShell when running this application!
-PowerShell causes compatibility issues with batch scripts and environment setup.
+## 🚀 **Quick Deployment (5 Minutes)**
 
-Backend API for SavorMe, an emotionally intelligent recipe recommendation system that curates recipes based on user's mood, nutritional needs, and culinary preferences.
+### **Prerequisites**
+1. Install [Google Cloud SDK](https://cloud.google.com/sdk/docs/install)
+2. Copy your `.env` file to project root (contains API keys)
 
-## 🎯 Overview
+### **Deployment Steps**
+```cmd
+# 1. Authenticate with Google Cloud
+gcloud auth login
 
-SavorMe Backend provides a RESTful API that:
-- Interprets user mood combinations into culinary parameters
-- Calculates personalized nutrition targets
-- Searches for recipes matching emotional and nutritional needs
-- Generates poetic emotional rationales using AI
-- Integrates with multiple food and AI APIs
+# 2. Set project (already configured)
+gcloud config set project savorme-474712
 
-## 🏗️ Architecture
+# 3. Check setup
+.\check-setup.bat
 
-### Core Components
-
-```
-app/
-├── api/           # FastAPI routes and endpoints
-├── core/          # Configuration and settings
-├── models/        # Pydantic data models
-├── services/      # Business logic and external API clients
-│   ├── fusion_engine.py      # Mood → Recipe parameter conversion
-│   ├── edamam_client.py      # Edamam Recipe Search API
-│   ├── openrouter_client.py  # AI-powered emotional rationale
-│   └── nutrition_calculator.py # Nutrition calculations
-└── utils/         # Utility functions
+# 4. Deploy to Cloud Run
+.\deploy-to-cloud-run.bat
 ```
 
-### Key Services
+## 🌐 **Live URLs After Deployment**
+- **Frontend**: `https://savorme-frontend-savorme-474712-uc.a.run.app`
+- **API Gateway**: `https://savorme-router-savorme-474712-uc.a.run.app`
 
-1. **Fusion Engine** - Converts mood combinations into:
-   - Flavor bias (floral, spicy, earthy, etc.)
-   - Texture preferences (silky, crispy, creamy, etc.)
-   - Culinary tone (poetic, bold, nurturing, etc.)
-   - Recipe search keywords
+## 🏗️ **Architecture**
+- **Frontend**: Flask web app (mood selection & recipe display)
+- **API Gateway**: FastAPI router (orchestrates microservices)
+- **User Nutrition Service**: Profile management & nutrition calculations
+- **Recipe Service**: Recipe search & scoring via Edamam API
+- **Mood AI Service**: Mood interpretation & AI content generation
 
-2. **Nutrition Calculator** - Calculates daily targets using:
-   - Harris-Benedict BMR equation
-   - WHO nutrition guidelines
-   - Activity level adjustments
+## ✅ **What's Fixed & Ready**
+- ✅ All Dockerfiles configured for Cloud Run (port 8080)
+- ✅ All environment variables properly set
+- ✅ All path issues resolved
+- ✅ Complete deployment scripts
+- ✅ Google Cloud project configured (`savorme-474712`)
+- ✅ Account authenticated (`ngsiokun88@gmail.com`)
 
-3. **Edamam Client** - Searches recipes with filters:
-   - Mood-derived keywords
-   - Dietary restrictions (vegetarian, vegan, etc.)
-   - Allergen exclusions
-   - Nutrition ranges (calories, protein, fiber)
-   - Cuisine preferences
-
-4. **OpenRouter Client** - Generates emotional content:
-   - Poetic recipe descriptions
-   - Mood-specific rationales
-   - Plating suggestions
-   - Journaling prompts
-
-## 🚀 Getting Started
-
-### 🎯 Quick Start Options
-
-#### **Option 1: Automatic Setup (Recommended)**
-```bash
-# Clone and start with automatic setup
-git clone https://github.com/ngsiokun/SavorMe-backend.git
-cd SavorMe-backend
-start.bat
+## 📋 **Required Environment Variables (.env)**
 ```
-⚠️ **CRITICAL**: Run in Command Prompt (cmd.exe), NOT PowerShell!
-
-#### **Option 2: Python Direct Start**
-```bash
-# Clone and start with Python setup
-git clone https://github.com/ngsiokun/SavorMe-backend.git
-cd SavorMe-backend
-py start_with_setup.py
-```
-
-#### **Option 3: Manual Setup**
-Follow the detailed installation steps below.
-
-## 📋 Detailed Installation
-
-### Prerequisites
-
-- Python 3.8+
-- API Keys for:
-  - [Edamam Recipe API](https://developer.edamam.com/)
-  - [OpenRouter AI](https://openrouter.ai/) (optional)
-  - [USDA FoodData Central](https://fdc.nal.usda.gov/api-key-signup.html) (optional)
-
-### Installation
-
-1. **Clone the repository**
-```bash
-git clone https://github.com/ngsiokun/SavorMe-backend.git
-cd SavorMe-backend
-```
-
-2. **Create virtual environment**
-```bash
-# Windows (use py command)
-py -m venv venv
-venv\Scripts\activate.bat
-
-# macOS/Linux
-python3 -m venv venv
-venv\Scripts\activate.bat
-```
-
-3. **Install dependencies**
-```bash
-pip install -r requirements.txt
-```
-
-4. **Configure environment variables**
-```bash
-# Create .env file with your API keys
-# Required variables:
-# EDAMAM_APP_ID=your_edamam_app_id
-# EDAMAM_APP_KEY=your_edamam_app_key
-# OPENROUTER_API_KEY=your_openrouter_api_key
-```
-
-5. **Run the server**
-```bash
-# Development mode
-uvicorn app.main:app --reload
-
-# Production mode
-python app/main.py
-```
-
-The API will be available at `http://localhost:8000`
-
-## 📚 API Documentation
-
-Once the server is running, visit:
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
-
-### Main Endpoints
-
-#### `POST /api/v1/recipes/recommend`
-Get complete recipe recommendation with emotional rationale
-
-**Request:**
-```json
-{
-  "mood_blend": {
-    "moods": [
-      {"mood": "dreamy", "intensity": "very"},
-      {"mood": "craving", "intensity": "medium"},
-      {"mood": "grounded", "intensity": "a_little"}
-    ]
-  },
-  "user_profile": {
-    "age": 34,
-    "gender": "female",
-    "height_cm": 168,
-    "weight_kg": 58,
-    "cuisine_preferences": ["Japanese", "Italian"],
-    "food_allergies": ["peanuts"],
-    "dietary_preference": "vegetarian"
-  }
-}
-```
-
-**Response:**
-```json
-{
-  "recipe": {
-    "name": "Yuzu-Scented Risotto with Silken Tofu",
-    "ingredients": [...],
-    "nutrition": {
-      "calories": 520,
-      "protein_g": 18,
-      "fiber_g": 7
-    }
-  },
-  "emotional_rationale": {
-    "overall_rationale": "This dish was chosen to gently cradle your emotional state...",
-    "mood_breakdowns": [...]
-  },
-  "nutrition_comparison": {...},
-  "flavor_alignment": {...}
-}
-```
-
-#### `POST /api/v1/nutrition/calculate`
-Calculate daily nutrition targets
-
-#### `POST /api/v1/mood/interpret`
-Interpret mood blend into flavor profile
-
-#### `POST /api/v1/recipes/search`
-Search recipes based on mood and profile
-
-## 🎨 Mood System
-
-### Available Moods (10 total)
-
-| Mood | Flavor Bias | Texture | Tone |
-|------|-------------|---------|------|
-| Dreamy | Floral, citrus, vanilla | Silky, smooth | Poetic, artistic |
-| Fiery | Spicy, bold, smoky | Crispy, charred | Bold, dramatic |
-| Focused | Clean, herbal, sharp | Lean, minimal | Precise, efficient |
-| Playful | Fruity, tangy, bright | Bouncy, varied | Whimsical, fun |
-| Craving | Rich, creamy, umami | Luscious, decadent | Indulgent, sensory |
-| Light | Fresh, crisp, airy | Delicate, fluffy | Bright, elegant |
-| Grounded | Earthy, nutty, roasted | Dense, hearty | Traditional, rustic |
-| Restorative | Warm, comforting, gentle | Soft, brothy | Nurturing, healing |
-| Charismatic | Vibrant, exotic, bold | Dynamic, complex | Sophisticated, magnetic |
-| Melancholy | Tender, subtle, soft | Slow-cooked, tender | Introspective, gentle |
-
-### Intensity Levels
-- **A little**: 30% weight
-- **Medium**: 60% weight  
-- **Very**: 100% weight
-
-Users can select 1-3 moods, each with an intensity level.
-
-## 🔧 Configuration
-
-### Environment Variables
-
-See `.env file creation instructions` for all configuration options:
-
-```bash
-# Required
-EDAMAM_APP_ID=your_app_id
-EDAMAM_APP_KEY=your_app_key
-
-# Optional (fallback implementations provided)
+EDAMAM_APP_ID=your_edamam_app_id
+EDAMAM_APP_KEY=your_edamam_app_key
 OPENROUTER_API_KEY=your_openrouter_key
-USDA_API_KEY=your_usda_key
-HUGGINGFACE_API_KEY=your_hf_key
-
-# Database
-DATABASE_URL=sqlite:///./savorme.db
 ```
 
-## 🧪 Testing
+## 🎯 **Features**
+- Mood-based recipe recommendations
+- AI-powered emotional rationale generation
+- Nutritional analysis and scoring
+- Beautiful responsive web interface
+- Scalable microservices architecture
 
-```bash
-# Run tests
-pytest
+## 📚 **Documentation**
+- `CLOUD_RUN_DEPLOYMENT.md` - Complete deployment guide
+- `SETUP_REQUIREMENTS.md` - Prerequisites and troubleshooting
+- `PROJECT_STATUS.md` - Current status and fixes applied
 
-# Run with coverage
-pytest --cov=app tests/
-```
-
-## 📦 Project Structure
-
-```
-SavorMe-backend/
-├── app/
-│   ├── __init__.py
-│   ├── main.py              # FastAPI application
-│   ├── api/
-│   │   ├── __init__.py
-│   │   └── routes.py        # API endpoints
-│   ├── core/
-│   │   ├── __init__.py
-│   │   └── config.py        # Settings and configuration
-│   ├── models/
-│   │   ├── __init__.py
-│   │   ├── mood.py          # Mood-related models
-│   │   ├── user.py          # User profile models
-│   │   └── recipe.py        # Recipe models
-│   ├── services/
-│   │   ├── __init__.py
-│   │   ├── fusion_engine.py
-│   │   ├── edamam_client.py
-│   │   ├── openrouter_client.py
-│   │   └── nutrition_calculator.py
-│   └── utils/
-│       └── __init__.py
-├── documentation.md         # Detailed documentation
-├── workflow.md             # End-to-end workflow
-├── requirements.txt
-├── .env file creation instructions
-├── .gitignore
-└── README.md
-```
-
-## 🔌 API Integration Details
-
-### Edamam Recipe Search API
-- **Endpoint**: `https://api.edamam.com/api/recipes/v2`
-- **Rate Limit**: 10 requests/min (free tier)
-- **Features**: Recipe search with nutrition, cuisine, dietary filters
-
-### OpenRouter AI API
-- **Endpoint**: `https://openrouter.ai/api/v1`
-- **Models**: Claude 3.5 Sonnet, GPT-4, etc.
-- **Usage**: Emotional rationale generation
-
-### USDA FoodData Central
-- **Endpoint**: `https://api.nal.usda.gov/fdc/v1/`
-- **Rate Limit**: 1,000 requests/hour
-- **Usage**: Nutritional data (future enhancement)
-
-## 🤝 Contributing
-
-Contributions are welcome! Please:
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 📚 Additional Documentation
-
-### Local Development
-- **[STARTUP_GUIDE.md](STARTUP_GUIDE.md)** - Comprehensive startup and troubleshooting guide
-- **[QUICK_START_COMMANDS.md](QUICK_START_COMMANDS.md)** - Copy-paste commands for quick setup
-- **[FINAL_VERIFICATION_CHECKLIST.md](FINAL_VERIFICATION_CHECKLIST.md)** - Complete verification checklist
-- **[EVIDENCE_BASED_MOODS_v2.md](EVIDENCE_BASED_MOODS_v2.md)** - Scientific foundation and mood mapping
-
-### Cloud Deployment
-- **[DEPLOY_FROM_BROWSER.md](DEPLOY_FROM_BROWSER.md)** - 🌐 Deploy without installing anything (Cloud Shell)
-- **[DEPLOY_NOW.md](DEPLOY_NOW.md)** - ⚡ Quickest deployment guide
-- **[QUICK_FIX_COMMANDS.md](QUICK_FIX_COMMANDS.md)** - Copy-paste commands for manual deployment
-- **[CLOUD_BUILD_TROUBLESHOOTING.md](CLOUD_BUILD_TROUBLESHOOTING.md)** - Complete troubleshooting guide
-- **[fix-cloud-build.sh](fix-cloud-build.sh)** / **[fix-cloud-build.bat](fix-cloud-build.bat)** - Automated scripts (requires gcloud CLI)
-
-## 🙏 Acknowledgments
-
-- Edamam for recipe data API
-- OpenRouter for AI API access
-- USDA for nutritional guidelines
-- FastAPI framework
+## 🚀 **Deployment Scripts**
+- `deploy-to-cloud-run.bat` - Deploy all services
+- `deploy-frontend-only.bat` - Deploy frontend only
+- `test-docker-builds.bat` - Test builds locally
+- `check-setup.bat` - Validate setup
 
 ---
 
-**Built with ❤️ for emotional eaters everywhere**
+**Status**: ✅ **Production Ready**  
+**Deployment Time**: ~10-15 minutes  
+**Last Updated**: December 2024

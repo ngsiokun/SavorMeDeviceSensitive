@@ -1,0 +1,189 @@
+/* SavorMe Landing Page - Mobile-First Design */
+/* This file ensures consistent styling across GitHub clones */
+
+/* Mobile-first smartphone design */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #0F766E 0%, #065F46 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.landing-container {
+    max-width: 414px; /* iPhone width */
+    margin: 0 auto;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0F766E 0%, #065F46 100%);
+    position: relative;
+    padding: 0;
+}
+
+/* Hero Section - Top Half */
+.hero-section {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 20px 20px 0 0;
+    padding: 40px 24px 60px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    margin: 20px 20px 0;
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+.hero-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+.hero-title {
+    font-size: 36px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.hero-subtitle {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+
+.hero-description {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.5;
+    margin-bottom: 32px;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-cta-btn {
+    background: white;
+    color: #065F46;
+    border: none;
+    border-radius: 12px;
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.hero-cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+/* Features Section - Bottom Half */
+.features-section {
+    background: linear-gradient(135deg, #0F766E 0%, #065F46 100%);
+    padding: 40px 20px;
+    border-radius: 20px 20px 0 0;
+    margin-top: -20px;
+    position: relative;
+    z-index: 1;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.feature-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.feature-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.feature-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 6px;
+}
+
+.feature-description {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Keep mobile-first design for all screen sizes */
+@media (min-width: 768px) {
+    .landing-container {
+        max-width: 600px; /* Keep mobile-like width even on desktop */
+        padding: 20px;
+    }
+    
+    .hero-section {
+        margin-bottom: 20px;
+    }
+    
+    .features-section {
+        padding: 30px 20px;
+    }
+    
+    .features-grid {
+        max-width: 500px;
+        gap: 20px;
+    }
+    
+    .feature-card {
+        padding: 20px;
+    }
+    
+    .feature-icon {
+        font-size: 28px;
+        margin-bottom: 12px;
+    }
+    
+    .feature-title {
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+    
+    .feature-description {
+        font-size: 12px;
+        line-height: 1.4;
+    }
+}

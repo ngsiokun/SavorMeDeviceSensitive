@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # API Gateway
+  router:
+    build: ./router
+    ports:
+      - "8000:8000"
+    environment:
+      - USER_NUTRITION_SERVICE_URL=http://user-nutrition:8001
+      - RECIPE_SERVICE_URL=http://recipe:8002
+      - MOOD_AI_SERVICE_URL=http://mood-ai:8003
+    depends_on:
+      - user-nutrition
+      - recipe
+      - mood-ai
+
+  # User & Nutrition Service
+  user-nutrition:
+    build: ./backend_app/user-nutrition-service
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+
+  # Recipe Service
+  recipe:
+    build: ./backend_app/recipe-service
+    ports:
+      - "8002:8002"
+    environment:
+      - PORT=8002
+      - EDAMAM_APP_ID=${EDAMAM_APP_ID}
+      - EDAMAM_APP_KEY=${EDAMAM_APP_KEY}
+
+  # Mood & AI Service
+  mood-ai:
+    build: ./backend_app/mood-ai-service
+    ports:
+      - "8003:8003"
+    environment:
+      - PORT=8003
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+
+  # Frontend App
+  frontend:
+    build: ./frontend_app
+    ports:
+      - "5000:5000"
+    environment:
+      - BACKEND_URL=http://localhost:8000
+    depends_on:
+      - router
+
+networks:
+  default:
+    name: savorme-network

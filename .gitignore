@@ -1,3 +1,8 @@
+# Environment variables (DO NOT COMMIT)
+.env
+.env.local
+.env.production
+
 # Python
 __pycache__/
 *.py[cod]
@@ -20,15 +25,12 @@ wheels/
 .installed.cfg
 *.egg
 
-# Virtual Environment
+# Virtual environments
 venv/
 env/
 ENV/
-.venv
-
-# Environment variables
-.env
-.env.local
+env.bak/
+venv.bak/
 
 # IDE
 .vscode/
@@ -37,24 +39,28 @@ ENV/
 *.swo
 *~
 
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# Logs
-*.log
-
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
+# Logs
+logs/
+*.log
 
-# Project specific
-savorme.db
-mockups/
-*.html
+# Google Cloud SDK
+.gcloud/
+.boto
+
+# Docker
+.dockerignore
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
