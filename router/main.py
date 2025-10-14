@@ -38,10 +38,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Service URLs
-USER_NUTRITION_SERVICE_URL = "http://localhost:8001"
-RECIPE_SERVICE_URL = "http://localhost:8002"
-MOOD_AI_SERVICE_URL = "http://localhost:8003"
+# Service URLs - Cloud Run microservices
+USER_NUTRITION_SERVICE_URL = "https://savorme-user-nutrition-662773309683.us-central1.run.app"
+RECIPE_SERVICE_URL = "https://savorme-recipe-662773309683.us-central1.run.app"
+MOOD_AI_SERVICE_URL = "https://savorme-mood-ai-662773309683.us-central1.run.app"
 
 
 @app.get("/health")
@@ -91,7 +91,7 @@ async def calculate_nutrition_targets(profile: UserProfile):
         async with httpx.AsyncClient(timeout=30.0) as client:
             response = await client.post(
                 f"{USER_NUTRITION_SERVICE_URL}/nutrition/calculate",
-                json={"user_profile": profile.dict()}
+                json={"user_profile": profile.model_dump(mode='json')}
             )
             response.raise_for_status()
             data = response.json()
@@ -108,7 +108,7 @@ async def interpret_mood(mood_blend: MoodBlend, cuisine_preference: str = None):
             response = await client.post(
                 f"{MOOD_AI_SERVICE_URL}/mood/interpret",
                 json={
-                    "mood_blend": mood_blend.dict(),
+                    "mood_blend": mood_blend.model_dump(mode='json'),
                     "cuisine_preference": cuisine_preference
                 }
             )
@@ -143,8 +143,8 @@ async def search_recipes(
                 f"{RECIPE_SERVICE_URL}/recipes/search",
                 json={
                     "search_keywords": mood_interpretation.flavor_profile.search_keywords,
-                    "user_profile": user_profile.dict(),
-                    "nutrition_targets": nutrition_targets.dict(),
+                    "user_profile": user_profile.model_dump(mode='json'),
+                    "nutrition_targets": nutrition_targets.model_dump(mode='json'),
                     "mood_ids": mood_ids
                 }
             )
@@ -174,14 +174,16 @@ async def get_recipe_recommendation(
         mood_ids = [m.mood.value for m in mood_blend.moods]
         
         async with httpx.AsyncClient(timeout=30.0) as client:
+            recipe_search_request = {
+                "search_keywords": mood_interpretation.flavor_profile.search_keywords,
+                "user_profile": user_profile.model_dump(mode='json'),
+                "nutrition_targets": nutrition_targets.model_dump(mode='json'),
+                "mood_ids": mood_ids
+            }
+            
             response = await client.post(
                 f"{RECIPE_SERVICE_URL}/recipes/search",
-                json={
-                    "search_keywords": mood_interpretation.flavor_profile.search_keywords,
-                    "user_profile": user_profile.dict(),
-                    "nutrition_targets": nutrition_targets.dict(),
-                    "mood_ids": mood_ids
-                }
+                json=recipe_search_request
             )
             response.raise_for_status()
             data = response.json()
@@ -196,8 +198,8 @@ async def get_recipe_recommendation(
             response = await client.post(
                 f"{MOOD_AI_SERVICE_URL}/ai/generate-content",
                 json={
-                    "recipe": best_recipe.dict(),
-                    "mood_interpretation": mood_interpretation.dict(),
+                    "recipe": best_recipe.model_dump(mode='json'),
+                    "mood_interpretation": mood_interpretation.model_dump(mode='json'),
                     "task": "rationale"
                 }
             )
@@ -210,8 +212,8 @@ async def get_recipe_recommendation(
                 response = await client.post(
                     f"{MOOD_AI_SERVICE_URL}/ai/generate-content",
                     json={
-                        "recipe": best_recipe.dict(),
-                        "mood_interpretation": mood_interpretation.dict(),
+                        "recipe": best_recipe.model_dump(mode='json'),
+                        "mood_interpretation": mood_interpretation.model_dump(mode='json'),
                         "task": "directions"
                     }
                 )
@@ -256,12 +258,25 @@ async def get_recipe_recommendation(
 @app.get("/")
 async def root():
     """Root endpoint"""
-    return {
-        "message": "Welcome to SavorMe API Gateway",
-        "version": "1.0.0",
-        "docs": "/docs",
-        "health": "/health"
-    }
+    return {"message": "SavorMe API Gateway", "version": "1.0.0", "docs": "/docs"}
+
+
+# API v1 endpoints for frontend compatibility
+@app.post("/api/v1/recipes/recommend", response_model=RecipeRecommendation)
+async def api_v1_get_recipe_recommendation(
+    mood_blend: MoodBlend,
+    user_profile: UserProfile,
+    nutrition_targets: Optional[NutritionTargets] = None,
+    activity_level: str = "moderate"
+):
+    """API v1 endpoint for recipe recommendations"""
+    return await get_recipe_recommendation(mood_blend, user_profile, nutrition_targets)
+
+
+@app.get("/api/v1/health")
+async def api_v1_health_check():
+    """API v1 health check endpoint"""
+    return await health_check()
 
 
 if __name__ == "__main__":

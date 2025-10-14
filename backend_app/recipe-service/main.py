@@ -9,11 +9,8 @@ import httpx
 import json
 from typing import List, Dict, Any, Optional
 
-# Add shared models to path
-sys.path.append(str(Path(__file__).parent.parent / "shared"))
-
 from fastapi import FastAPI, HTTPException
-from shared.models import (
+from shared_models import (
     UserProfile, 
     NutritionTargets, 
     Recipe,
@@ -38,6 +35,34 @@ class EdamamClient:
         self.app_id = os.getenv("EDAMAM_APP_ID")
         self.app_key = os.getenv("EDAMAM_APP_KEY")
     
+    # Valid Edamam cuisine types (case-sensitive!)
+    # Map lowercase input to Edamam's exact case requirements
+    CUISINE_MAPPING = {
+        "american": "American",
+        "asian": "South East Asian",
+        "british": "British",
+        "caribbean": "Caribbean",
+        "central europe": "Central Europe",
+        "chinese": "Chinese",
+        "eastern europe": "Eastern Europe",
+        "french": "French",
+        "greek": "Greek",
+        "indian": "Indian",
+        "italian": "Italian",
+        "japanese": "Japanese",
+        "korean": "Korean",
+        "kosher": "Kosher",
+        "mediterranean": "Mediterranean",
+        "mexican": "Mexican",
+        "middle eastern": "Middle Eastern",
+        "nordic": "Nordic",
+        "south american": "South American",
+        "south east asian": "South East Asian",
+        "thai": "South East Asian",  # Thai is part of South East Asian
+        "vietnamese": "South East Asian",  # Vietnamese is part of South East Asian
+        "world": "World"
+    }
+    
     def build_search_params(self, keywords: List[str], user_profile: UserProfile, nutrition_targets: NutritionTargets) -> Dict[str, Any]:
         """Build search parameters for Edamam API"""
         params = {
@@ -47,9 +72,14 @@ class EdamamClient:
             "app_key": self.app_key,
         }
         
-        # Add cuisine filters
+        # Add cuisine filters with proper case mapping
         if user_profile.cuisine_preferences:
-            params["cuisineType"] = user_profile.cuisine_preferences[0]
+            cuisine_input = user_profile.cuisine_preferences[0].lower()
+            # Map to Edamam's exact case
+            cuisine = self.CUISINE_MAPPING.get(cuisine_input)
+            if cuisine:
+                params["cuisineType"] = cuisine
+            # If invalid, skip cuisine filter rather than failing
         
         # Add dietary restrictions
         if user_profile.dietary_preference != "none":
@@ -70,15 +100,29 @@ class EdamamClient:
         return params
     
     async def search_recipes(self, keywords: List[str], user_profile: UserProfile, nutrition_targets: NutritionTargets) -> List[Dict]:
-        """Search for recipes using Edamam API"""
+        """Search for recipes using Edamam API with fallback logic"""
         params = self.build_search_params(keywords, user_profile, nutrition_targets)
         
         async with httpx.AsyncClient(timeout=30.0) as client:
+            # Try with all filters first
             response = await client.get(self.base_url, params=params)
             response.raise_for_status()
             data = response.json()
             
-            return data.get("hits", [])[:10]  # Return top 10 recipes
+            hits = data.get("hits", [])
+            
+            # If no results and cuisine was specified, try without cuisine filter
+            if not hits and "cuisineType" in params:
+                print(f"No results with cuisine {params['cuisineType']}, retrying without cuisine filter...")
+                params_no_cuisine = params.copy()
+                del params_no_cuisine["cuisineType"]
+                
+                response = await client.get(self.base_url, params=params_no_cuisine)
+                response.raise_for_status()
+                data = response.json()
+                hits = data.get("hits", [])
+            
+            return hits[:10]  # Return top 10 recipes
     
     def parse_recipe(self, recipe_data: Dict) -> Recipe:
         """Parse Edamam recipe data into our Recipe model"""
@@ -257,5 +301,5 @@ async def search_recipes(request: RecipeSearchRequest):
 if __name__ == "__main__":
     import uvicorn
     import os
-    port = int(os.environ.get('PORT', 8002))
+    port = int(os.environ.get('PORT', 8080))
     uvicorn.run(app, host="0.0.0.0", port=port)

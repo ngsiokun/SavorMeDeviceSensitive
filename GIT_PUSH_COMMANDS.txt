@@ -1,0 +1,95 @@
+================================================================================
+GIT COMMANDS - PUSH FILES TO GITHUB
+================================================================================
+
+OPTION 1: USE THE BATCH FILE (EASIEST)
+================================================================================
+Double-click: push-to-github.bat
+
+This will automatically:
+1. Add all changes
+2. Commit with timestamp
+3. Push to GitHub
+
+
+OPTION 2: MANUAL COMMANDS (COMMAND PROMPT)
+================================================================================
+cd C:\Users\Samsung\savorme-cloud-run\SavorMeDeviceSensitive
+
+git add .
+
+git commit -m "Fixed local testing, Nutrient Match Score button, Edamam cuisines, cleaned up files"
+
+git push origin main
+
+
+OPTION 3: MANUAL COMMANDS (POWERSHELL)
+================================================================================
+cd C:\Users\Samsung\savorme-cloud-run\SavorMeDeviceSensitive
+
+git add .
+
+git commit -m "Fixed local testing, Nutrient Match Score button, Edamam cuisines, cleaned up files"
+
+git push origin main
+
+
+WHAT WILL BE PUSHED:
+================================================================================
+New Files (7):
+- CLOUD_RUN_DEPLOYMENT_STEPS.md
+- COPY_PASTE_INTO_CURSOR_TOMORROW.txt
+- DEPLOY_TO_CLOUD_RUN.bat
+- FILE_STRUCTURE_GUIDE.md
+- LOCAL_TEST_TOMORROW.bat
+- LOCAL_TESTING_CHECKLIST.md
+- RESUME_WORK_TOMORROW.md
+- START_HERE_TOMORROW.md
+- GIT_PUSH_COMMANDS.txt (this file)
+
+Modified Files:
+- demo_app/static/js/recipe_result.js (fixed button)
+- backend_app/recipe-service/main.py (cuisine mapping)
+- frontend_app/templates/profile.html (cuisine dropdown)
+- router/main.py (service URLs, serialization)
+- backend_app/user-nutrition-service/main.py (port, imports)
+- backend_app/mood-ai-service/main.py (port, imports)
+- app/main.py (indentation fix)
+
+Deleted Files (9):
+- RUN_LOCAL_FRONTEND.bat
+- START_FRONTEND_SIMPLE.bat
+- START_LOCAL_BACKEND.bat
+- START_LOCAL_FRONTEND.bat
+- FINAL_INSTRUCTIONS.md
+- README_START_HERE.txt
+- MANUAL_LOCAL_TEST.md
+- SIMPLE_LOCAL_TEST.md
+- DEPLOY_NOW.txt
+
+
+VERIFY PUSH WAS SUCCESSFUL:
+================================================================================
+After pushing, go to:
+https://github.com/YOUR_USERNAME/SavorMeDeviceSensitive
+
+You should see your latest commit with the message above.
+
+
+TROUBLESHOOTING:
+================================================================================
+If you get "Please configure your git identity":
+git config --global user.email "your-email@example.com"
+git config --global user.name "Your Name"
+
+If you get authentication error:
+- Use GitHub Personal Access Token as password
+- Or use: gh auth login (if GitHub CLI installed)
+
+
+RECOMMENDED:
+================================================================================
+Use OPTION 1 (push-to-github.bat) - it's the easiest!
+
+================================================================================
+

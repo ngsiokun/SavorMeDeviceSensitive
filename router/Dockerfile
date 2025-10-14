@@ -11,8 +11,8 @@ ENV PORT=8080
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy shared models (will be copied from parent context)
-COPY backend_app/shared/ ./shared/
+# Copy shared models (from local shared directory)
+COPY shared/ ./shared/
 
 # Copy service code
 COPY main.py .

@@ -232,14 +232,16 @@ function generateErrorPage() {
 
 // Add event listeners
 function addEventListeners() {
-    // Nutrient Match Score button
-    const nutrientMatchBtn = document.querySelector('.nutrient-match-btn');
-    if (nutrientMatchBtn) {
-        nutrientMatchBtn.addEventListener('click', () => {
+    // Nutrient Match Score buttons (both mobile and desktop)
+    const nutrientMatchBtns = document.querySelectorAll('.nutrient-match-btn');
+    console.log('Found', nutrientMatchBtns.length, 'nutrient match buttons');
+    nutrientMatchBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            console.log('Nutrient Match Score button clicked!');
             // Show detailed nutrition analysis
             showNutrientAnalysis();
         });
-    }
+    });
     
     // Retry button (for error state)
     const retryBtn = document.getElementById('retry-btn');

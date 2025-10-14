@@ -6,12 +6,9 @@ import sys
 import os
 from pathlib import Path
 
-# Add shared models to path
-sys.path.append(str(Path(__file__).parent.parent / "shared"))
-
 from fastapi import FastAPI, HTTPException
 from typing import Dict, Any
-from shared.models import (
+from shared_models import (
     UserProfile, 
     NutritionTargets, 
     ActivityLevel,
@@ -140,5 +137,5 @@ async def validate_user_profile(profile: UserProfile):
 if __name__ == "__main__":
     import uvicorn
     import os
-    port = int(os.environ.get('PORT', 8001))
+    port = int(os.environ.get('PORT', 8080))
     uvicorn.run(app, host="0.0.0.0", port=port)

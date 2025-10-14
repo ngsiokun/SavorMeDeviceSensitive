@@ -9,14 +9,12 @@ import httpx
 import random
 from typing import List, Dict, Any
 
-# Add shared models to path
-sys.path.append(str(Path(__file__).parent.parent / "shared"))
-
 from fastapi import FastAPI, HTTPException
-from shared.models import (
+from shared_models import (
     MoodBlend,
     MoodInterpretationRequest,
     MoodInterpretationResponse,
+    MoodInterpretation,
     FlavorProfile,
     MoodType,
     IntensityLevel,
@@ -287,5 +285,5 @@ async def generate_ai_content(request: AIContentRequest):
 if __name__ == "__main__":
     import uvicorn
     import os
-    port = int(os.environ.get('PORT', 8003))
+    port = int(os.environ.get('PORT', 8080))
     uvicorn.run(app, host="0.0.0.0", port=port)

@@ -232,7 +232,7 @@ async function generateRecommendation() {
         
     } catch (error) {
         console.error('Error:', error);
-        alert(`Error: ${error.message}\n\nMake sure the backend is running at http://127.0.0.1:8000`);
+        alert(`Error: ${error.message}\n\nPlease check the backend connection. If the problem persists, refresh the page and try again.`);
     } finally {
         clearInterval(messageInterval);
         if (loadingIndicator) {
