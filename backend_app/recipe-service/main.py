@@ -129,7 +129,23 @@ class EdamamClient:
         # Extract basic info
         recipe_id = recipe_data.get("uri", "").split("_")[-1]
         name = recipe_data.get("label", "Unknown Recipe")
-        image_url = recipe_data.get("image")
+        
+        # Get the best available image from Edamam's images object
+        images = recipe_data.get("images", {})
+        image_url = None
+        
+        # Try to get the best quality image available
+        if images.get("LARGE", {}).get("url"):
+            image_url = images["LARGE"]["url"]
+        elif images.get("REGULAR", {}).get("url"):
+            image_url = images["REGULAR"]["url"]
+        elif images.get("SMALL", {}).get("url"):
+            image_url = images["SMALL"]["url"]
+        elif images.get("THUMBNAIL", {}).get("url"):
+            image_url = images["THUMBNAIL"]["url"]
+        else:
+            # Fallback to the basic image field (often a placeholder)
+            image_url = recipe_data.get("image")
         
         # Parse ingredients
         ingredients = []

@@ -201,6 +201,10 @@
         </div>
     </div>
     
+    <script>
+        // Pass backend URL to JavaScript
+        window.BACKEND_URL = "{{ backend_url }}";
+    </script>
     <script src="{{ url_for('static', filename='js/mood_selection.js') }}"></script>
 </body>
 </html>

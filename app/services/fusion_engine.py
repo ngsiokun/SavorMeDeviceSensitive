@@ -57,10 +57,10 @@ class FusionEngine:
             ["trout", "asparagus"], ["halibut", "sweet potato"], ["cod", "zucchini"], ["herring", "beets"],
             ["cashews", "mango"], ["pecans", "papaya"], ["brazil nuts", "pineapple"], ["pistachios", "coconut"],
             ["sunflower seeds", "apple"], ["sesame seeds", "pear"], ["flax seeds", "orange"], ["poppy seeds", "grapefruit"],
-            ["edamame", "cucumber"], ["tempeh", "radish"], ["seitan", "celery"], ["lentils", "bell pepper"],
+            ["edamame", "cucumber"], ["tempeh", "radish"], ["tofu", "celery"], ["lentils", "bell pepper"],
             ["chickpeas", "tomato"], ["black beans", "onion"], ["kidney beans", "garlic"], ["navy beans", "ginger"],
             ["quinoa", "mushroom"], ["brown rice", "eggplant"], ["wild rice", "squash"], ["barley", "corn"],
-            ["buckwheat", "peas"], ["millet", "green beans"], ["amaranth", "carrots"], ["teff", "parsnips"]
+            ["buckwheat", "peas"], ["millet", "green beans"], ["amaranth", "carrots"], ["quinoa", "parsnips"]
         ],
         MoodType.FATIGUED: [
             # High iron + vitamin C options
@@ -76,9 +76,9 @@ class FusionEngine:
             ["lean meat", "apple"],
             ["lamb", "bell peppers"],
             ["duck", "tomatoes"],
-            ["venison", "orange"],
-            ["bison", "lemon"],
-            ["rabbit", "strawberries"],
+            ["beef", "orange"],
+            ["turkey", "lemon"],
+            ["salmon", "strawberries"],
             ["beef", "brussels sprouts"],
             ["chicken", "artichoke"],
             ["pork", "cauliflower"],
@@ -96,10 +96,10 @@ class FusionEngine:
             ["halibut", "wild rice"], ["cod", "barley"], ["herring", "buckwheat"], ["anchovies", "millet"],
             ["flax seeds", "blueberries"], ["walnuts", "raspberries"], ["pecans", "blackberries"], ["almonds", "strawberries"],
             ["cashews", "cranberries"], ["brazil nuts", "goji berries"], ["pistachios", "acai"], ["sunflower seeds", "elderberries"],
-            ["edamame", "kale"], ["tempeh", "collard greens"], ["seitan", "swiss chard"], ["lentils", "arugula"],
+            ["edamame", "kale"], ["tempeh", "collard greens"], ["tofu", "swiss chard"], ["lentils", "arugula"],
             ["black beans", "watercress"], ["kidney beans", "dandelion greens"], ["navy beans", "mustard greens"], ["pinto beans", "beet greens"],
             ["quinoa", "sweet potato"], ["brown rice", "butternut squash"], ["wild rice", "acorn squash"], ["barley", "pumpkin"],
-            ["buckwheat", "beets"], ["millet", "carrots"], ["amaranth", "parsnips"], ["teff", "turnips"]
+            ["buckwheat", "beets"], ["millet", "carrots"], ["amaranth", "parsnips"], ["brown rice", "turnips"]
         ],
         MoodType.IRRITABLE: [
             # High protein + fiber, low sugar options
@@ -115,9 +115,9 @@ class FusionEngine:
             ["lean meat", "green beans"],
             ["lamb", "vegetables"],
             ["duck", "beans"],
-            ["venison", "quinoa"],
-            ["bison", "broccoli"],
-            ["rabbit", "lentils"],
+            ["beef", "quinoa"],
+            ["turkey", "broccoli"],
+            ["chicken", "lentils"],
             ["chicken", "brussels sprouts"],
             ["turkey", "artichoke"],
             ["lean beef", "cauliflower"],

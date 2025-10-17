@@ -196,26 +196,46 @@ async function generateRecommendation() {
                     intensity: selectedIntensity
                 }))
             },
-            user_profile: userProfile,
-            cuisine_preference: userProfile.cuisine_preference || null
+            user_profile: {
+                ...userProfile,
+                cuisine_preferences: userProfile.cuisine_preference ? [userProfile.cuisine_preference] : []
+            }
         };
         
-        console.log('Sending request:', payload);
+        // Use backend URL from template
+        const backendUrl = window.BACKEND_URL || 'http://127.0.0.1:8000';
+        const apiUrl = `${backendUrl}/api/v1/recipes/recommend`;
         
-        // Call backend API
-        const response = await fetch('/api/recommend', {
+        console.log('📤 Sending request to', apiUrl, ':', payload);
+        
+        // Call backend API - IMPROVED ERROR HANDLING per Gemini
+        const response = await fetch(apiUrl, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             body: JSON.stringify(payload)
         });
         
+        console.log('📥 Response status:', response.status, response.statusText);
+        console.log('📥 Response headers:', [...response.headers.entries()]);
+        
+        // 1. Check if the HTTP response itself was successful (2xx status codes)
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Failed to get recommendation');
+            let errorDetails = {};
+            try {
+                errorDetails = await response.json(); // Try to parse error JSON if any
+                console.error('❌ Server error response:', errorDetails);
+            } catch (jsonError) {
+                // If response is not JSON, use status text
+                errorDetails = { message: response.statusText, status: response.status };
+                console.error('❌ Non-JSON error response, status:', response.status);
+            }
+            throw new Error(`HTTP Error: ${errorDetails.message || errorDetails.error || 'Unknown error'} (Status: ${response.status})`);
         }
         
+        // 2. Parse the JSON body. This can fail if the response is not valid JSON.
         const result = await response.json();
         console.log('✅ Recommendation received:', result);
         console.log('🍽️ Recipe name:', result.recipe?.name);
@@ -231,8 +251,9 @@ async function generateRecommendation() {
         window.location.href = '/recipe-result';
         
     } catch (error) {
-        console.error('Error:', error);
-        alert(`Error: ${error.message}\n\nMake sure the backend is running at http://127.0.0.1:8000`);
+        console.error('❌ Error fetching recommendation:', error);
+        console.error('❌ Error stack:', error.stack);
+        alert(`Error: Failed to get recommendation.\n\nDetails: ${error.message}\n\nMake sure the backend is running at http://127.0.0.1:8000`);
     } finally {
         clearInterval(messageInterval);
         if (loadingIndicator) {

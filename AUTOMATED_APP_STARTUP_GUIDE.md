@@ -8,13 +8,19 @@ This document provides a complete, step-by-step guide for running the SavorMe ap
 **IMPORTANT**: Before starting the application, ensure you have reviewed the essential documentation:
 
 **`MASTER_FILE_ORGANIZATION.md`** - **SINGLE SOURCE OF TRUTH** for all project files and configuration
-   - Complete file inventory and organization guide
+   - Complete file inventory with frontend/backend separation
+   - Docker configurations for separate debugging
+   - Deployment scripts for frontend-only or backend-only testing
    - Project status, configuration, and startup commands
    - Shows where to find each file and its purpose
-   - Contains all essential documentation references
+   - Contains debugging guidance for frontend vs backend issues
    - Prevents forgotten files during updates
    - Essential for understanding project structure
-   - **This file contains all the information from other documentation files**
+
+**⭐ COMPREHENSIVE INTEGRATION GUIDES** - **CRITICAL FOR API UNDERSTANDING**
+   - **`EDAMAM_API_INTEGRATION_GUIDE.md`** - Complete Edamam API input/output format documentation
+   - **`MOOD_INGREDIENT_CONVERSION_GUIDE.md`** - Mood-to-ingredient conversion system documentation
+   - **`FOOD_IMAGE_SYSTEM_GUIDE.md`** - Food image handling and display system documentation
 
 ### ⚠️ **CRITICAL: Use Command Prompt Only**
 **ALL COMMANDS IN THIS GUIDE MUST BE RUN VIA COMMAND PROMPT (cmd.exe) AND NEVER USE POWERSHELL.** 
@@ -75,42 +81,66 @@ When you run `start.bat`, the system follows this integrated workflow:
 
 ### **Quick Start Commands**
 
-#### **Option 1: Simple Startup (Recommended)**
+#### **Option 1: Full System Startup (Recommended)**
 ```cmd
-cd C:\Users\HP\SavorMe\SavorMe-backend
+cd C:\Users\Samsung\savorme-cloud-run\SavorMeDeviceSensitive
 start.bat
 ```
 ⚠️ **CRITICAL**: Run in Command Prompt (cmd.exe), NOT PowerShell!
-*This script automatically references all documentation files and follows the complete workflow.*
+*Starts both backend and frontend automatically*
 
-#### **Option 2: New Clone Setup**
+#### **Option 2: Local Testing with Validation**
 ```cmd
-cd C:\Users\HP\SavorMe\SavorMe-backend
+cd C:\Users\Samsung\savorme-cloud-run\SavorMeDeviceSensitive
+LOCAL_TEST_TOMORROW.bat
+```
+⚠️ **CRITICAL**: Run in Command Prompt (cmd.exe), NOT PowerShell!
+*Comprehensive testing with validation steps*
+
+#### **Option 3: New Clone Setup**
+```cmd
+cd C:\Users\Samsung\savorme-cloud-run\SavorMeDeviceSensitive
 setup_new_clone.bat
 ```
 ⚠️ **CRITICAL**: Run in Command Prompt (cmd.exe), NOT PowerShell!
-*Use this for fresh GitHub clones - sets up venv, installs dependencies, then runs start.bat*
-*Note: start.bat will automatically find and copy .env from C:\Users\HP\SavorMe if needed*
+*Use this for fresh GitHub clones - sets up venv, installs dependencies*
 
-#### **Option 3: Manual Startup (Debugging)**
+#### **Option 4: Backend-Only Debugging**
 ```cmd
-cd C:\Users\HP\SavorMe\SavorMe-backend
-# Manual backend start
+cd C:\Users\Samsung\savorme-cloud-run\SavorMeDeviceSensitive
+# Manual backend start for debugging
 venv\Scripts\activate && python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
-# Manual frontend start (in new terminal)
+```
+⚠️ **CRITICAL**: Run in Command Prompt (cmd.exe), NOT PowerShell!
+*Use this for backend-specific debugging*
+
+#### **Option 5: Frontend-Only Debugging**
+```cmd
+cd C:\Users\Samsung\savorme-cloud-run\SavorMeDeviceSensitive
+# Manual frontend start for debugging
 cd demo_app && ..\venv\Scripts\activate && set BACKEND_URL=http://127.0.0.1:8000 && python app.py
 ```
 ⚠️ **CRITICAL**: Run in Command Prompt (cmd.exe), NOT PowerShell!
-*Use this for debugging - manual control over each component*
+*Use this for frontend-specific debugging*
+
+#### **Option 6: Microservices Backend**
+```cmd
+cd C:\Users\Samsung\savorme-cloud-run\SavorMeDeviceSensitive
+start-microservices.bat
+```
+⚠️ **CRITICAL**: Run in Command Prompt (cmd.exe), NOT PowerShell!
+*Use this for microservices architecture debugging*
 
 ### **🔧 Automatic .env File Handling**
 
-**For GitHub Clones**: The `start.bat` script now automatically handles `.env` file location:
+**For GitHub Clones**: The startup scripts automatically handle `.env` file location:
 
-1. **First Check**: Looks for `.env` in the project directory (`SavorMe-backend\.env`)
-2. **Fallback**: If not found, checks parent directory (`C:\Users\HP\SavorMe\.env`)
+1. **First Check**: Looks for `.env` in the project directory
+2. **Fallback**: If not found, checks parent directory
 3. **Auto-Copy**: Automatically copies `.env` from parent directory if found
 4. **Helpful Error**: Provides clear instructions if `.env` is missing entirely
+
+**Current Project Directory**: `C:\Users\Samsung\savorme-cloud-run\SavorMeDeviceSensitive\`
 
 **This means after a GitHub clone:**
 - ✅ No manual `.env` copying required

@@ -10,21 +10,53 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background: var(--background-light);
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     min-height: 100vh;
     overflow-x: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md);
 }
 
 /* Mobile layout - phone mockup style */
 .app-container {
     max-width: var(--container-mobile);
+    width: 100%;
     margin: 0 auto;
-    min-height: 100vh;
+    min-height: auto;
     background: var(--background-light);
     position: relative;
     border-left: 8px solid var(--primary-dark);
     border-right: 8px solid var(--primary-dark);
     border-top: 32px solid var(--primary-dark);
+    border-radius: var(--radius-2xl);
+}
+
+/* Mobile-specific image fixes */
+@media (max-width: 767px) {
+    .recipe-image-container {
+        aspect-ratio: 4 / 3 !important;
+        margin-bottom: 16px !important;
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 200px !important;
+    }
+    
+    .recipe-image {
+        width: 100% !important;
+        height: 100% !important;
+        display: block !important;
+        object-fit: cover !important;
+        min-height: 200px !important;
+    }
+    
+    .recipe-image-placeholder {
+        width: 100% !important;
+        height: 200px !important;
+        display: flex !important;
+    }
 }
 
 /* Tablet layout */
@@ -45,7 +77,24 @@ body {
         background: var(--surface-white);
         border-radius: var(--radius-2xl);
         box-shadow: var(--shadow-xl);
-        margin: var(--spacing-xl) auto;
+        margin: 0 auto;
+        min-height: auto;
+    }
+    
+    /* Ensure desktop layout is properly centered */
+    .desktop-layout {
+        width: 100%;
+        max-width: var(--container-desktop);
+        margin: 0 auto;
+        background: var(--surface-white);
+        border-radius: var(--radius-2xl);
+        box-shadow: var(--shadow-xl);
+        overflow: visible;
+    }
+    
+    .desktop-content {
+        padding: var(--spacing-2xl);
+        background: linear-gradient(135deg, var(--background-light) 0%, var(--background-accent) 100%);
         min-height: auto;
     }
 }
@@ -99,23 +148,29 @@ body {
     font-weight: 500;
 }
 
-/* Recipe Image - Fixed for better food visibility */
+/* Recipe Image - Optimized for food photography */
 .recipe-image-container {
     margin-bottom: 20px;
-    border-radius: 12px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     width: 100%;
-    aspect-ratio: 16 / 9;  /* Consistent aspect ratio */
-    background: #E9F4EA;   /* Subtle skeleton color while loading */
+    aspect-ratio: 4 / 3;  /* Better aspect ratio for food photos */
+    background: #F8FAFC;   /* Clean background while loading */
+    position: relative;
 }
 
 .recipe-image {
     width: 100%;
     height: 100%;
-    object-fit: cover;        /* Fill the box, crop edges if needed */
-    object-position: 50% 40%; /* Focus slightly down from center - avoids bowl rims */
+    object-fit: cover;        /* Fill the container while maintaining aspect ratio */
+    object-position: center;  /* Center the image for better composition */
     display: block;
+    transition: transform 0.3s ease; /* Smooth hover effect */
+}
+
+.recipe-image:hover {
+    transform: scale(1.02);  /* Subtle zoom on hover */
 }
 
 .recipe-image-placeholder {
@@ -751,12 +806,17 @@ body {
         padding: 30px;
     }
     
+    .recipe-image-container {
+        aspect-ratio: 3 / 2;  /* Slightly wider for mobile */
+        margin-bottom: 16px;
+    }
+    
     .recipe-image {
-        height: 250px;
+        height: auto;  /* Let aspect-ratio handle the sizing */
     }
     
     .recipe-image-placeholder {
-        height: 250px;
+        height: auto;  /* Match the image container */
     }
     
     .page-title {

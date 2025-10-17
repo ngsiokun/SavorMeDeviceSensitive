@@ -346,13 +346,13 @@ async def get_recipe_recommendation(
         if not best:
             best = scored_recipes[0]  # Fallback to highest scored
         
-        recipe = edamam_client._parse_recipe(best["recipe_data"])
+        # ✅ FIX: Use async version with image fallback!
+        recipe = await edamam_client._parse_recipe_with_image_fallback(best["recipe_data"])
         
         # Enhance recipe with secondary nutrients from canonical data
         recipe = edamam_client._enhance_recipe_nutrition(recipe, best["nutrients"])
         
-        # Validate the final recipe image (only 1 HEAD request for the selected recipe)
-        recipe = edamam_client.validate_final_recipe_image(recipe)
+        # Note: validate_final_recipe_image removed since _parse_recipe_with_image_fallback already handles it
         
         # Record this recipe as used for future rotation
         recipe_rotation_service.record_recipe_used(recipe, session_id)

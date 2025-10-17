@@ -507,14 +507,15 @@ body {
 .mood-card.selected::after {
     content: "✓" !important;
     position: absolute !important;
-    top: 4px !important;
-    right: 4px !important;
+    top: 8px !important;
+    right: 8px !important;
     background: #10B981 !important;
     color: white !important;
-    width: 32px !important;
-    height: 32px !important;
+    width: 28px !important;
+    height: 28px !important;
     border-radius: 50% !important;
     display: flex !important;
+    z-index: 10 !important;
     align-items: center !important;
     justify-content: center !important;
     font-size: 18px !important;

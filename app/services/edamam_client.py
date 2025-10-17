@@ -221,13 +221,27 @@ class EdamamClient:
         # Choose best image with intelligent selection and validation
         image_url = self._choose_recipe_image(recipe_data, recipe_name)
         
-        # Parse ingredients
+        # Parse ingredients with proper unit handling
         ingredients = []
         for ing_data in recipe_data.get("ingredients", []):
+            # Extract quantity, unit, and food name properly
+            text = ing_data.get("text", "")
+            quantity = ing_data.get("quantity", 0)
+            measure = ing_data.get("measure", "")
+            food = ing_data.get("food", "")
+            
+            # Create proper display text with units
+            if quantity and measure:
+                amount = f"{quantity} {measure} {food}"
+            elif text:
+                amount = text  # Fallback to original text
+            else:
+                amount = food  # Just the food name
+            
             ingredient = Ingredient(
-                name=ing_data.get("food", ""),
-                amount=ing_data.get("text", ""),
-                unit=ing_data.get("measure", "")
+                name=food,
+                amount=amount,
+                unit=measure
             )
             ingredients.append(ingredient)
         
@@ -302,16 +316,20 @@ class EdamamClient:
         # First, parse the recipe normally
         recipe = self._parse_recipe(recipe_data)
         
+        recipe_name = recipe.name
+        print(f"DEBUG: Checking image for '{recipe_name}' - image_url is: {'None' if not recipe.image_url else 'present'}")
+        
         # Only try fallback if no image was found AND the original was filtered out
         if not recipe.image_url:
             # Check if the original image was filtered out (not just missing)
             original_image_url = recipe_data.get("image")
+            print(f"DEBUG: recipe.image_url is None. Original URL exists: {bool(original_image_url)}")
             if original_image_url:
-                recipe_name = recipe.name
                 ingredients = recipe.ingredients
                 
                 print(f"DEBUG: Original image was filtered out for {recipe_name}, trying web search...")
                 fallback_image = await self._get_fallback_image_url(recipe_name, ingredients)
+                print(f"DEBUG: Fallback image result: {fallback_image[:100] if fallback_image else 'None'}...")
                 if fallback_image:
                     # Update the recipe with the fallback image
                     recipe = Recipe(
@@ -551,6 +569,12 @@ class EdamamClient:
             print(f"DEBUG: No image URL in Edamam data for '{recipe_name}'")
             return None
         
+        # Filter out URLs that are too long (likely malformed or data URLs)
+        # Increased limit for Edamam S3 URLs which can be 1000+ chars
+        if len(image_url) > 2000:
+            print(f"DEBUG: Image URL too long ({len(image_url)} chars) for '{recipe_name}', will use fallback")
+            return None
+        
         # Filter out generic/decorative images by path
         if self._is_generic_path(image_url):
             print(f"DEBUG: Image filtered as generic for '{recipe_name}'")
@@ -745,14 +769,53 @@ class EdamamClient:
         """
         Build Edamam search parameters from mood keywords and user profile
         """
-        # Filter keywords based on dietary preferences and allergies
+        # Filter keywords based on dietary preferences, allergies, and Edamam availability
         meat_keywords = ["beef", "pork", "chicken", "turkey", "lamb", "veal", "duck", 
                         "meat", "bacon", "sausage", "ham", "lean meat", "lean beef"]
         seafood_keywords = ["fish", "salmon", "tuna", "shrimp", "seafood", "shellfish"]
         
+        # Known problematic ingredients that Edamam doesn't support well
+        problematic_ingredients = {
+            # Exotic proteins
+            "rabbit": ["chicken", "turkey", "salmon"],
+            "venison": ["beef", "lamb"],
+            "bison": ["beef", "turkey"],
+            "elk": ["beef", "lamb"],
+            "boar": ["pork", "beef"],
+            
+            # Specialty grains (less common in recipes)
+            "teff": ["quinoa", "brown rice", "barley"],
+            "amaranth": ["quinoa", "brown rice"],
+            "millet": ["quinoa", "brown rice"],
+            "buckwheat": ["quinoa", "brown rice"],
+            
+            # Specialty proteins
+            "seitan": ["tofu", "tempeh"],
+            "jackfruit": ["tofu", "tempeh"],
+            
+            # Rare vegetables
+            "kohlrabi": ["cabbage", "broccoli"],
+            "crosnes": ["potato", "turnip"],
+            "sunchokes": ["potato", "artichoke"],
+            
+            # Exotic fruits (less common in savory recipes)
+            "durian": ["mango", "banana"],
+            "rambutan": ["lychee", "mango"],
+            "dragonfruit": ["kiwi", "mango"]
+        }
+        
         filtered_keywords = []
         for keyword in keywords:
             keyword_lower = keyword.lower()
+            
+            # Check if keyword needs replacement due to Edamam availability
+            if keyword_lower in problematic_ingredients:
+                # Replace with common alternatives
+                alternatives = problematic_ingredients[keyword_lower]
+                replacement = alternatives[0]  # Use first alternative
+                print(f"DEBUG: Replacing '{keyword}' with '{replacement}' for better Edamam compatibility")
+                keyword_lower = replacement
+                keyword = replacement
             
             # Skip meat for vegetarians/vegans
             if user_profile.dietary_preference in ["vegetarian", "vegan"]:
@@ -794,7 +857,6 @@ class EdamamClient:
             "Mexican": ["Mexican"],
             "Italian": ["Italian"],
             "American": ["American"],
-            "Other Western": ["British", "French", "Nordic", "Central Europe", "Eastern Europe"],
             "Surprise Me": None  # No filter = all cuisines
         }
         

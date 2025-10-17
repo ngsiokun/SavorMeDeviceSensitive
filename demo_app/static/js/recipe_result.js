@@ -1,8 +1,19 @@
 // SavorMe Recipe Result - Pure JavaScript Dynamic Page Generation
 // Matching the beautiful design from the first screenshot
 
+// Clear any cached images to prevent mismatches
+function clearImageCache() {
+    const images = document.querySelectorAll('img.recipe-image');
+    images.forEach(img => {
+        img.src = '';
+        img.remove();
+    });
+}
+
 // Main function to generate the entire page
 function generatePage() {
+    // Clear any existing images to prevent caching issues
+    clearImageCache();
     const container = document.getElementById('app-container');
     
     // Get recipe data from session storage
@@ -64,7 +75,40 @@ function generateRecipePage(data) {
     
     // Generate image HTML with smart validation and contextual placeholders
     let imageHTML = '';
-    if (recipe.image_url && !isImageMismatched(recipe)) {
+    
+    // Trust Edamam images completely - they are reliable recipe image sources
+    // Only validate that it's a real URL from Edamam
+    const hasValidEdamamImage = recipe.image_url && 
+                               recipe.image_url.includes('edamam-product-images.s3.amazonaws.com') &&
+                               (recipe.image_url.startsWith('http') || recipe.image_url.startsWith('https'));
+    
+    // Use Edamam image if it's valid, otherwise use Unsplash
+    const hasValidImage = hasValidEdamamImage;
+    
+    // Log what Edamam provided
+    console.log('🔍 Edamam image analysis:');
+    console.log('  - Image URL exists:', !!recipe.image_url);
+    console.log('  - Image URL length:', recipe.image_url?.length || 0);
+    console.log('  - Is SVG placeholder:', recipe.image_url?.includes('data:image/svg') || false);
+    console.log('  - Is base64:', recipe.image_url?.includes('base64') || false);
+    console.log('  - Starts with http:', recipe.image_url?.startsWith('http') || false);
+    console.log('  - Valid Edamam image:', hasValidEdamamImage);
+    
+    if (!hasValidImage && !recipe.image_url) {
+        console.log('🖼️ Image URL is null, using Unsplash fallback');
+    } else if (!hasValidImage && recipe.image_url) {
+        if (recipe.image_url.length > 2000) {
+            console.log(`🖼️ Image URL too long (${recipe.image_url.length} chars), using Unsplash fallback`);
+        } else if (recipe.image_url.includes('data:image/svg') || recipe.image_url.includes('base64')) {
+            console.log('🖼️ Image URL is base64 SVG placeholder, using Unsplash fallback');
+        } else if (!recipe.image_url.startsWith('http')) {
+            console.log('🖼️ Image URL is not a valid HTTP URL, using Unsplash fallback');
+        } else {
+            console.log('🖼️ Image URL failed validation, using Unsplash fallback');
+        }
+    }
+    
+    if (hasValidImage) {
         imageHTML = `
             <img src="${recipe.image_url}" class="recipe-image" alt="${recipe.name}" 
                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -73,11 +117,204 @@ function generateRecipePage(data) {
             </div>
         `;
     } else {
+        // Use Unsplash fallback image - select based on recipe type
+        const recipeName = recipe.name.toLowerCase();
+        const ingredients = (recipe.ingredients || []).map(ing => ing.name.toLowerCase()).join(' ');
+        
+        let selectedImage;
+        
+        // Smart image selection based on recipe type - REFINED LOGIC
+        const combined = recipeName + ' ' + ingredients;
+        
+        // DEBUG: Log the combined string for debugging
+        console.log(`🔍 DEBUG: Combined string for image matching: "${combined}"`);
+        
+        // Define keywords with PRIORITY ORDER - most specific first
+        // HIGH PRIORITY: Specific ingredients that should override generic matches
+        const avocadoKeywords = ['avocado', 'avocados', 'guacamole'];
+        const chardKeywords = ['chard', 'swiss chard', 'rainbow chard'];
+        const leafyGreenKeywords = ['spinach', 'kale', 'arugula', 'lettuce', 'greens', 'chard', 'swiss chard'];
+        const porkKeywords = ['pork', 'pork loin', 'pork roast', 'pork chop', 'pork tenderloin', 'pork shoulder', 'pork belly'];
+        const cauliflowerKeywords = ['cauliflower', 'cauliflower rice', 'cauliflower mash', 'roasted cauliflower', 'cauliflower florets'];
+        const tunaKeywords = ['tuna', 'tuna steak', 'tuna salad', 'tuna fish', 'albacore', 'yellowfin', 'bluefin'];
+        const beansKeywords = ['beans', 'kidney beans', 'black beans', 'pinto beans', 'white beans', 'cannellini beans', 'navy beans'];
+        
+        // MEDIUM PRIORITY: Specific dish types
+        const pizzaKeywords = ['pizza', 'calzone', 'flatbread'];
+        const sandwichKeywords = ['sandwich', 'panini', 'wrap', 'sub', 'burger', 'grilled cheese', 'club sandwich'];
+        const pastaKeywords = ['pasta', 'spaghetti', 'linguine', 'penne', 'noodles', 'fettuccine', 'ravioli', 'macaroni', 'lasagna'];
+        const chiliKeywords = ['chili', 'poblano chili', 'con carne'];
+        const soupKeywords = ['soup', 'chowder', 'broth', 'bisque', 'consommé'];
+        const stewKeywords = ['stew', 'casserole', 'braised', 'goulash', 'curry'];
+        const vegetarianKeywords = ['vegetarian', 'vegan', 'plant-based', 'salad', 'vegetables', 'falafel', 'lentil', 'chickpea', 'eggplant', 'squash', 'stuffed eggplant', 'baked eggplant'];
+        const tofuKeywords = ['tofu', 'firm tofu', 'silken tofu', 'bean curd'];
+        const fishSeafoodKeywords = ['fish', 'salmon', 'tuna', 'cod', 'shrimp', 'prawn', 'seafood', 'lobster', 'crab'];
+        const salmonKeywords = ['salmon', 'grilled salmon', 'baked salmon', 'salmon fillet'];
+        const grilledMeatKeywords = ['grilled', 'bbq', 'barbecue', 'kebab', 'skewer', 'chops'];
+        const meatballKeywords = ['meatball', 'kofta'];
+        const generalMeatKeywords = ['lamb', 'beef', 'pork', 'steak', 'burger', 'chicken', 'turkey', 'ribs', 'bacon', 'sausage'];
+        
+        const saladKeywords = ['salad', 'lettuce', 'greens', 'arugula', 'spinach salad', 'coleslaw', 'asian salad', 'turkey salad', 'pasta salad', 'quinoa salad', 'vegan salad'];
+        const dessertKeywords = ['dessert', 'sweet', 'cake', 'pie', 'compote', 'jam', 'jelly', 'preserve', 'apricot', 'fruit', 'berries', 'chocolate', 'ice cream', 'pudding', 'tart', 'muffin', 'cookie', 'brownie', 'cheesecake'];
+        
+        // LOW PRIORITY: Generic ingredients (only match if no specific match found)
+        const riceKeywords = ['rice', 'fried rice', 'brown rice', 'white rice', 'basmati', 'jasmine', 'wild rice', 'rice bowl', 'rice dish'];
+        const eggKeywords = ['egg', 'eggs', 'fried egg', 'scrambled egg', 'poached egg', 'boiled egg', 'omelet', 'omelette'];
+        const quinoaKeywords = ['quinoa', 'quinoa bowl', 'quinoa salad', 'quinoa dish'];
+        const lentilKeywords = ['lentils', 'lentil soup', 'lentil curry', 'lentil stew', 'one-pot lentils'];
+        
+        let matchedCategory = 'default';
+        
+        // 1. HIGHEST PRIORITY: Specific ingredients (avocado, chard, leafy greens, pork, cauliflower)
+        if (avocadoKeywords.some(keyword => combined.includes(keyword)) || chardKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1512621776951-a5739a2d21ae?w=1200&h=600&fit=crop&auto=format"; // Avocado/Chard dishes
+            matchedCategory = 'avocado_chard';
+        } else if (porkKeywords.some(keyword => combined.includes(keyword)) && cauliflowerKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=1200&h=600&fit=crop&auto=format"; // Pork with cauliflower dishes
+            matchedCategory = 'pork_cauliflower';
+        } else if (porkKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=600&fit=crop&auto=format"; // Pork dishes
+            matchedCategory = 'pork_dishes';
+        } else if (tunaKeywords.some(keyword => combined.includes(keyword)) && beansKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=1200&h=600&fit=crop&auto=format"; // Tuna and beans dishes
+            matchedCategory = 'tuna_beans';
+        } else if (tunaKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=600&fit=crop&auto=format"; // Tuna dishes
+            matchedCategory = 'tuna_dishes';
+        } else if (cauliflowerKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=1200&h=600&fit=crop&auto=format"; // Cauliflower dishes
+            matchedCategory = 'cauliflower_dishes';
+        } else if (leafyGreenKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=1200&h=600&fit=crop&auto=format"; // Leafy green dishes
+            matchedCategory = 'leafy_greens';
+        } else if (dessertKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=1200&h=600&fit=crop&auto=format"; // Dessert
+            matchedCategory = 'dessert';
+        } else if (lentilKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=1200&h=600&fit=crop&auto=format"; // Lentil dishes
+            matchedCategory = 'lentil';
+        } else if (quinoaKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1512621776951-a5739a2d21ae?w=1200&h=600&fit=crop&auto=format"; // Quinoa dishes
+            matchedCategory = 'quinoa';
+        } else if (riceKeywords.some(keyword => combined.includes(keyword)) && eggKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=1200&h=600&fit=crop&auto=format"; // Rice + Egg dishes
+            matchedCategory = 'rice_egg';
+        } else if (riceKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=1200&h=600&fit=crop&auto=format"; // Rice dishes
+            matchedCategory = 'rice';
+        } else if (eggKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1512621776951-a5739a2d21ae?w=1200&h=600&fit=crop&auto=format"; // Egg dishes
+            matchedCategory = 'egg';
+        } else if (beansKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=1200&h=600&fit=crop&auto=format"; // Bean dishes
+            matchedCategory = 'beans';
+        } else if (sandwichKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=1200&h=600&fit=crop&auto=format"; // Sandwich/Panini
+            matchedCategory = 'sandwich';
+        } else if (pizzaKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1593560704721-db25271a3615?w=1200&h=600&fit=crop&auto=format"; // Pizza
+            matchedCategory = 'pizza';
+        } else if (saladKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=1200&h=600&fit=crop&auto=format"; // Salad - Higher priority
+            matchedCategory = 'salad';
+        } else if (pastaKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1588726231922-26154562c55b?w=1200&h=600&fit=crop&auto=format"; // Pasta - New reliable URL
+            matchedCategory = 'pasta';
+        }
+        // 2. Distinct liquid/sauced dishes (Chili, Soup, Stew)
+        else if (chiliKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1550965020-03ee3ce56ad2?w=1200&h=600&fit=crop&auto=format"; // Chili
+            matchedCategory = 'chili';
+        } else if (soupKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=1200&h=600&fit=crop&auto=format"; // Soup
+            matchedCategory = 'soup';
+        } else if (stewKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1543353071-872f771f7679?w=1200&h=600&fit=crop&auto=format"; // Stew
+            matchedCategory = 'stew';
+        }
+        // 3. Specific components/dietary categories
+        else if (vegetarianKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1512621776951-a5739a2d21ae?w=1200&h=600&fit=crop&auto=format"; // Vegetarian - Working URL
+            matchedCategory = 'vegetarian';
+        } else if (tofuKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=1200&h=600&fit=crop&auto=format"; // Tofu
+            matchedCategory = 'tofu';
+        } else if (salmonKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=1200&h=600&fit=crop&auto=format"; // Salmon - Proper salmon dish image
+            matchedCategory = 'salmon';
+        } else if (fishSeafoodKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1574484284002-952d92456975?w=1200&h=600&fit=crop&auto=format"; // Fish - General fish image
+            matchedCategory = 'fish_seafood';
+        } else if (meatballKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1533038668700-1c056d61034f?w=1200&h=600&fit=crop&auto=format"; // Meatballs
+            matchedCategory = 'meatball';
+        } else if (grilledMeatKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=1200&h=600&fit=crop&auto=format"; // Grilled meat/BBQ
+            matchedCategory = 'grilled_meat';
+        }
+        // 4. General fallback meat category
+        else if (generalMeatKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=600&fit=crop&auto=format"; // General meat
+            matchedCategory = 'general_meat';
+        } else if (saladKeywords.some(keyword => combined.includes(keyword))) {
+            selectedImage = "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=1200&h=600&fit=crop&auto=format"; // Salad
+            matchedCategory = 'salad';
+        } else {
+            // Generic healthy bowl - Better default image for rice/egg dishes
+            selectedImage = "https://images.unsplash.com/photo-1512621776951-a5739a2d21ae?w=1200&h=600&fit=crop&auto=format";
+            matchedCategory = 'default';
+        }
+        
+        console.log(`🔍 Recipe: "${recipe.name}"`);
+        console.log(`🔍 Matched category: ${matchedCategory}`);
+        console.log(`🔍 Keywords checked: ${combined.substring(0, 150)}...`);
+        
+        // Debug: Check if our new keywords are being matched
+        console.log(`🔍 Debug - Rice keywords match:`, riceKeywords.some(keyword => combined.includes(keyword)));
+        console.log(`🔍 Debug - Egg keywords match:`, eggKeywords.some(keyword => combined.includes(keyword)));
+        console.log(`🔍 Debug - Beans keywords match:`, beansKeywords.some(keyword => combined.includes(keyword)));
+        
+        // Add aggressive cache busting to force fresh image load
+        const cacheBuster = Date.now();
+        const randomId = Math.random().toString(36).substring(7);
+        const imageUrlWithCache = `${selectedImage}&t=${cacheBuster}&r=${randomId}&v=2`;
+        
+        // Reliable image URLs for each category (manually verified)
+        const reliableImageUrls = {
+            'egg': 'https://images.unsplash.com/photo-1512621776951-a5739a2d21ae?w=1200&h=600&fit=crop&auto=format',
+            'rice_egg': 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=1200&h=600&fit=crop&auto=format',
+            'rice': 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=1200&h=600&fit=crop&auto=format',
+            'beans': 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=1200&h=600&fit=crop&auto=format',
+            'lentil': 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=1200&h=600&fit=crop&auto=format',
+            'quinoa': 'https://images.unsplash.com/photo-1512621776951-a5739a2d21ae?w=1200&h=600&fit=crop&auto=format',
+            'salad': 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=1200&h=600&fit=crop&auto=format',
+            'fish_seafood': 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=1200&h=600&fit=crop&auto=format',
+            'default': 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=600&fit=crop&auto=format'
+        };
+        
+        // Use reliable image for the matched category
+        const reliableImage = reliableImageUrls[matchedCategory] || reliableImageUrls['default'];
+        const finalImageUrl = reliableImage + `&t=${cacheBuster}&r=${randomId}&v=2`;
+        
+        console.log(`✅ Using reliable image for ${recipe.name}: ${finalImageUrl}`);
+        console.log(`🔍 Category: ${matchedCategory} | Recipe: ${recipe.name}`);
+        
+        // Image loading with inline fallback logic
+        
         imageHTML = `
-            <div class="recipe-image-placeholder">
-                ${generateContextualPlaceholder(recipe)}
+            <img src="${finalImageUrl}" class="recipe-image" alt="${recipe.name}" style="width: 100%; height: auto; object-fit: cover;" loading="eager" 
+                 onload="console.log('✅ Image loaded successfully:', this.src)" 
+                 onerror="console.error('❌ Failed to load image:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="recipe-image-placeholder" style="display: none;">
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; background: #f0f9ff; color: #065f46; padding: 20px; text-align: center; border-radius: 8px;">
+                    <div style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">${recipe.name}</div>
+                    <div style="font-size: 16px; color: #6b7280;">🍽️ Recipe Image</div>
+                    <div style="font-size: 12px; color: #9ca3af;">Image from Web</div>
+                </div>
             </div>
         `;
+        
+        console.log(`🖼️ Final image HTML:`, imageHTML);
     }
     
     return `

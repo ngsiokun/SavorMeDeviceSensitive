@@ -19,7 +19,13 @@ from .api.routes import router
 def check_and_setup_environment():
     """
     Check if the environment is properly set up and run setup if needed
+    Only run in local development, skip in Cloud Run
     """
+    # Skip environment checks in Cloud Run (production)
+    if os.getenv("K_SERVICE") or os.getenv("PORT"):
+        print("Running in Cloud Run - skipping local environment checks")
+        return
+        
     print("Checking SavorMe environment setup...")
     
     # Check if .env file exists
@@ -124,5 +130,7 @@ async def root():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # Cloud Run requires PORT=8080, but allow local development on 8000
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
 

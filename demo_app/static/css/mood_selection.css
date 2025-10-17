@@ -148,6 +148,9 @@
     box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 
+/* Mood selection styles are handled by main.css - DO NOT OVERRIDE */
+/* This prevents CSS conflicts */
+
 /* Mood card selection styles are now handled by main.css */
 /* This file no longer overrides the comprehensive selection styles */
 
@@ -219,9 +222,22 @@
 }
 
 .intensity-btn.selected {
-    border-color: #10B981;
-    background: #10B981;
-    color: white;
+    border-color: #10B981 !important;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+    color: white !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+    position: relative !important;
+}
+
+.intensity-btn.selected::after {
+    content: '✓' !important;
+    position: absolute !important;
+    top: 4px !important;
+    right: 4px !important;
+    font-weight: bold !important;
+    font-size: 12px !important;
+    color: white !important;
 }
 
 .generate-btn {
