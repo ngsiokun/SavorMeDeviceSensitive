@@ -252,6 +252,7 @@ AUTOMATED_APP_STARTUP_GUIDE.md         # ⭐ COMPREHENSIVE STARTUP GUIDE
 CUSTOMIZATIONS_PERSISTENT.md           # ⭐ DESIGN SYSTEM, PAGE LAYOUTS, SCORING TRANSPARENCY & EVIDENCE-BASED MOODS
 MASTER_FILE_ORGANIZATION.md            # ⭐ SINGLE SOURCE OF TRUTH - THIS FILE
 SAVORME_MASTER_OVERVIEW.md             # ⭐ PROJECT OVERVIEW AND INTEGRATION CHECKLIST
+SAVORME_COMPLETE_WORKFLOW.md           # ⭐ COMPLETE APPLICATION WORKFLOW WITH MASTER FILE REFERENCES
 SYSTEM_WORKFLOW.md                     # ⭐ COMPLETE USER JOURNEY, TECHNICAL WORKFLOW, MAPPING SOURCES & MOOD-TO-RECIPE FLOW
 README.md                              # ⭐ PROJECT OVERVIEW & QUICK DEPLOYMENT
 ```
@@ -290,6 +291,7 @@ READY_TO_TEST_LOCALLY.md              # Local testing readiness
 
 #### **Process & Workflow Documentation**
 ```
+SAVORME_COMPLETE_WORKFLOW.md          # ⭐ COMPLETE APPLICATION WORKFLOW WITH MASTER FILE REFERENCES
 FILE_STRUCTURE_GUIDE.md               # File organization guide
 CONNECTION_ANALYSIS.md                 # System connection analysis
 CLEAR_CACHE_INSTRUCTIONS.md           # Cache clearing procedures
@@ -472,11 +474,19 @@ The following files work together and should be used in conjunction:
    - Fast setup instructions
    - Complements the automated startup guide
 
+5. **`SAVORME_COMPLETE_WORKFLOW.md`** ← **WORKFLOW REFERENCE**
+   - Complete application workflow with master file references
+   - Cross-references all master documentation files
+   - Provides step-by-step system flow understanding
+   - **ESSENTIAL** for understanding complete application architecture
+
 ### **File Usage Workflow**
 ```
 CUSTOMIZATIONS_PERSISTENT.md (Review First)
            ↓
 AUTOMATED_APP_STARTUP_GUIDE.md (Follow for Deployment)
+           ↓
+SAVORME_COMPLETE_WORKFLOW.md (Understand Complete Flow)
            ↓
 TECHNICAL_SPECIFICATION_COMPLETE.md (Reference for Details)
            ↓
