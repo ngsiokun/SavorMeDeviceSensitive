@@ -23,10 +23,10 @@ import os
 
 app = Flask(__name__)
 
-# Frontend URLs
-DESKTOP_URL = "http://localhost:5001"
-MOBILE_URL = "http://localhost:5000"
-BACKEND_URL = "http://127.0.0.1:8000"
+# Frontend URLs (use environment variables for Cloud Run)
+DESKTOP_URL = os.getenv("DESKTOP_URL", "http://localhost:5001")
+MOBILE_URL = os.getenv("MOBILE_URL", "http://localhost:5000")
+BACKEND_URL = os.getenv("BACKEND_URL", "http://127.0.0.1:8000")
 
 print("=" * 70)
 print("SavorMe Frontend Router v4.0.0")
@@ -119,10 +119,11 @@ if __name__ == '__main__':
     print(f"   Mobile:  {MOBILE_URL}")
     print("\n   Use START-ALL-SEPARATE.bat to start everything correctly!\n")
     
-    # Router runs on port 8080 (separate from both frontends)
+    # Router runs on port from environment (Cloud Run) or 8080 (local)
+    port = int(os.getenv('PORT', 8080))
     app.run(
         host='0.0.0.0',
-        port=8080,
-        debug=True
+        port=port,
+        debug=os.getenv('ENV') != 'production'
     )
 

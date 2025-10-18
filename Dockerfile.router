@@ -1,0 +1,28 @@
+# Dockerfile for SavorMe Auto-Detect Router
+# This router automatically detects device type and routes to appropriate frontend
+
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy router application
+COPY app_router.py .
+COPY requirements.txt .
+
+# Install dependencies
+RUN pip install --no-cache-dir Flask==2.3.3 gunicorn==21.2.0
+
+# Set environment variables
+ENV PORT=8080
+ENV PYTHONUNBUFFERED=1
+ENV DESKTOP_URL=https://savorme-desktop-662773309683.us-central1.run.app
+ENV MOBILE_URL=https://savorme-mobile-662773309683.us-central1.run.app
+ENV BACKEND_URL=https://savorme-backend-662773309683.us-central1.run.app
+
+# Expose port
+EXPOSE 8080
+
+# Run the router
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app_router:app
+
