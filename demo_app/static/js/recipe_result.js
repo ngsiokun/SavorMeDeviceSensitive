@@ -779,8 +779,7 @@ function showNutrientAnalysis() {
                 </div>
                 
                         <div class="modal-footer">
-                            <button class="back-btn" onclick="goBackFromModal()">← Go Back</button>
-                            <button class="btn btn-primary" onclick="generateNewRecommendation()">Another Recipe Suggestion</button>
+                            <button class="back-btn" onclick="goBackFromModal()" style="width: 100%; text-align: center;">← Go Back</button>
                         </div>
             </div>
             </div>
