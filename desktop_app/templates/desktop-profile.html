@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SavorMe Desktop - Profile Setup</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/desktop-main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/desktop-profile.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="desktop-container">
+        <div class="desktop-layout">
+            <!-- Desktop Header -->
+            <header class="desktop-header">
+                <a href="/" class="desktop-logo">🍽️ SavorMe</a>
+                <nav class="desktop-nav">
+                    <a href="/">Home</a>
+                    <a href="/profile" class="active">Profile</a>
+                    <a href="/mood">Mood</a>
+                    <a href="/results">Results</a>
+                </nav>
+            </header>
+
+            <!-- Desktop Profile Content -->
+            <div class="desktop-content">
+                <div class="desktop-profile-container">
+                    <!-- Profile Header -->
+                    <div class="desktop-profile-header">
+                        <h1 class="desktop-profile-title">Create Your Profile</h1>
+                        <p class="desktop-profile-subtitle">
+                            Tell us about yourself so we can provide personalized recipe recommendations 
+                            based on your nutritional needs and preferences.
+                        </p>
+                    </div>
+
+                    <!-- Progress Indicator -->
+                    <div class="desktop-progress">
+                        <div class="desktop-progress-bar">
+                            <div class="desktop-progress-fill" style="width: 25%"></div>
+                        </div>
+                        <div class="desktop-progress-text">Step 1 of 4 - Basic Information</div>
+                    </div>
+
+                    <!-- Desktop Profile Form -->
+                    <form id="desktopProfileForm" class="desktop-profile-grid">
+                        <!-- Left Column - Basic Information -->
+                        <div class="desktop-form-section">
+                            <h2 class="desktop-form-section-title">
+                                <span class="desktop-form-section-icon">👤</span>
+                                Basic Information
+                            </h2>
+                            
+                            <div class="desktop-form-row">
+                                <div class="desktop-form-group">
+                                    <label for="age">Age</label>
+                                    <input type="number" id="age" name="age" min="1" max="120" placeholder="Enter your age" required>
+                                </div>
+                                <div class="desktop-form-group">
+                                    <label for="gender">Gender</label>
+                                    <select id="gender" name="gender" required>
+                                        <option value="">Select Gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="desktop-form-row">
+                                <div class="desktop-form-group">
+                                    <label for="height">Height (cm)</label>
+                                    <input type="number" id="height" name="height" min="50" max="300" placeholder="e.g. 170" required>
+                                </div>
+                                <div class="desktop-form-group">
+                                    <label for="weight">Weight (kg)</label>
+                                    <input type="number" id="weight" name="weight" min="20" max="500" step="0.1" placeholder="e.g. 70" required>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Right Column - Preferences -->
+                        <div class="desktop-form-section">
+                            <h2 class="desktop-form-section-title">
+                                <span class="desktop-form-section-icon">🍽️</span>
+                                Dietary Preferences
+                            </h2>
+
+                            <div class="desktop-form-group">
+                                <label>Dietary Preference</label>
+                                <div class="desktop-dietary-grid">
+                                    <div class="desktop-dietary-option">
+                                        <input type="radio" id="diet-none" name="dietary_preference" value="none" checked>
+                                        <label for="diet-none">No Restrictions</label>
+                                    </div>
+                                    <div class="desktop-dietary-option">
+                                        <input type="radio" id="diet-vegetarian" name="dietary_preference" value="vegetarian">
+                                        <label for="diet-vegetarian">Vegetarian</label>
+                                    </div>
+                                    <div class="desktop-dietary-option">
+                                        <input type="radio" id="diet-vegan" name="dietary_preference" value="vegan">
+                                        <label for="diet-vegan">Vegan</label>
+                                    </div>
+                                    <div class="desktop-dietary-option">
+                                        <input type="radio" id="diet-pescatarian" name="dietary_preference" value="pescatarian">
+                                        <label for="diet-pescatarian">Pescatarian</label>
+                                    </div>
+                                    <div class="desktop-dietary-option">
+                                        <input type="radio" id="diet-paleo" name="dietary_preference" value="paleo">
+                                        <label for="diet-paleo">Paleo</label>
+                                    </div>
+                                    <div class="desktop-dietary-option">
+                                        <input type="radio" id="diet-keto" name="dietary_preference" value="keto">
+                                        <label for="diet-keto">Keto</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="desktop-form-group">
+                                <label>Cuisine Preferences</label>
+                                <div class="desktop-cuisine-grid">
+                                    <div class="desktop-cuisine-option">
+                                        <input type="checkbox" id="cuisine-mediterranean" name="cuisine_preferences" value="Mediterranean">
+                                        <label for="cuisine-mediterranean">Mediterranean</label>
+                                    </div>
+                                    <div class="desktop-cuisine-option">
+                                        <input type="checkbox" id="cuisine-asian" name="cuisine_preferences" value="Asian">
+                                        <label for="cuisine-asian">Asian</label>
+                                    </div>
+                                    <div class="desktop-cuisine-option">
+                                        <input type="checkbox" id="cuisine-mexican" name="cuisine_preferences" value="Mexican">
+                                        <label for="cuisine-mexican">Mexican</label>
+                                    </div>
+                                    <div class="desktop-cuisine-option">
+                                        <input type="checkbox" id="cuisine-italian" name="cuisine_preferences" value="Italian">
+                                        <label for="cuisine-italian">Italian</label>
+                                    </div>
+                                    <div class="desktop-cuisine-option">
+                                        <input type="checkbox" id="cuisine-american" name="cuisine_preferences" value="American">
+                                        <label for="cuisine-american">American</label>
+                                    </div>
+                                    <div class="desktop-cuisine-option">
+                                        <input type="checkbox" id="cuisine-surprise" name="cuisine_preferences" value="Surprise Me">
+                                        <label for="cuisine-surprise">Surprise Me</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Full Width - Calorie Preferences -->
+                        <div class="desktop-form-section" style="grid-column: 1 / -1;">
+                            <h2 class="desktop-form-section-title">
+                                <span class="desktop-form-section-icon">⚡</span>
+                                Calorie Preferences
+                            </h2>
+                            
+                            <div class="desktop-calorie-options">
+                                <div class="desktop-calorie-option">
+                                    <input type="radio" id="calorie-auto" name="calorie_preference" value="auto" checked>
+                                    <div class="desktop-calorie-title">Auto Calculate</div>
+                                    <div class="desktop-calorie-desc">Let us calculate based on your profile</div>
+                                </div>
+                                <div class="desktop-calorie-option">
+                                    <input type="radio" id="calorie-custom" name="calorie_preference" value="custom">
+                                    <div class="desktop-calorie-title">Custom Amount</div>
+                                    <div class="desktop-calorie-desc">Set your own daily calorie target</div>
+                                </div>
+                            </div>
+
+                            <div class="desktop-custom-calorie" id="customCalorieGroup">
+                                <label for="customCalories">Daily Calorie Target</label>
+                                <input type="number" id="customCalories" name="custom_calories" min="800" max="5000" placeholder="Enter your daily calorie target">
+                            </div>
+                        </div>
+
+                        <!-- Full Width - Allergies -->
+                        <div class="desktop-form-section" style="grid-column: 1 / -1;">
+                            <h2 class="desktop-form-section-title">
+                                <span class="desktop-form-section-icon">⚠️</span>
+                                Food Allergies & Restrictions
+                            </h2>
+                            
+                            <div class="desktop-allergies-grid">
+                                <div class="desktop-allergy-option">
+                                    <input type="checkbox" id="allergy-peanuts" name="food_allergies" value="peanuts">
+                                    <label for="allergy-peanuts">Peanuts</label>
+                                </div>
+                                <div class="desktop-allergy-option">
+                                    <input type="checkbox" id="allergy-tree-nuts" name="food_allergies" value="tree nuts">
+                                    <label for="allergy-tree-nuts">Tree Nuts</label>
+                                </div>
+                                <div class="desktop-allergy-option">
+                                    <input type="checkbox" id="allergy-dairy" name="food_allergies" value="dairy">
+                                    <label for="allergy-dairy">Dairy</label>
+                                </div>
+                                <div class="desktop-allergy-option">
+                                    <input type="checkbox" id="allergy-gluten" name="food_allergies" value="gluten">
+                                    <label for="allergy-gluten">Gluten</label>
+                                </div>
+                                <div class="desktop-allergy-option">
+                                    <input type="checkbox" id="allergy-soy" name="food_allergies" value="soy">
+                                    <label for="allergy-soy">Soy</label>
+                                </div>
+                                <div class="desktop-allergy-option">
+                                    <input type="checkbox" id="allergy-eggs" name="food_allergies" value="eggs">
+                                    <label for="allergy-eggs">Eggs</label>
+                                </div>
+                                <div class="desktop-allergy-option">
+                                    <input type="checkbox" id="allergy-fish" name="food_allergies" value="fish">
+                                    <label for="allergy-fish">Fish</label>
+                                </div>
+                                <div class="desktop-allergy-option">
+                                    <input type="checkbox" id="allergy-shellfish" name="food_allergies" value="shellfish">
+                                    <label for="allergy-shellfish">Shellfish</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="desktop-profile-actions" style="grid-column: 1 / -1;">
+                            <a href="/" class="desktop-btn-back">
+                                <span>←</span>
+                                Back to Home
+                            </a>
+                            <button type="submit" class="desktop-btn-continue">
+                                <span>Continue</span>
+                                <span>→</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Desktop Profile Form JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('desktopProfileForm');
+            const customCalorieGroup = document.getElementById('customCalorieGroup');
+            const calorieOptions = document.querySelectorAll('input[name="calorie_preference"]');
+            
+            // Simple text visibility fix
+            function setInputStyles() {
+                const inputs = document.querySelectorAll('input, select');
+                inputs.forEach(input => {
+                    input.style.color = '#000000';
+                    input.style.fontWeight = '500';
+                    input.style.fontSize = '14px';
+                    input.style.backgroundColor = '#FFFFFF';
+                });
+            }
+            
+            // Run once on page load
+            setInputStyles();
+            
+            // Add visual feedback for input fields
+            const inputs = document.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                // Force text to be visible
+                input.style.color = '#000000';
+                input.style.fontWeight = '500';
+                input.style.fontSize = '14px';
+                input.style.webkitTextFillColor = '#000000';
+                input.style.webkitOpacity = '1';
+                input.style.opacity = '1';
+                
+                input.addEventListener('focus', function() {
+                    this.style.borderColor = 'var(--desktop-primary)';
+                    this.style.boxShadow = '0 0 0 3px rgba(15, 118, 110, 0.1)';
+                    this.style.backgroundColor = 'white';
+                    this.style.color = '#000000';
+                    this.style.webkitTextFillColor = '#000000';
+                });
+                
+                input.addEventListener('blur', function() {
+                    if (this.value) {
+                        this.style.borderColor = 'var(--desktop-primary)';
+                        this.style.backgroundColor = '#F0FDF4';
+                        this.style.color = '#000000';
+                        this.style.webkitTextFillColor = '#000000';
+                    } else {
+                        this.style.borderColor = 'var(--desktop-border)';
+                        this.style.backgroundColor = 'white';
+                        this.style.color = '#000000';
+                        this.style.webkitTextFillColor = '#000000';
+                    }
+                });
+                
+                input.addEventListener('input', function() {
+                    this.style.color = '#000000';
+                    this.style.fontWeight = '500';
+                    this.style.fontSize = '14px';
+                    this.style.webkitTextFillColor = '#000000';
+                    if (this.value) {
+                        this.style.borderColor = 'var(--desktop-primary)';
+                        this.style.backgroundColor = '#F0FDF4';
+                    }
+                });
+                
+                input.addEventListener('change', function() {
+                    this.style.color = '#000000';
+                    this.style.fontWeight = '500';
+                    this.style.fontSize = '14px';
+                    this.style.webkitTextFillColor = '#000000';
+                    if (this.value) {
+                        this.style.borderColor = 'var(--desktop-primary)';
+                        this.style.backgroundColor = '#F0FDF4';
+                    }
+                });
+                
+                // Add keyup event for immediate feedback
+                input.addEventListener('keyup', function() {
+                    this.style.color = '#000000';
+                    this.style.fontWeight = '500';
+                    this.style.fontSize = '14px';
+                    this.style.webkitTextFillColor = '#000000';
+                    if (this.value) {
+                        this.style.borderColor = 'var(--desktop-primary)';
+                        this.style.backgroundColor = '#F0FDF4';
+                    }
+                });
+            });
+            
+            // Handle calorie preference changes
+            calorieOptions.forEach(option => {
+                option.addEventListener('change', function() {
+                    if (this.value === 'custom') {
+                        customCalorieGroup.classList.add('show');
+                    } else {
+                        customCalorieGroup.classList.remove('show');
+                    }
+                });
+            });
+            
+            // Handle "Surprise Me" cuisine preference
+            const cuisineSurprise = document.getElementById('cuisine-surprise');
+            const otherCuisineOptions = document.querySelectorAll('input[name="cuisine_preferences"]:not(#cuisine-surprise)');
+            
+            // When "Surprise Me" is clicked, uncheck all others
+            cuisineSurprise.addEventListener('change', function() {
+                if (this.checked) {
+                    otherCuisineOptions.forEach(option => {
+                        option.checked = false;
+                    });
+                }
+            });
+            
+            // When any other cuisine is clicked, uncheck "Surprise Me"
+            otherCuisineOptions.forEach(option => {
+                option.addEventListener('change', function() {
+                    if (this.checked) {
+                        cuisineSurprise.checked = false;
+                    }
+                });
+            });
+            
+            // Form submission
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Validate required fields
+                const requiredFields = form.querySelectorAll('input[required], select[required]');
+                let isValid = true;
+                
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        field.style.borderColor = '#F87171';
+                        field.style.backgroundColor = '#FEF2F2';
+                        isValid = false;
+                    }
+                });
+                
+                if (!isValid) {
+                    alert('Please fill in all required fields.');
+                    return;
+                }
+                
+                // Collect form data
+                const formData = new FormData(form);
+                const profileData = {
+                    age: parseInt(formData.get('age')),
+                    gender: formData.get('gender'),
+                    height_cm: parseInt(formData.get('height')),
+                    weight_kg: parseFloat(formData.get('weight')),
+                    dietary_preference: formData.get('dietary_preference'),
+                    cuisine_preferences: formData.getAll('cuisine_preferences'),
+                    food_allergies: formData.getAll('food_allergies'),
+                    calorie_preference: formData.get('calorie_preference'),
+                    custom_calories: formData.get('custom_calories') ? parseInt(formData.get('custom_calories')) : null
+                };
+                
+                // Show loading state on submit button
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<span>⏳</span> <span>Connecting to backend...</span>';
+                submitBtn.disabled = true;
+                
+                // Test backend connection by calculating nutrition targets
+                try {
+                    const response = await fetch('/api/nutrition/calculate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            age: profileData.age,
+                            gender: profileData.gender,
+                            height_cm: profileData.height_cm,
+                            weight_kg: profileData.weight_kg,
+                            dietary_preference: profileData.dietary_preference,
+                            food_allergies: profileData.food_allergies,
+                            cuisine_preferences: profileData.cuisine_preferences
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to connect to backend');
+                    }
+                    
+                    const nutritionData = await response.json();
+                    console.log('Backend connected! Nutrition targets:', nutritionData);
+                    
+                    // Store profile and nutrition data
+                    sessionStorage.setItem('desktopProfile', JSON.stringify(profileData));
+                    sessionStorage.setItem('nutritionTargets', JSON.stringify(nutritionData));
+                    
+                    // Update button to show success
+                    submitBtn.innerHTML = '<span>✓</span> <span>Success! Redirecting...</span>';
+                    
+                    // Smooth redirect after brief success message
+                    setTimeout(() => {
+                        window.location.href = '/mood';
+                    }, 500);
+                    
+                } catch (error) {
+                    console.error('Backend connection error:', error);
+                    
+                    // Restore button state
+                    submitBtn.innerHTML = originalBtnText;
+                    submitBtn.disabled = false;
+                    
+                    // Show error alert (only for errors, not success)
+                    alert('Error: Cannot connect to backend server. Please make sure the backend is running on port 8000.\n\nError details: ' + error.message);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

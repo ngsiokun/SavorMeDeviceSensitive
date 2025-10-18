@@ -1,0 +1,465 @@
+/* SavorMe Desktop Profile Page */
+/* Two-column layout optimized for desktop screens */
+
+/* Desktop Profile Layout */
+.desktop-profile-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: var(--desktop-spacing-2xl);
+}
+
+.desktop-profile-header {
+    text-align: center;
+    margin-bottom: var(--desktop-spacing-3xl);
+}
+
+.desktop-profile-title {
+    font-size: var(--desktop-text-4xl);
+    font-weight: 800;
+    color: var(--desktop-primary);
+    margin-bottom: var(--desktop-spacing-md);
+}
+
+.desktop-profile-subtitle {
+    font-size: var(--desktop-text-lg);
+    color: var(--desktop-text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Desktop Profile Grid */
+.desktop-profile-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--desktop-spacing-2xl);
+    margin-bottom: var(--desktop-spacing-3xl);
+}
+
+/* Desktop Form Sections */
+.desktop-form-section {
+    background: var(--desktop-surface);
+    border-radius: var(--desktop-radius-lg);
+    padding: var(--desktop-spacing-2xl);
+    box-shadow: var(--desktop-shadow-md);
+    border: 1px solid var(--desktop-border);
+    margin-bottom: var(--desktop-spacing-xl);
+}
+
+.desktop-form-section:last-child {
+    margin-bottom: 0;
+}
+
+.desktop-form-section-title {
+    font-size: var(--desktop-text-xl);
+    font-weight: 700;
+    color: var(--desktop-text-primary);
+    margin-bottom: var(--desktop-spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--desktop-spacing-sm);
+}
+
+.desktop-form-section-icon {
+    font-size: var(--desktop-text-lg);
+    color: var(--desktop-primary);
+}
+
+/* Desktop Form Groups */
+.desktop-form-group {
+    margin-bottom: var(--desktop-spacing-xl);
+}
+
+.desktop-form-group:last-child {
+    margin-bottom: 0;
+}
+
+.desktop-form-group label {
+    display: block;
+    font-size: var(--desktop-text-sm);
+    font-weight: 600;
+    color: var(--desktop-text-primary);
+    margin-bottom: var(--desktop-spacing-sm);
+}
+
+/* Simple input styling */
+.desktop-form-group input,
+.desktop-form-group select {
+    width: 100%;
+    padding: 20px 24px;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    background: #FFFFFF;
+    min-height: 64px;
+    color: #000000;
+    line-height: 1.4;
+    text-align: left;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.desktop-form-group input::placeholder {
+    color: var(--desktop-text-secondary);
+    opacity: 0.7;
+    font-size: var(--desktop-text-base);
+}
+
+
+.desktop-form-group input:focus,
+.desktop-form-group select:focus {
+    outline: none;
+    border-color: var(--desktop-primary);
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+    background: white;
+    color: #1F2937 !important;
+}
+
+.desktop-form-group input:not(:placeholder-shown),
+.desktop-form-group select:not([value=""]) {
+    color: #1F2937 !important;
+    font-weight: 600;
+    background: #F0FDF4;
+}
+
+.desktop-form-group select option {
+    color: #1F2937;
+    background: white;
+    font-weight: 500;
+}
+
+
+/* Desktop Form Rows */
+.desktop-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--desktop-spacing-xl);
+    margin-bottom: var(--desktop-spacing-lg);
+}
+
+.desktop-form-row-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* Desktop Cuisine Selection */
+.desktop-cuisine-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--desktop-spacing-md);
+}
+
+.desktop-cuisine-option {
+    display: flex;
+    align-items: center;
+    gap: var(--desktop-spacing-sm);
+    padding: var(--desktop-spacing-md);
+    background: var(--desktop-background);
+    border: 2px solid var(--desktop-border);
+    border-radius: var(--desktop-radius-md);
+    cursor: pointer;
+    transition: var(--desktop-transition);
+}
+
+.desktop-cuisine-option:hover {
+    background: var(--desktop-surface);
+    border-color: var(--desktop-primary);
+}
+
+.desktop-cuisine-option:has(input:checked) {
+    background: var(--desktop-primary);
+    color: white;
+    border-color: var(--desktop-primary);
+}
+
+.desktop-cuisine-option input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+/* Desktop Calorie Options */
+.desktop-calorie-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--desktop-spacing-md);
+}
+
+.desktop-calorie-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--desktop-spacing-lg);
+    background: var(--desktop-background);
+    border: 2px solid var(--desktop-border);
+    border-radius: var(--desktop-radius-md);
+    cursor: pointer;
+    transition: var(--desktop-transition);
+    text-align: center;
+}
+
+.desktop-calorie-option:hover {
+    background: var(--desktop-surface);
+    border-color: var(--desktop-primary);
+    transform: translateY(-2px);
+}
+
+.desktop-calorie-option:has(input:checked) {
+    background: var(--desktop-primary);
+    color: white;
+    border-color: var(--desktop-primary);
+}
+
+.desktop-calorie-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.desktop-calorie-title {
+    font-size: var(--desktop-text-base);
+    font-weight: 600;
+    margin-bottom: var(--desktop-spacing-xs);
+}
+
+.desktop-calorie-desc {
+    font-size: var(--desktop-text-sm);
+    opacity: 0.8;
+    line-height: 1.4;
+}
+
+/* Desktop Custom Calorie Input */
+.desktop-custom-calorie {
+    margin-top: var(--desktop-spacing-lg);
+    padding-top: var(--desktop-spacing-lg);
+    border-top: 1px solid var(--desktop-border);
+    display: none;
+}
+
+.desktop-custom-calorie.show {
+    display: block;
+}
+
+.desktop-custom-calorie input {
+    width: 100%;
+    padding: var(--desktop-spacing-md);
+    border: 2px solid var(--desktop-primary);
+    border-radius: var(--desktop-radius-md);
+    font-size: var(--desktop-text-base);
+    background: var(--desktop-surface);
+}
+
+/* Desktop Dietary Preferences */
+.desktop-dietary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--desktop-spacing-md);
+}
+
+.desktop-dietary-option {
+    display: flex;
+    align-items: center;
+    gap: var(--desktop-spacing-sm);
+    padding: var(--desktop-spacing-md);
+    background: var(--desktop-background);
+    border: 2px solid var(--desktop-border);
+    border-radius: var(--desktop-radius-md);
+    cursor: pointer;
+    transition: var(--desktop-transition);
+}
+
+.desktop-dietary-option:hover {
+    background: var(--desktop-surface);
+    border-color: var(--desktop-primary);
+}
+
+.desktop-dietary-option:has(input:checked) {
+    background: var(--desktop-primary);
+    color: white;
+    border-color: var(--desktop-primary);
+}
+
+/* Desktop Allergies */
+.desktop-allergies-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--desktop-spacing-sm);
+}
+
+.desktop-allergy-option {
+    display: flex;
+    align-items: center;
+    gap: var(--desktop-spacing-sm);
+    padding: var(--desktop-spacing-sm) var(--desktop-spacing-md);
+    background: var(--desktop-background);
+    border: 2px solid var(--desktop-border);
+    border-radius: var(--desktop-radius-sm);
+    cursor: pointer;
+    transition: var(--desktop-transition);
+    font-size: var(--desktop-text-sm);
+}
+
+.desktop-allergy-option:hover {
+    background: var(--desktop-surface);
+    border-color: var(--desktop-primary);
+}
+
+.desktop-allergy-option:has(input:checked) {
+    background: #FEF2F2;
+    border-color: #F87171;
+    color: #991B1B;
+}
+
+/* Desktop Action Buttons */
+.desktop-profile-actions {
+    display: flex;
+    gap: var(--desktop-spacing-lg);
+    justify-content: center;
+    margin-top: var(--desktop-spacing-3xl);
+}
+
+.desktop-btn-continue {
+    padding: var(--desktop-spacing-lg) var(--desktop-spacing-2xl);
+    background: linear-gradient(135deg, var(--desktop-primary) 0%, var(--desktop-primary-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: var(--desktop-radius-lg);
+    font-size: var(--desktop-text-lg);
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--desktop-shadow-lg);
+    transition: var(--desktop-transition);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--desktop-spacing-sm);
+}
+
+.desktop-btn-continue:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--desktop-shadow-xl);
+}
+
+.desktop-btn-continue:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.desktop-btn-back {
+    padding: var(--desktop-spacing-lg) var(--desktop-spacing-2xl);
+    background: var(--desktop-surface);
+    color: var(--desktop-text-primary);
+    border: 2px solid var(--desktop-border);
+    border-radius: var(--desktop-radius-lg);
+    font-size: var(--desktop-text-lg);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--desktop-transition);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--desktop-spacing-sm);
+}
+
+.desktop-btn-back:hover {
+    background: var(--desktop-background);
+    border-color: var(--desktop-primary);
+    transform: translateY(-2px);
+}
+
+/* Desktop Progress Indicator */
+.desktop-progress {
+    margin-bottom: var(--desktop-spacing-2xl);
+}
+
+.desktop-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--desktop-border);
+    border-radius: var(--desktop-radius-sm);
+    overflow: hidden;
+}
+
+.desktop-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--desktop-primary), var(--desktop-secondary));
+    border-radius: var(--desktop-radius-sm);
+    transition: width 0.5s ease;
+}
+
+.desktop-progress-text {
+    text-align: center;
+    margin-top: var(--desktop-spacing-sm);
+    font-size: var(--desktop-text-sm);
+    color: var(--desktop-text-secondary);
+    font-weight: 500;
+}
+
+/* Desktop Form Validation */
+.desktop-form-error {
+    background: #FEF2F2;
+    border: 2px solid #F87171;
+    border-radius: var(--desktop-radius-md);
+    padding: var(--desktop-spacing-md);
+    color: #991B1B;
+    font-size: var(--desktop-text-sm);
+    font-weight: 500;
+    margin-top: var(--desktop-spacing-sm);
+}
+
+.desktop-form-success {
+    background: #F0FDF4;
+    border: 2px solid #10B981;
+    border-radius: var(--desktop-radius-md);
+    padding: var(--desktop-spacing-md);
+    color: var(--desktop-primary-dark);
+    font-size: var(--desktop-text-sm);
+    font-weight: 500;
+    margin-top: var(--desktop-spacing-sm);
+}
+
+/* Desktop Responsive Adjustments */
+@media (max-width: 1200px) {
+    .desktop-profile-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .desktop-form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .desktop-cuisine-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .desktop-calorie-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .desktop-dietary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .desktop-profile-container {
+        padding: var(--desktop-spacing-lg);
+    }
+    
+    .desktop-form-section {
+        padding: var(--desktop-spacing-lg);
+    }
+    
+    .desktop-dietary-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .desktop-allergies-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .desktop-profile-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+

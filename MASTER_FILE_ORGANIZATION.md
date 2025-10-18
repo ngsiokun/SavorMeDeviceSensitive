@@ -6,30 +6,65 @@ This document serves as the **SINGLE SOURCE OF TRUTH** for all files in the Savo
 ## 📊 **Project Status & Configuration**
 
 **Date**: October 2025  
-**Version**: 3.2.0 (Dynamic Ingredient Replacement & UI Fixes)  
-**Status**: Production Ready with Comprehensive Error Prevention & Enhanced UX  
+**Version**: 4.0.0 (Desktop Application + Mobile Application Separation)  
+**Status**: Production Ready with Desktop & Mobile Versions + Medical Disclaimers  
 
 ### **Quick Configuration Reference**
 
 **Active Project Directory**: `C:\Users\Samsung\savorme-cloud-run\SavorMeDeviceSensitive\`
 
+**⚠️ CRITICAL SHELL REQUIREMENT ⚠️**
+```
+██████╗  ██████╗     ███╗   ██╗ ██████╗ ████████╗    ██╗   ██╗███████╗███████╗
+██╔══██╗██╔═══██╗    ████╗  ██║██╔═══██╗╚══██╔══╝    ██║   ██║██╔════╝██╔════╝
+██║  ██║██║   ██║    ██╔██╗ ██║██║   ██║   ██║       ██║   ██║███████╗█████╗  
+██║  ██║██║   ██║    ██║╚██╗██║██║   ██║   ██║       ██║   ██║╚════██║██╔══╝  
+██████╔╝╚██████╔╝    ██║ ╚████║╚██████╔╝   ██║       ╚██████╔╝███████║███████╗
+╚═════╝  ╚═════╝     ╚═╝  ╚═══╝ ╚═════╝    ╚═╝        ╚═════╝ ╚══════╝╚══════╝
+                                                                                
+██████╗  ██████╗ ██╗    ██╗███████╗██████╗ ███████╗██╗  ██╗███████╗██╗     ██╗     
+██╔══██╗██╔═══██╗██║    ██║██╔════╝██╔══██╗██╔════╝██║  ██║██╔════╝██║     ██║     
+██████╔╝██║   ██║██║ █╗ ██║█████╗  ██████╔╝███████╗███████║█████╗  ██║     ██║     
+██╔═══╝ ██║   ██║██║███╗██║██╔══╝  ██╔══██╗╚════██║██╔══██║██╔══╝  ██║     ██║     
+██║     ╚██████╔╝╚███╔███╔╝███████╗██║  ██║███████║██║  ██║███████╗███████╗███████╗
+╚═╝      ╚═════╝  ╚══╝╚══╝ ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝
+
+ALWAYS USE: Command Prompt (cmd.exe)
+NEVER USE: PowerShell (will cause syntax errors with && operator)
+```
+
 **Startup Commands**:
 ```cmd
-# Primary startup (recommended)
-LOCAL_TEST_TOMORROW.bat
+# ⭐ RECOMMENDED - AUTO-DETECT (Just double-click!)
+START.bat                         # Automatic device detection - NO MENU! 🚀
+                                  # Auto-starts all services with device routing
 
-# Alternative startup
-start.bat
+# AUTO-DETECT WITH ALL SERVICES SEPARATE
+START-ALL-SEPARATE.bat            # Backend + Mobile + Desktop + Router (4 windows)
+                                  # Best for debugging - all services separate
 
-# Setup for new clones
-setup_new_clone.bat
+# INTERACTIVE MENU (Choose manually)
+start.bat                         # Shows menu to choose startup option
+
+# SPECIFIC SERVICES
+START-BOTH-SERVICES.bat           # Desktop + Backend only (port 5001)
+start-backend-only.bat            # Backend only (port 8000)
+start-desktop-only.bat            # Desktop only (port 5001)
+
+# UTILITIES
+cleanup-processes.bat             # Kill all SavorMe processes
+test-connection.bat               # Test frontend-backend connectivity
+restart-desktop.bat               # Restart desktop app only
+setup_new_clone.bat               # Setup for new clones
+LOCAL_TEST_TOMORROW.bat           # Local testing with validation
 ```
-⚠️ **CRITICAL**: Always use Command Prompt (cmd.exe), NEVER PowerShell!
 
 **Access Points**:
-- **Frontend**: http://localhost:5000
-- **Backend**: http://127.0.0.1:8000  
-- **API Docs**: http://127.0.0.1:8000/docs
+- **Auto-Detect Router**: http://localhost:8080 ⭐ (Recommended - auto-detects device)
+- **Desktop Frontend**: http://localhost:5001 (Direct access)
+- **Mobile Frontend**: http://localhost:5000 (Direct access)
+- **Backend API**: http://127.0.0.1:8000  
+- **API Documentation**: http://127.0.0.1:8000/docs
 
 **Essential Files**:
 - `CUSTOMIZATIONS_PERSISTENT.md` - Complete design system and scoring transparency
@@ -47,11 +82,25 @@ EDAMAM_APP_KEY=your_edamam_app_key
 OPENROUTER_API_KEY=your_openrouter_api_key
 ```
 
-## 🎉 **Version 3.2.0 - Recent Major Improvements (October 2025)**
+## 🎉 **Version 4.0.0 - Desktop + Mobile + Auto-Detect (October 2025)**
 
-### **✅ Critical Bug Fixes Implemented**
+### **🚀 Major New Features**
 
-#### **1. Dynamic Ingredient Replacement System**
+#### **1. Automatic Device Detection**
+- **Files**: `app_router.py`, `START.bat`, `START-ALL-SEPARATE.bat`
+- **Feature**: Router automatically detects device type (desktop vs mobile)
+- **User Experience**: Users get the right version automatically - no manual choice!
+- **Architecture**: All services run separately for easy debugging
+- **Access**: http://localhost:8080 (router), or direct: 5001 (desktop), 5000 (mobile)
+
+#### **2. Complete Frontend/Backend Separation**
+- **Desktop App**: `desktop_app/` (port 5001) - Optimized for screens 1024px+
+- **Mobile App**: `demo_app/` (port 5000) - Responsive mobile-first design
+- **Backend API**: `app/` (port 8000) - Completely separate
+- **Router**: `app_router.py` (port 8080) - Device detection routing
+- **Benefit**: Debug each service independently in its own terminal window
+
+#### **3. Dynamic Ingredient Replacement System** (v3.2.0)
 - **File**: `app/services/edamam_client.py` (lines 762-803)
 - **Problem Solved**: Eliminated 404 errors from exotic ingredients (rabbit, venison, bison, teff, seitan)
 - **Solution**: Runtime ingredient replacement with Edamam-compatible alternatives
@@ -174,36 +223,70 @@ router/
 ```
 
 #### **Frontend Applications**
-```
-demo_app/                    # Primary frontend (local development)
-├── app.py                   # Flask application entry point
-├── Dockerfile               # Docker configuration
-├── README.md                # Frontend documentation
-├── requirements.txt         # Frontend dependencies
-├── templates/               # HTML templates
-│   ├── index.html          # Landing page
-│   ├── profile.html        # User profile page
-│   ├── mood_selection.html # Mood selection page
-│   └── recipe_result.html  # Recipe results page
-├── static/css/             # Stylesheets
-│   ├── main.css           # Base styles
-│   ├── landing.css        # Landing page styles
-│   ├── profile.css        # Profile page styles
-│   ├── mood_selection.css # Mood selection styles
-│   ├── results.css        # Results page styles
-│   └── recipe_results.css # Recipe results styles
-└── static/js/             # JavaScript files
-    ├── profile.js         # Profile page logic
-    ├── mood_selection.js  # Mood selection logic
-    └── recipe_result.js   # Recipe results logic
 
-frontend_app/               # Alternative frontend (cloud deployment)
-├── app.py                  # Flask application entry point
+**⚠️ IMPORTANT: Desktop and Mobile are SEPARATE applications**
+- Desktop app (`desktop_app/`) - Optimized for screens 1024px+, port 5001
+- Mobile app (`demo_app/`) - Responsive mobile-first design, port 5000
+- **DO NOT MIX**: Keep files separate for easier debugging
+
+```
+desktop_app/                # ⭐ DESKTOP APPLICATION (Port 5001)
+├── app.py                  # Flask application entry point (SEPARATE from mobile)
+├── README.md               # Desktop-specific documentation
+├── requirements.txt        # Desktop-specific dependencies
+├── start-desktop.bat       # Desktop app startup script
+├── templates/              # Desktop HTML templates
+│   ├── desktop-index.html # Desktop landing page
+│   ├── desktop-profile.html # Desktop profile page
+│   ├── desktop-mood.html  # Desktop mood selection
+│   └── desktop-results.html # Desktop recipe results
+└── static/                # Desktop assets
+    └── css/               # Desktop stylesheets
+        ├── desktop-main.css      # Desktop base styles
+        ├── desktop-landing.css   # Desktop landing styles
+        ├── desktop-profile.css   # Desktop profile styles
+        ├── desktop-mood.css      # Desktop mood styles
+        └── desktop-results.css   # Desktop results styles
+
+demo_app/                   # ⭐ MOBILE APPLICATION (Port 5000)
+├── app.py                  # Flask application entry point (SEPARATE from desktop)
 ├── Dockerfile              # Docker configuration
-├── README.md               # Frontend documentation
-├── requirements.txt        # Frontend dependencies
-├── templates/              # HTML templates (same as demo_app)
-└── static/                 # CSS/JS files (same as demo_app)
+├── README.md               # Mobile frontend documentation
+├── requirements.txt        # Mobile frontend dependencies
+├── templates/              # Mobile HTML templates
+│   ├── index.html         # Mobile landing page
+│   ├── profile.html       # Mobile profile page
+│   ├── mood_selection.html # Mobile mood selection
+│   └── recipe_result.html # Mobile recipe results
+├── static/css/            # Mobile stylesheets
+│   ├── main.css          # Mobile base styles
+│   ├── landing.css       # Mobile landing styles
+│   ├── profile.css       # Mobile profile styles
+│   ├── mood_selection.css # Mobile mood styles
+│   ├── results.css       # Mobile results styles
+│   └── recipe_results.css # Mobile recipe results styles
+└── static/js/            # Mobile JavaScript files
+    ├── profile.js        # Mobile profile logic
+    ├── mood_selection.js # Mobile mood logic
+    └── recipe_result.js  # Mobile recipe results logic
+
+frontend_app/              # Alternative frontend (cloud deployment)
+├── app.py                 # Flask application entry point
+├── Dockerfile             # Docker configuration
+├── README.md              # Frontend documentation
+├── requirements.txt       # Frontend dependencies
+├── templates/             # HTML templates (same as demo_app)
+└── static/                # CSS/JS files (same as demo_app)
+```
+
+#### **Device Router & Unified Access** (NEW v4.0.0)
+```
+app_router.py               # ⭐ Device detection router (port 8080)
+                           # Automatically routes desktop vs mobile requests
+                           # Keeps frontend/backend completely separate for debugging
+
+unified_app.py             # Alternative unified approach (not recommended)
+                           # Kept for reference - use app_router.py instead
 ```
 
 #### **Configuration Files**
@@ -219,10 +302,39 @@ cloudbuild.simple.yaml     # Simplified Cloud Build configuration
 ### **2. STARTUP & DEPLOYMENT SCRIPTS** 🚀 (Essential for Operation)
 
 #### **Local Development Scripts**
+
+**⚠️ AUTO-DETECT SCRIPTS (RECOMMENDED)** ⭐
 ```
-start.bat                    # ⭐ PRIMARY STARTUP - Backend + Frontend
-LOCAL_TEST_TOMORROW.bat      # ⭐ LOCAL TESTING - With validation
-setup_new_clone.bat          # ⭐ FIRST-TIME SETUP - For new clones
+START.bat                    # 🚀 BEST CHOICE - Automatic device detection, NO MENU
+                            # Just double-click and go!
+                            # Starts all services with auto-routing
+
+START-ALL-SEPARATE.bat       # All services in separate windows for debugging
+                            # Backend (8000) + Mobile (5000) + Desktop (5001) + Router (8080)
+                            # Best for development - each service visible
+
+start.bat                    # Interactive menu - choose startup option manually
+                            # Options: Auto-detect, Desktop, Mobile, Both, Backend-only
+```
+
+**DESKTOP APP SCRIPTS**
+```
+START-BOTH-SERVICES.bat      # Desktop App + Backend (ports 5001 & 8000)
+start-desktop-only.bat       # Desktop app only (port 5001)
+restart-desktop.bat          # Restart desktop app
+```
+
+**MOBILE APP SCRIPTS**
+```
+LOCAL_TEST_TOMORROW.bat      # Local testing with validation (original)
+```
+
+**UTILITY SCRIPTS**
+```
+start-backend-only.bat       # Backend service only (port 8000)
+cleanup-processes.bat        # Kill all SavorMe processes (ports 5000, 5001, 8000, 8080)
+test-connection.bat          # Test frontend-backend connectivity
+setup_new_clone.bat          # First-time setup for new clones
 start-microservices.bat      # Backend microservices only
 setup-microservices.bat      # Setup microservices environment
 ```
@@ -248,13 +360,19 @@ DEPLOY_TO_CLOUD_RUN.bat     # Alternative deployment script
 
 #### **Master Documentation** (Essential Reading - Current Files)
 ```
-AUTOMATED_APP_STARTUP_GUIDE.md         # ⭐ COMPREHENSIVE STARTUP GUIDE
+AUTOMATED_APP_STARTUP_GUIDE.md         # ⭐ COMPREHENSIVE STARTUP GUIDE (Updated for v4.0.0)
 CUSTOMIZATIONS_PERSISTENT.md           # ⭐ DESIGN SYSTEM, PAGE LAYOUTS, SCORING TRANSPARENCY & EVIDENCE-BASED MOODS
-MASTER_FILE_ORGANIZATION.md            # ⭐ SINGLE SOURCE OF TRUTH - THIS FILE
+MASTER_FILE_ORGANIZATION.md            # ⭐ SINGLE SOURCE OF TRUTH - THIS FILE (v4.0.0)
 SAVORME_MASTER_OVERVIEW.md             # ⭐ PROJECT OVERVIEW AND INTEGRATION CHECKLIST
 SAVORME_COMPLETE_WORKFLOW.md           # ⭐ COMPLETE APPLICATION WORKFLOW WITH MASTER FILE REFERENCES
 SYSTEM_WORKFLOW.md                     # ⭐ COMPLETE USER JOURNEY, TECHNICAL WORKFLOW, MAPPING SOURCES & MOOD-TO-RECIPE FLOW
 README.md                              # ⭐ PROJECT OVERVIEW & QUICK DEPLOYMENT
+AUTO_DETECT_ARCHITECTURE.md            # ⭐ AUTO-DETECT SYSTEM ARCHITECTURE (NEW v4.0.0)
+desktop_app/README.md                  # ⭐ DESKTOP APP SPECIFIC DOCUMENTATION (NEW v4.0.0)
+DESKTOP_QUICK_START.md                 # ⭐ DESKTOP QUICK START GUIDE (NEW v4.0.0)
+API_SCHEMA_REFERENCE.md                # ⭐ API SCHEMA FOR /api/v1/recipes/recommend ENDPOINT
+EDAMAM_JSON_FORMAT.md                  # ⭐ EDAMAM API JSON FORMAT DOCUMENTATION (NEW v4.0.0)
+CLEANUP_SUMMARY_V4.md                  # ⭐ V4.0.0 CLEANUP & DOCUMENTATION SUMMARY (NEW)
 ```
 
 #### **Technical Documentation** (Implementation Details)

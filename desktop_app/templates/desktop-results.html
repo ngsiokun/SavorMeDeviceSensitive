@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SavorMe Desktop - Recipe Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/desktop-main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/desktop-results.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="desktop-container">
+        <div class="desktop-layout">
+            <!-- Desktop Header -->
+            <header class="desktop-header">
+                <a href="/" class="desktop-logo">🍽️ SavorMe</a>
+                <nav class="desktop-nav">
+                    <a href="/">Home</a>
+                    <a href="/profile">Profile</a>
+                    <a href="/mood">Mood</a>
+                    <a href="/results" class="active">Results</a>
+                </nav>
+            </header>
+
+            <!-- Desktop Results Content -->
+            <div class="desktop-content">
+                <div class="desktop-results-container">
+                    <!-- Results Header -->
+                    <div class="desktop-results-header">
+                        <h1 class="desktop-results-title">Your Personalized Recipes</h1>
+                        <p class="desktop-results-subtitle">
+                            Based on your mood and nutritional needs, here are the perfect recipes for you right now.
+                        </p>
+                    </div>
+
+                    <!-- Desktop Results Grid -->
+                    <div class="desktop-results-grid" id="desktopResultsGrid">
+                        <!-- Recipe cards will be populated by JavaScript -->
+                        <div class="desktop-results-loading">
+                            <div class="desktop-results-spinner"></div>
+                            <div class="desktop-results-loading-text">Finding your perfect recipes...</div>
+                        </div>
+                    </div>
+
+                    <!-- Results Actions -->
+                    <div class="desktop-results-actions">
+                        <a href="/mood" class="desktop-btn-new-search">
+                            <span>🔄</span>
+                            Try Different Mood
+                        </a>
+                        <a href="/profile" class="desktop-btn-back-to-mood">
+                            <span>⚙️</span>
+                            Update Profile
+                        </a>
+                    </div>
+                    
+                    <!-- Medical Disclaimer -->
+                    <div style="max-width: 900px; margin: 40px auto 20px auto; padding: 20px; background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border-left: 4px solid #F59E0B; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div style="display: flex; align-items: flex-start; gap: 15px;">
+                            <span style="font-size: 24px; flex-shrink: 0;">⚠️</span>
+                            <div>
+                                <h3 style="margin: 0 0 10px 0; font-size: 16px; font-weight: 700; color: #92400E;">Important Disclaimer</h3>
+                                <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #78350F;">
+                                    <strong>SavorMe is designed to support healthy eating habits and is not intended for medical purposes.</strong> 
+                                    The recipe recommendations provided are based on nutritional guidelines and mood-food research, but they are not a substitute for professional medical advice, diagnosis, or treatment. 
+                                    Always seek the advice of your physician, registered dietitian, or other qualified health provider with any questions you may have regarding a medical condition, dietary restrictions, or nutritional needs. 
+                                    Never disregard professional medical advice or delay seeking it because of information provided by this application.
+                                </p>
+                                <p style="margin: 10px 0 0 0; font-size: 13px; line-height: 1.5; color: #78350F; font-style: italic;">
+                                    If you have food allergies, dietary restrictions, or chronic health conditions, please consult with a healthcare professional before making significant changes to your diet.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Desktop Recipe Modal -->
+    <div class="desktop-recipe-modal" id="desktopRecipeModal">
+        <div class="desktop-recipe-modal-content">
+            <div class="desktop-recipe-modal-header">
+                <h2 class="desktop-recipe-modal-title" id="desktopRecipeModalTitle">Recipe Details</h2>
+                <button class="desktop-recipe-modal-close" id="modalCloseBtn">&times;</button>
+            </div>
+            <div class="desktop-recipe-modal-body" id="modalRecipeContent">
+                <!-- Recipe content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Desktop Results JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const resultsGrid = document.getElementById('desktopResultsGrid');
+            const modal = document.getElementById('desktopRecipeModal');
+            const modalCloseBtn = document.getElementById('modalCloseBtn');
+            const modalTitle = document.getElementById('desktopRecipeModalTitle');
+            const modalContent = document.getElementById('modalRecipeContent');
+            
+            // Get request data from sessionStorage
+            const requestData = JSON.parse(sessionStorage.getItem('desktopRequestData') || '{}');
+            
+            // Load recipe results
+            loadRecipeResults();
+            
+            // Modal close handlers
+            modalCloseBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) closeModal();
+            });
+            
+            function closeModal() {
+                modal.classList.remove('show');
+            }
+            
+            async function loadRecipeResults() {
+                try {
+                    // Check if we have request data
+                    if (!requestData || Object.keys(requestData).length === 0) {
+                        throw new Error('No profile or mood data found. Please start from the profile page.');
+                    }
+                    
+                    // Show loading state
+                    resultsGrid.innerHTML = `
+                        <div class="desktop-results-loading">
+                            <div class="desktop-results-spinner"></div>
+                            <div class="desktop-results-loading-text">Finding your perfect recipes...</div>
+                        </div>
+                    `;
+                    
+                    // Transform request data to match backend API format
+                    const backendRequest = transformToBackendFormat(requestData);
+                    
+                    console.log('Request data from sessionStorage:', requestData);
+                    console.log('Transformed backend request:', backendRequest);
+                    
+                    // Make API call to get recommendations
+                    const response = await fetch('/api/recipes/recommend', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(backendRequest)
+                    });
+                    
+                    console.log('Response status:', response.status);
+                    
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error('Backend error response:', errorText);
+                        let errorData;
+                        try {
+                            errorData = JSON.parse(errorText);
+                        } catch {
+                            errorData = { error: errorText || 'Unknown error' };
+                        }
+                        throw new Error(errorData.error || errorData.detail || 'Failed to get recommendations');
+                    }
+                    
+                    const data = await response.json();
+                    
+                    console.log('Received recipe data:', data);
+                    
+                    // Display results
+                    displayResults(data);
+                    
+                } catch (error) {
+                    console.error('Error loading results:', error);
+                    console.error('Error stack:', error.stack);
+                    displayError('Failed to load recipe recommendations: ' + error.message);
+                }
+            }
+            
+            function transformToBackendFormat(requestData) {
+                // Map mood selections to backend format
+                const moodMap = {
+                    'stressed': 'stressed',
+                    'fatigued': 'fatigued',
+                    'sad': 'low_mood',
+                    'irritable': 'irritable'
+                };
+                
+                // Map intensity to backend format
+                const intensityMap = {
+                    'little': 'a_little',
+                    'medium': 'medium',
+                    'very': 'very'
+                };
+                
+                // Transform moods array
+                const moods = requestData.mood_selections.map(mood => ({
+                    mood: moodMap[mood] || mood,
+                    intensity: intensityMap[requestData.mood_intensity] || requestData.mood_intensity
+                }));
+                
+                // Build backend request
+                return {
+                    mood_blend: {
+                        moods: moods
+                    },
+                    user_profile: {
+                        age: parseInt(requestData.age),
+                        gender: requestData.gender,
+                        height_cm: parseFloat(requestData.height_cm),
+                        weight_kg: parseFloat(requestData.weight_kg),
+                        cuisine_preferences: requestData.cuisine_preferences || [],
+                        food_allergies: requestData.food_allergies || [],
+                        dietary_preference: requestData.dietary_preference || 'none'
+                    },
+                    activity_level: 'moderate'  // Default activity level
+                };
+            }
+            
+            function displayResults(data) {
+                if (!data.recipe) {
+                    displayError('No recipe found for your current mood and preferences.');
+                    return;
+                }
+                
+                const recipe = data.recipe;
+                const nutrition = recipe.nutrition || {};
+                const flavorAlignment = data.flavor_alignment || {};
+                
+                // Format the single recipe recommendation with full-width layout
+                const recipeHtml = `
+                    <div class="desktop-recipe-card-full">
+                        <!-- Large Recipe Image -->
+                        <div class="desktop-recipe-image-large">
+                            ${recipe.image_url ? `<img src="${recipe.image_url}" alt="${recipe.name}">` : '<div style="font-size: 96px; text-align: center; padding: 80px; color: white;">🍽️</div>'}
+                        </div>
+                        
+                        <!-- Recipe Content -->
+                        <div class="desktop-recipe-content-full">
+                            <div class="desktop-recipe-header">
+                                <div>
+                                    <h3 class="desktop-recipe-title">${recipe.name}</h3>
+                                    <div class="desktop-recipe-cuisine">${recipe.cuisine_type || 'International'}</div>
+                                </div>
+                                <div class="desktop-recipe-match-badge">
+                                    <div class="match-score">${flavorAlignment.nutrient_match_score || 85}%</div>
+                                    <div class="match-label">Match Score</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Emotional Rationale -->
+                            <div class="desktop-emotional-context">
+                                <h4 style="margin-bottom: 10px; color: #065F46; font-size: 16px; font-weight: 600;">
+                                    🎯 Why This Recipe Is Perfect for You
+                                </h4>
+                                <p style="color: #047857; line-height: 1.6; margin: 0; font-size: 14px;">
+                                    ${data.emotional_rationale || 'A delicious recipe perfect for your current mood and nutritional needs.'}
+                                </p>
+                            </div>
+                            
+                            <!-- Mood Description (if available) -->
+                            ${data.mood_description ? `
+                            <div class="desktop-mood-context" style="background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                                <h4 style="margin-bottom: 8px; color: #92400E; font-size: 14px; font-weight: 600;">
+                                    💭 Your Current Mood
+                                </h4>
+                                <p style="color: #B45309; line-height: 1.6; margin: 0; font-size: 13px;">
+                                    ${data.mood_description}
+                                </p>
+                            </div>
+                            ` : ''}
+                            
+                            <!-- Nutrition Summary -->
+                            <div class="desktop-nutrition-summary">
+                                <div class="desktop-nutrition-title">
+                                    <span>📊</span>
+                                    Nutrition per serving
+                                </div>
+                                <div class="desktop-nutrition-grid">
+                                    <div class="desktop-nutrition-item">
+                                        <div class="desktop-nutrition-value">${Math.round(nutrition.calories || 0)}</div>
+                                        <div class="desktop-nutrition-label">Calories</div>
+                                    </div>
+                                    <div class="desktop-nutrition-item">
+                                        <div class="desktop-nutrition-value">${Math.round(nutrition.protein_g || 0)}g</div>
+                                        <div class="desktop-nutrition-label">Protein</div>
+                                    </div>
+                                    <div class="desktop-nutrition-item">
+                                        <div class="desktop-nutrition-value">${Math.round(nutrition.carbs_g || 0)}g</div>
+                                        <div class="desktop-nutrition-label">Carbs</div>
+                                    </div>
+                                    <div class="desktop-nutrition-item">
+                                        <div class="desktop-nutrition-value">${Math.round(nutrition.fat_g || 0)}g</div>
+                                        <div class="desktop-nutrition-label">Fat</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Nutrient Match Reasons (Evidence-Based) -->
+                            ${flavorAlignment.nutrient_reasons && flavorAlignment.nutrient_reasons.length > 0 ? `
+                            <div class="desktop-nutrient-reasons" style="background: #EFF6FF; border-left: 4px solid #3B82F6; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                                <h4 style="margin-bottom: 10px; color: #1E40AF; font-size: 14px; font-weight: 600;">
+                                    🔬 Evidence-Based Match
+                                </h4>
+                                <ul style="margin: 0; padding-left: 20px; color: #1E3A8A;">
+                                    ${flavorAlignment.nutrient_reasons.map(reason => `<li style="margin-bottom: 6px; font-size: 13px; line-height: 1.5;">${reason}</li>`).join('')}
+                                </ul>
+                            </div>
+                            ` : ''}
+                            
+                            <!-- Recipe Details -->
+                            <div class="desktop-recipe-meta">
+                                <div class="desktop-recipe-info-item">
+                                    <span class="desktop-recipe-info-icon">⏱️</span>
+                                    <span>${recipe.prep_time || 30} minutes</span>
+                                </div>
+                                <div class="desktop-recipe-info-item">
+                                    <span class="desktop-recipe-info-icon">👥</span>
+                                    <span>Serves ${recipe.servings || 4}</span>
+                                </div>
+                                <div class="desktop-recipe-info-item">
+                                    <span class="desktop-recipe-info-icon">📝</span>
+                                    <span>${(recipe.ingredients || []).length} ingredients</span>
+                                </div>
+                                <div class="desktop-recipe-info-item">
+                                    <span class="desktop-recipe-info-icon">🔥</span>
+                                    <span>${(() => {
+                                        const validSteps = (recipe.cooking_directions || []).filter(step => {
+                                            const stepText = typeof step === 'string' ? step : (step.text || step.instruction || '');
+                                            return stepText && stepText.trim().length > 0;
+                                        });
+                                        return validSteps.length;
+                                    })()} steps</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Tags -->
+                            ${recipe.diet_labels && recipe.diet_labels.length > 0 ? `
+                            <div class="desktop-recipe-tags">
+                                ${recipe.diet_labels.map(tag => `<span class="desktop-recipe-tag">${tag}</span>`).join('')}
+                            </div>
+                            ` : ''}
+                            
+                            <!-- Quick View: Ingredients (Full Width) -->
+                            <div class="desktop-recipe-ingredients-section">
+                                <h4 style="font-size: 18px; font-weight: 700; color: var(--desktop-text-primary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                                    <span>🥘</span>
+                                    Ingredients (${(recipe.ingredients || []).length})
+                                </h4>
+                                <ul class="desktop-ingredients-list" style="list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                    ${(recipe.ingredients || []).map(ing => {
+                                        let ingredientText = '';
+                                        if (typeof ing === 'string') {
+                                            ingredientText = ing;
+                                        } else if (ing && typeof ing === 'object') {
+                                            // Handle object format with amount and name
+                                            let amount = ing.amount || ing.quantity || '';
+                                            const name = ing.name || ing.text || ing.ingredient || '';
+                                            
+                                            // Format decimal numbers to max 2 decimal places
+                                            if (amount && typeof amount === 'string') {
+                                                // Check if it's a decimal number
+                                                const numMatch = amount.match(/(\d+\.\d+)/);
+                                                if (numMatch) {
+                                                    const num = parseFloat(numMatch[1]);
+                                                    const formatted = num.toFixed(2).replace(/\.?0+$/, ''); // Remove trailing zeros
+                                                    amount = amount.replace(numMatch[1], formatted);
+                                                }
+                                            }
+                                            
+                                            ingredientText = amount ? `${amount} ${name}` : name;
+                                        } else {
+                                            ingredientText = String(ing || '');
+                                        }
+                                        
+                                        // Format any decimal numbers in the text to 2 decimal places
+                                        ingredientText = ingredientText.replace(/(\d+)\.(\d{3,})/g, (match, whole, decimals) => {
+                                            return `${whole}.${decimals.substring(0, 2)}`;
+                                        });
+                                        
+                                        // Add measurement conversion tooltip if "cup" is mentioned
+                                        const hasCup = ingredientText.toLowerCase().includes('cup');
+                                        const tooltip = hasCup ? ' <span style="color: #666; font-size: 12px;" title="1 cup = 240ml / 8 fl oz">(ℹ️ 1 cup = 240ml)</span>' : '';
+                                        
+                                        return `<li style="padding: 12px; background: var(--desktop-background); border-radius: 6px; border-left: 3px solid var(--desktop-primary); font-size: 14px; color: var(--desktop-text-primary); line-height: 1.5;">
+                                            <span style="color: var(--desktop-primary); margin-right: 8px;">•</span>${ingredientText}${tooltip}
+                                        </li>`;
+                                    }).join('')}
+                                </ul>
+                            </div>
+                            
+                            <!-- Quick View: Cooking Steps (Full Width) -->
+                            <div class="desktop-recipe-steps-section">
+                                ${(() => {
+                                    // Filter out empty steps and title steps
+                                    const validSteps = (recipe.cooking_directions || []).filter(step => {
+                                        const stepText = typeof step === 'string' ? step : (step.text || step.instruction || '');
+                                        if (!stepText || stepText.trim().length === 0) return false;
+                                        
+                                        // Filter out title steps (all caps followed by colon, or just all caps titles)
+                                        const trimmedText = stepText.trim();
+                                        if (/^[A-Z\s]+:?\s*$/.test(trimmedText)) return false; // All caps titles like "PREPARATION:" or "COOKING STEPS:"
+                                        if (/^(PREPARATION|COOKING STEPS|COOKING TIPS|TIPS|NOTES|GARNISH|SERVING):?\s*$/i.test(trimmedText)) return false;
+                                        
+                                        return true;
+                                    });
+                                    
+                                    return `
+                                        <h4 style="font-size: 18px; font-weight: 700; color: var(--desktop-text-primary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                                            <span>👨‍🍳</span>
+                                            Cooking Steps (${validSteps.length})
+                                        </h4>
+                                        <div class="desktop-steps-list" style="padding: 0; margin: 0;">
+                                            ${validSteps.map((step, index) => {
+                                                const stepText = typeof step === 'string' ? step : (step.text || step.instruction || '');
+                                                return `<div style="display: flex; gap: 15px; margin-bottom: 12px; padding: 15px; background: var(--desktop-background); border-radius: 6px; border-left: 4px solid var(--desktop-primary);">
+                                                    <div style="flex-shrink: 0; width: 36px; height: 36px; background: var(--desktop-primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px;">
+                                                        ${index + 1}
+                                                    </div>
+                                                    <div style="flex: 1; font-size: 14px; line-height: 1.7; color: var(--desktop-text-primary); padding-top: 6px;">
+                                                        ${stepText}
+                                                    </div>
+                                                </div>`;
+                                            }).join('')}
+                                        </div>
+                                    `;
+                                })()}
+                            </div>
+                            
+                            <!-- Actions -->
+                            <div class="desktop-recipe-actions" style="display: flex; gap: 15px; margin-top: 30px;">
+                                <button class="desktop-btn-nutrient-score" onclick="showNutrientMatchScore()" style="width: 100%; padding: 18px 24px; background: linear-gradient(135deg, #0F766E 0%, #0D9488 100%); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);">
+                                    <span style="font-size: 20px;">📊</span>
+                                    <span>Nutrient Match Score Summary</span>
+                                </button>
+                            </div>
+                            
+                            <!-- Save Button (Separate, smaller) -->
+                            <div style="text-align: center; margin-top: 15px;">
+                                <button class="desktop-btn-save-recipe" onclick="saveRecipe(0)" style="padding: 12px 24px; background: white; color: #059669; border: 2px solid #D1FAE5; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px;">
+                                    <span>💾</span>
+                                    <span>Save Recipe</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                resultsGrid.innerHTML = recipeHtml;
+                
+                // Store recipe data for modal access
+                window.recipeData = [data];
+            }
+            
+            function displayError(message) {
+                resultsGrid.innerHTML = `
+                    <div class="desktop-results-error">
+                        <div class="desktop-results-error-title">Oops! Something went wrong</div>
+                        <div class="desktop-results-error-message">${message}</div>
+                        <button class="desktop-btn-new-search" onclick="window.location.href='/mood'">
+                            <span>🔄</span>
+                            Try Again
+                        </button>
+                    </div>
+                `;
+            }
+            // Show nutrient match score modal
+            window.showNutrientMatchScore = function() {
+                const data = window.recipeData[0];
+                if (!data) return;
+                
+                const recipe = data.recipe;
+                const flavorAlignment = data.flavor_alignment || {};
+                const nutritionComparison = data.nutrition_comparison || {};
+                const rationale = data.emotional_rationale || '';
+                
+                modalTitle.textContent = 'Nutrient Match Score';
+                modalContent.innerHTML = `
+                    <!-- Match Score Badge -->
+                    <div style="text-align: center; padding: 30px; background: linear-gradient(135deg, #10B981 0%, #059669 100%); border-radius: 12px; margin-bottom: 20px;">
+                        <div style="font-size: 64px; font-weight: 800; color: white; line-height: 1;">${Math.round(flavorAlignment.nutrient_match_score || 85)}%</div>
+                        <div style="font-size: 16px; color: rgba(255,255,255,0.9); margin-top: 8px; font-weight: 600;">Evidence-Based Recommendation</div>
+                    </div>
+                    
+                    <!-- Why This Recipe -->
+                    <div style="background: #F0FDF4; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #10B981;">
+                        <h3 style="margin: 0 0 12px 0; color: #065F46; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                            <span>💭</span>
+                            <span>Why This Recipe?</span>
+                        </h3>
+                        <p style="margin: 0 0 20px 0; color: #047857; line-height: 1.7; font-size: 15px;">${generateDetailedRationale(recipe, nutritionComparison)}</p>
+                        
+                        <!-- Mood Breakdown Cards -->
+                        ${generateMoodBreakdown(data)}
+                    </div>
+                    
+                    <!-- Nutrition Breakdown Table -->
+                    <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #E5E7EB; margin-bottom: 20px;">
+                        <h3 style="margin: 0 0 15px 0; color: #374151; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                            <span>📊</span>
+                            <span>Nutrition Breakdown</span>
+                        </h3>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                                <thead>
+                                    <tr style="background: #F9FAFB; border-bottom: 2px solid #E5E7EB;">
+                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151;">Nutrient</th>
+                                        <th style="padding: 12px; text-align: right; font-weight: 600; color: #374151;">This Meal</th>
+                                        <th style="padding: 12px; text-align: right; font-weight: 600; color: #374151;">Daily Target</th>
+                                        <th style="padding: 12px; text-align: right; font-weight: 600; color: #374151;">% of Day</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom: 1px solid #F3F4F6;">
+                                        <td style="padding: 12px; color: #6B7280;">Calories</td>
+                                        <td style="padding: 12px; text-align: right; font-weight: 600; color: #0F766E;">${Math.round(nutritionComparison.recipe_calories || 0)} kcal</td>
+                                        <td style="padding: 12px; text-align: right; color: #6B7280;">${Math.round(nutritionComparison.target_calories || 0)} kcal</td>
+                                        <td style="padding: 12px; text-align: right; font-weight: 700; color: #0F766E;">${Math.round(nutritionComparison.percentage_of_daily_calories || 0)}%</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #F3F4F6;">
+                                        <td style="padding: 12px; color: #6B7280;">Protein</td>
+                                        <td style="padding: 12px; text-align: right; font-weight: 600; color: #0F766E;">${Math.round(nutritionComparison.recipe_protein || 0)}g</td>
+                                        <td style="padding: 12px; text-align: right; color: #6B7280;">${Math.round(nutritionComparison.target_protein || 0)}g</td>
+                                        <td style="padding: 12px; text-align: right; font-weight: 700; color: #0F766E;">${Math.round(nutritionComparison.percentage_of_daily_protein || 0)}%</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 12px; color: #6B7280;">Fiber</td>
+                                        <td style="padding: 12px; text-align: right; font-weight: 600; color: #0F766E;">${Math.round(nutritionComparison.recipe_fiber || 0)}g</td>
+                                        <td style="padding: 12px; text-align: right; color: #6B7280;">${Math.round(nutritionComparison.target_fiber || 0)}g</td>
+                                        <td style="padding: 12px; text-align: right; font-weight: 700; color: #0F766E;">${Math.round(nutritionComparison.percentage_of_daily_fiber || 0)}%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Nutrient Highlights -->
+                        <div style="margin-top: 20px; padding: 15px; background: #F0FDF4; border-radius: 8px;">
+                            <h4 style="margin: 0 0 10px 0; font-size: 15px; font-weight: 600; color: #065F46;">Nutrient Highlights:</h4>
+                            <ul style="margin: 0; padding-left: 20px; color: #047857; font-size: 14px; line-height: 1.8;">
+                                ${generateNutrientHighlights(recipe)}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Scientific Evidence -->
+                    <div style="background: #EFF6FF; padding: 20px; border-radius: 10px; border-left: 4px solid #3B82F6;">
+                        <h3 style="margin: 0 0 15px 0; color: #1E40AF; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                            <span>🧪</span>
+                            <span>Scientific Evidence</span>
+                        </h3>
+                        <div style="text-align: center; margin-bottom: 15px;">
+                            <div style="font-size: 24px; color: #F59E0B; letter-spacing: 2px;">★★★★★</div>
+                            <div style="font-size: 13px; color: #1E40AF; font-weight: 600; margin-top: 5px;">Evidence-Based Recommendation</div>
+                        </div>
+                        <p style="margin: 0 0 10px 0; color: #1E3A8A; font-size: 14px;">This recommendation is based on:</p>
+                        <ul style="margin: 0; padding-left: 20px; color: #1E3A8A; font-size: 14px; line-height: 1.8;">
+                            <li>Peer-reviewed nutritional research</li>
+                            <li>Mediterranean diet studies (SMILES trial)</li>
+                            <li>Nutrient-mood correlation meta-analyses</li>
+                        </ul>
+                        <div style="margin-top: 15px; padding: 12px; background: #FEF3C7; border-left: 3px solid #F59E0B; border-radius: 6px;">
+                            <div style="display: flex; gap: 8px; align-items: flex-start;">
+                                <span style="font-size: 14px;">⚠️</span>
+                                <small style="color: #78350F; font-size: 12px; line-height: 1.6; font-weight: 500;">
+                                    <strong>Disclaimer:</strong> This recommendation is based on nutritional science and mood-food research, but is not a substitute for professional medical advice. 
+                                    Consult your healthcare provider for personalized dietary guidance.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                modal.classList.add('show');
+            };
+            
+            // Generate detailed rationale with specific nutritional data (matching mobile version)
+            function generateDetailedRationale(recipe, nutritionComparison) {
+                const calories = Math.round(recipe.nutrition?.calories || 0);
+                const protein = Math.round(recipe.nutrition?.protein_g || 0);
+                const fiber = Math.round(recipe.nutrition?.fiber_g || 0);
+                const magnesium = Math.round(recipe.nutrition?.magnesium_mg || 0);
+                const omega3 = Math.round((recipe.nutrition?.omega3_g || 0) * 1000) / 1000;
+                const iron = Math.round(recipe.nutrition?.iron_mg || 0);
+                const folate = Math.round(recipe.nutrition?.folate_mcg || 0);
+                const b12 = Math.round((recipe.nutrition?.vitamin_b12_mcg || 0) * 10) / 10;
+                const zinc = Math.round(recipe.nutrition?.zinc_mg || 0);
+                const vitaminD = Math.round(recipe.nutrition?.vitamin_d_iu || 0);
+                
+                const targetCalories = Math.round(nutritionComparison?.target_calories || 2131);
+                const targetProtein = Math.round(nutritionComparison?.target_protein || 72);
+                const targetFiber = Math.round(nutritionComparison?.target_fiber || 25);
+                
+                const caloriePercent = Math.round(nutritionComparison?.percentage_of_daily_calories || 0);
+                const proteinPercent = Math.round(nutritionComparison?.percentage_of_daily_protein || 0);
+                const fiberPercent = Math.round(nutritionComparison?.percentage_of_daily_fiber || 0);
+                
+                let rationale = `This ${recipe.name} was carefully selected to provide optimal nutrition for your current mood needs. `;
+                rationale += `With ${calories} calories (${caloriePercent}% of your daily target of ${targetCalories} calories), it delivers ${protein}g of protein (${proteinPercent}% of daily target of ${targetProtein}g) for sustained energy and muscle support. `;
+                rationale += `The ${fiber}g of fiber (${fiberPercent}% of daily target of ${targetFiber}g) helps maintain stable blood sugar levels and supports digestive health. `;
+                
+                if (magnesium > 0) {
+                    const magnesiumTarget = 120;
+                    const magnesiumPercent = Math.round((magnesium / magnesiumTarget) * 100);
+                    rationale += `Rich in magnesium (${magnesium}mg, ${magnesiumPercent}% of daily target of ${magnesiumTarget}mg), this recipe supports nervous system function and stress response. `;
+                }
+                
+                if (iron > 0) {
+                    const ironTarget = 18;
+                    const ironPercent = Math.round((iron / ironTarget) * 100);
+                    rationale += `With ${iron}mg of iron (${ironPercent}% of daily target of ${ironTarget}mg), it helps maintain energy levels and cognitive function. `;
+                }
+                
+                if (folate > 0) {
+                    const folateTarget = 400;
+                    const folatePercent = Math.round((folate / folateTarget) * 100);
+                    rationale += `The ${folate}mcg of folate (B9) (${folatePercent}% of daily target of ${folateTarget}mcg) is essential for neurotransmitter synthesis and mood stability. `;
+                }
+                
+                if (b12 > 0) {
+                    const b12Target = 2.4;
+                    const b12Percent = Math.round((b12 / b12Target) * 100);
+                    rationale += `Vitamin B12 (${b12}mcg, ${b12Percent}% of daily target of ${b12Target}mcg) supports brain function and helps maintain a positive mood. `;
+                }
+                
+                if (zinc > 0) {
+                    const zincTarget = 11;
+                    const zincPercent = Math.round((zinc / zincTarget) * 100);
+                    rationale += `Zinc (${zinc}mg, ${zincPercent}% of daily target of ${zincTarget}mg) regulates stress response and supports immune function. `;
+                }
+                
+                if (vitaminD > 0) {
+                    const vitaminDTarget = 2000;
+                    const vitaminDPercent = Math.round((vitaminD / vitaminDTarget) * 100);
+                    rationale += `Vitamin D (${vitaminD}IU, ${vitaminDPercent}% of daily target of ${vitaminDTarget}IU) is crucial for mood regulation and helps combat seasonal depression. `;
+                }
+                
+                if (magnesium > 0 && omega3 === 0) {
+                    rationale += `For stress management, this recipe provides ${magnesium}mg magnesium (${Math.round((magnesium/120)*100)}% of 120mg daily target) and 0g omega-3 (0% of 2g daily target) to help regulate your stress response. `;
+                }
+                
+                if (iron > 0 && b12 > 0 && folate > 0) {
+                    rationale += `To combat fatigue, this recipe provides ${iron}mg iron (${Math.round((iron/18)*100)}% of 18mg daily target), ${b12}mcg B12 (${Math.round((b12/2.4)*100)}% of 2.4mcg daily target), and ${folate}mcg folate (${Math.round((folate/400)*100)}% of 400mcg daily target) to boost energy and cognitive function. `;
+                }
+                
+                rationale += `This combination of nutrients works synergistically to support your emotional well-being and provide the energy your body needs.`;
+                
+                return rationale;
+            }
+            
+            // Generate mood breakdown cards (matching mobile version)
+            function generateMoodBreakdown(data) {
+                const moodData = JSON.parse(sessionStorage.getItem('desktopRequestData') || '{}');
+                const moods = moodData.mood_selections || [];
+                
+                if (moods.length === 0) return '';
+                
+                const moodEmojis = {
+                    'stressed': '😰',
+                    'fatigued': '😴',
+                    'sad': '😔',
+                    'irritable': '😠',
+                    'low_mood': '😔'
+                };
+                
+                const moodDescriptions = {
+                    'stressed': 'The energizing, calming flavors complement your stressed mood.',
+                    'fatigued': 'The energizing, calming flavors complement your fatigued mood.',
+                    'sad': 'The comforting, uplifting flavors complement your low mood.',
+                    'irritable': 'The soothing, balancing flavors complement your irritable mood.',
+                    'low_mood': 'The comforting, uplifting flavors complement your low mood.'
+                };
+                
+                return moods.map(mood => `
+                    <div style="background: white; padding: 15px; border-radius: 8px; margin-top: 12px; border: 1px solid #D1FAE5;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                            <span style="font-size: 24px;">${moodEmojis[mood] || '💭'}</span>
+                            <span style="font-weight: 700; color: #065F46; font-size: 16px; text-transform: capitalize;">${mood.replace('_', ' ')}</span>
+                        </div>
+                        <p style="margin: 0; color: #047857; font-size: 14px; line-height: 1.5;">${moodDescriptions[mood] || 'This recipe is perfect for your current mood.'}</p>
+                    </div>
+                `).join('');
+            }
+            
+            // Generate nutrient highlights with visual indicators (matching mobile version)
+            function generateNutrientHighlights(recipe) {
+                const nutrition = recipe.nutrition || {};
+                const highlights = [];
+                
+                // Helper function to get indicator based on percentage
+                function getIndicator(value, target) {
+                    const percentage = (value / target) * 100;
+                    if (percentage >= 100) return '✓'; // Green checkmark
+                    if (percentage >= 20) return '🟡'; // Yellow circle
+                    return '🔴'; // Red circle
+                }
+                
+                // Magnesium
+                const magnesium = Math.round(nutrition.magnesium_mg || 0);
+                if (magnesium > 0) {
+                    const magnesiumTarget = 120;
+                    const magnesiumPercent = Math.round((magnesium / magnesiumTarget) * 100);
+                    const indicator = getIndicator(magnesium, magnesiumTarget);
+                    highlights.push(`<li><strong>Magnesium:</strong> ${magnesium} mg of ${magnesiumTarget} mg target (${magnesiumPercent}%) ${indicator}<br><em style="color: #6B7280; font-size: 13px;">Critical for stress management and muscle relaxation</em></li>`);
+                }
+                
+                // Omega 3
+                const omega3 = Math.round((nutrition.omega3_g || 0) * 10) / 10;
+                if (omega3 > 0) {
+                    const omega3Target = 2.0;
+                    const omega3Percent = Math.round((omega3 / omega3Target) * 100);
+                    const indicator = getIndicator(omega3, omega3Target);
+                    highlights.push(`<li><strong>Omega 3 EPA DHA:</strong> ${omega3} g of ${omega3Target} g target (${omega3Percent}%) ${indicator}<br><em style="color: #6B7280; font-size: 13px;">Essential for brain health and depression prevention</em></li>`);
+                }
+                
+                // Iron
+                const iron = Math.round(nutrition.iron_mg || 0);
+                if (iron > 0) {
+                    const ironTarget = 18;
+                    const ironPercent = Math.round((iron / ironTarget) * 100);
+                    const indicator = getIndicator(iron, ironTarget);
+                    highlights.push(`<li><strong>Iron:</strong> ${iron} mg of ${ironTarget} mg target (${ironPercent}%) ${indicator}<br><em style="color: #6B7280; font-size: 13px;">Prevents mood-related fatigue and brain fog</em></li>`);
+                }
+                
+                // Folate
+                const folate = Math.round(nutrition.folate_mcg || 0);
+                if (folate > 0) {
+                    const folateTarget = 400;
+                    const folatePercent = Math.round((folate / folateTarget) * 100);
+                    const indicator = getIndicator(folate, folateTarget);
+                    highlights.push(`<li><strong>Folate (B9):</strong> ${folate} mcg of ${folateTarget} mcg target (${folatePercent}%) ${indicator}<br><em style="color: #6B7280; font-size: 13px;">Critical for serotonin and dopamine production</em></li>`);
+                }
+                
+                // Vitamin B12
+                const b12 = Math.round((nutrition.vitamin_b12_mcg || 0) * 10) / 10;
+                if (b12 > 0) {
+                    const b12Target = 2.4;
+                    const b12Percent = Math.round((b12 / b12Target) * 100);
+                    const indicator = getIndicator(b12, b12Target);
+                    highlights.push(`<li><strong>Vitamin B12:</strong> ${b12} mcg of ${b12Target} mcg target (${b12Percent}%) ${indicator}<br><em style="color: #6B7280; font-size: 13px;">Essential for nerve function and mood regulation</em></li>`);
+                }
+                
+                // Zinc
+                const zinc = Math.round(nutrition.zinc_mg || 0);
+                if (zinc > 0) {
+                    const zincTarget = 11;
+                    const zincPercent = Math.round((zinc / zincTarget) * 100);
+                    const indicator = getIndicator(zinc, zincTarget);
+                    highlights.push(`<li><strong>Zinc:</strong> ${zinc} mg of ${zincTarget} mg target (${zincPercent}%) ${indicator}<br><em style="color: #6B7280; font-size: 13px;">Supports stress resilience and immune health</em></li>`);
+                }
+                
+                // Vitamin D
+                const vitaminD = Math.round(nutrition.vitamin_d_iu || 0);
+                if (vitaminD > 0) {
+                    const vitaminDTarget = 2000;
+                    const vitaminDPercent = Math.round((vitaminD / vitaminDTarget) * 100);
+                    const indicator = getIndicator(vitaminD, vitaminDTarget);
+                    highlights.push(`<li><strong>Vitamin D:</strong> ${vitaminD} IU of ${vitaminDTarget} IU target (${vitaminDPercent}%) ${indicator}<br><em style="color: #6B7280; font-size: 13px;">Prevents seasonal mood disorders and supports well-being</em></li>`);
+                }
+                
+                // Plant Protein (if available)
+                const protein = Math.round(nutrition.protein_g || 0);
+                if (protein > 0) {
+                    const proteinTarget = 50;
+                    const proteinPercent = Math.round((protein / proteinTarget) * 100);
+                    const indicator = getIndicator(protein, proteinTarget);
+                    highlights.push(`<li><strong>Plant Protein:</strong> ${protein} g of ${proteinTarget} g target (${proteinPercent}%) ${indicator}<br><em style="color: #6B7280; font-size: 13px;">Essential for mood-regulating neurotransmitters like serotonin and dopamine</em></li>`);
+                }
+                
+                return highlights.length > 0 ? highlights.join('') : '<li>Balanced nutrition for overall well-being</li>';
+            }
+            
+            // Global functions for recipe actions
+            window.viewRecipe = function(index) {
+                const data = window.recipeData[index];
+                if (!data) return;
+                
+                const recipe = data.recipe;
+                
+                modalTitle.textContent = recipe.name;
+                modalContent.innerHTML = `
+                    <div class="desktop-recipe-instructions">
+                        <h3 class="desktop-recipe-instructions-title">Cooking Instructions</h3>
+                        <ol class="desktop-recipe-instructions-list">
+                            ${(recipe.cooking_directions || ['No instructions available']).map((instruction, i) => `
+                                <li>
+                                    <div class="desktop-recipe-instructions-step">${i + 1}</div>
+                                    <div class="desktop-recipe-instructions-text">${instruction}</div>
+                                </li>
+                            `).join('')}
+                        </ol>
+                    </div>
+                    
+                    <div class="desktop-recipe-ingredients">
+                        <h3 class="desktop-recipe-ingredients-title">Ingredients</h3>
+                        <ul class="desktop-recipe-ingredients-list">
+                            ${(recipe.ingredients || []).map(ingredient => `
+                                <li>
+                                    <span class="desktop-recipe-ingredients-name">${ingredient}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                    
+                    ${data.mood_description ? `
+                    <div class="desktop-recipe-mood-context" style="margin-top: 20px; padding: 15px; background: #F0FDF4; border-radius: 8px;">
+                        <h3 style="margin-bottom: 10px; color: #065F46;">Why This Recipe?</h3>
+                        <p style="color: #047857; line-height: 1.6;">${data.mood_description}</p>
+                    </div>
+                    ` : ''}
+                `;
+                
+                modal.classList.add('show');
+            };
+            
+            window.saveRecipe = function(index) {
+                const data = window.recipeData[index];
+                if (!data) return;
+                
+                // Simple save to localStorage (in real app, this would save to backend)
+                const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
+                savedRecipes.push(data);
+                localStorage.setItem('savedRecipes', JSON.stringify(savedRecipes));
+                
+                // Show success message
+                alert('Recipe saved to your favorites!');
+            };
+        });
+    </script>
+</body>
+</html>
+
+

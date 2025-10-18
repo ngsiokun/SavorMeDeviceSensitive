@@ -1,0 +1,519 @@
+/* SavorMe Desktop Mood Selection */
+/* 2x2 grid layout optimized for desktop screens */
+
+/* Desktop Mood Container */
+.desktop-mood-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: var(--desktop-spacing-2xl);
+}
+
+.desktop-mood-header {
+    text-align: center;
+    margin-bottom: var(--desktop-spacing-3xl);
+}
+
+.desktop-mood-title {
+    font-size: var(--desktop-text-4xl);
+    font-weight: 800;
+    color: var(--desktop-primary);
+    margin-bottom: var(--desktop-spacing-md);
+}
+
+.desktop-mood-subtitle {
+    font-size: var(--desktop-text-lg);
+    color: var(--desktop-text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.desktop-mood-evidence-banner {
+    background: #F0FDF4;
+    border: 2px solid #10B981;
+    border-radius: var(--desktop-radius-md);
+    padding: var(--desktop-spacing-md);
+    color: #065F46;
+    font-size: var(--desktop-text-base);
+    font-weight: 600;
+    text-align: center;
+    margin-top: var(--desktop-spacing-lg);
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Desktop Mood Grid */
+.desktop-mood-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--desktop-spacing-2xl);
+    margin-bottom: var(--desktop-spacing-3xl);
+}
+
+/* Desktop Mood Cards */
+.desktop-mood-card {
+    background: var(--desktop-surface);
+    border-radius: var(--desktop-radius-xl);
+    padding: var(--desktop-spacing-3xl);
+    text-align: center;
+    box-shadow: var(--desktop-shadow-lg);
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: var(--desktop-transition);
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.desktop-mood-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--desktop-primary) 0%, var(--desktop-secondary) 100%);
+    opacity: 0;
+    transition: var(--desktop-transition);
+    z-index: 1;
+}
+
+.desktop-mood-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--desktop-shadow-xl);
+    border-color: var(--desktop-primary);
+}
+
+.desktop-mood-card:hover::before {
+    opacity: 0.1;
+}
+
+.desktop-mood-card:has(input:checked) {
+    border-color: var(--desktop-primary);
+    background: linear-gradient(135deg, rgba(15, 118, 110, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
+    transform: translateY(-4px);
+    box-shadow: var(--desktop-shadow-xl);
+}
+
+.desktop-mood-card:has(input:checked)::before {
+    opacity: 0.15;
+}
+
+/* Green tick indicator */
+.mood-selected-tick {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    background: #10B981;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 10;
+    animation: tickAppear 0.3s ease-out;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+@keyframes tickAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Selected state for JavaScript */
+.desktop-mood-card.selected {
+    border-color: var(--desktop-primary);
+    background: linear-gradient(135deg, rgba(15, 118, 110, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
+    transform: translateY(-4px);
+    box-shadow: var(--desktop-shadow-xl);
+}
+
+.desktop-mood-card input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Desktop Mood Content */
+.desktop-mood-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--desktop-spacing-lg);
+}
+
+.desktop-mood-icon {
+    font-size: 4rem;
+    margin-bottom: var(--desktop-spacing-md);
+    transition: var(--desktop-transition);
+}
+
+.desktop-mood-card:hover .desktop-mood-icon {
+    transform: scale(1.1);
+}
+
+.desktop-mood-card:has(input:checked) .desktop-mood-icon {
+    transform: scale(1.05);
+}
+
+.desktop-mood-name {
+    font-size: var(--desktop-text-2xl);
+    font-weight: 700;
+    color: var(--desktop-text-primary);
+    margin-bottom: var(--desktop-spacing-sm);
+    transition: var(--desktop-transition);
+}
+
+.desktop-mood-card:has(input:checked) .desktop-mood-name {
+    color: var(--desktop-primary);
+}
+
+.desktop-mood-description {
+    font-size: var(--desktop-text-base);
+    color: var(--desktop-text-secondary);
+    line-height: 1.6;
+    max-width: 300px;
+    transition: var(--desktop-transition);
+}
+
+.desktop-mood-card:has(input:checked) .desktop-mood-description {
+    color: var(--desktop-text-primary);
+    font-weight: 500;
+}
+
+/* Desktop Mood Benefits */
+.desktop-mood-benefits {
+    margin-top: var(--desktop-spacing-lg);
+    padding: var(--desktop-spacing-lg);
+    background: var(--desktop-background);
+    border-radius: var(--desktop-radius-md);
+    border: 1px solid var(--desktop-border);
+}
+
+.desktop-mood-benefits-title {
+    font-size: var(--desktop-text-sm);
+    font-weight: 600;
+    color: var(--desktop-text-primary);
+    margin-bottom: var(--desktop-spacing-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.desktop-mood-benefits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.desktop-mood-benefits-list li {
+    font-size: var(--desktop-text-sm);
+    color: var(--desktop-text-secondary);
+    margin-bottom: var(--desktop-spacing-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--desktop-spacing-sm);
+}
+
+.desktop-mood-benefits-list li::before {
+    content: '✓';
+    color: var(--desktop-primary);
+    font-weight: 700;
+    font-size: var(--desktop-text-sm);
+}
+
+/* Desktop Mood Combinations */
+.desktop-mood-combinations {
+    background: var(--desktop-surface);
+    border-radius: var(--desktop-radius-lg);
+    padding: var(--desktop-spacing-2xl);
+    box-shadow: var(--desktop-shadow-md);
+    border: 1px solid var(--desktop-border);
+    margin-bottom: var(--desktop-spacing-3xl);
+}
+
+.desktop-mood-combinations-title {
+    font-size: var(--desktop-text-xl);
+    font-weight: 700;
+    color: var(--desktop-text-primary);
+    margin-bottom: var(--desktop-spacing-lg);
+    text-align: center;
+}
+
+.desktop-mood-combinations-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--desktop-spacing-lg);
+}
+
+.desktop-mood-combination {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--desktop-spacing-lg);
+    background: var(--desktop-background);
+    border-radius: var(--desktop-radius-md);
+    border: 2px solid var(--desktop-border);
+    cursor: pointer;
+    transition: var(--desktop-transition);
+}
+
+.desktop-mood-combination:hover {
+    background: var(--desktop-surface);
+    border-color: var(--desktop-primary);
+    transform: translateY(-2px);
+}
+
+.desktop-mood-combination:has(input:checked) {
+    background: var(--desktop-primary);
+    color: white;
+    border-color: var(--desktop-primary);
+}
+
+.desktop-mood-combination input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.desktop-mood-combination-icon {
+    font-size: 2rem;
+    margin-bottom: var(--desktop-spacing-sm);
+}
+
+.desktop-mood-combination-name {
+    font-size: var(--desktop-text-base);
+    font-weight: 600;
+    margin-bottom: var(--desktop-spacing-xs);
+}
+
+.desktop-mood-combination-desc {
+    font-size: var(--desktop-text-sm);
+    opacity: 0.8;
+    text-align: center;
+    line-height: 1.4;
+}
+
+/* Desktop Mood Intensity */
+.desktop-mood-intensity {
+    background: var(--desktop-surface);
+    border-radius: var(--desktop-radius-lg);
+    padding: var(--desktop-spacing-2xl);
+    box-shadow: var(--desktop-shadow-md);
+    border: 1px solid var(--desktop-border);
+    margin-bottom: var(--desktop-spacing-3xl);
+}
+
+.desktop-mood-intensity-title {
+    font-size: var(--desktop-text-xl);
+    font-weight: 700;
+    color: var(--desktop-text-primary);
+    margin-bottom: var(--desktop-spacing-lg);
+    text-align: center;
+}
+
+.desktop-mood-intensity-buttons {
+    display: flex;
+    gap: var(--desktop-spacing-lg);
+    justify-content: center;
+    align-items: center;
+}
+
+.desktop-mood-intensity-option {
+    display: flex;
+    align-items: center;
+    gap: var(--desktop-spacing-sm);
+    padding: var(--desktop-spacing-lg) var(--desktop-spacing-xl);
+    background: var(--desktop-background);
+    border: 2px solid var(--desktop-border);
+    border-radius: var(--desktop-radius-md);
+    cursor: pointer;
+    transition: var(--desktop-transition);
+    min-width: 120px;
+    justify-content: center;
+}
+
+.desktop-mood-intensity-option:hover {
+    background: var(--desktop-surface);
+    border-color: var(--desktop-primary);
+    transform: translateY(-2px);
+}
+
+.desktop-mood-intensity-option:has(input:checked) {
+    background: var(--desktop-primary);
+    color: white;
+    border-color: var(--desktop-primary);
+}
+
+.desktop-mood-intensity-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.desktop-mood-intensity-option label {
+    font-size: var(--desktop-text-lg);
+    font-weight: 600;
+    cursor: pointer;
+    margin: 0;
+}
+
+/* Desktop Mood Actions */
+.desktop-mood-actions {
+    display: flex;
+    gap: var(--desktop-spacing-lg);
+    justify-content: center;
+    margin-top: var(--desktop-spacing-3xl);
+}
+
+.desktop-btn-back {
+    padding: var(--desktop-spacing-lg) var(--desktop-spacing-2xl);
+    background: var(--desktop-surface);
+    color: var(--desktop-text-primary);
+    border: 2px solid var(--desktop-border);
+    border-radius: var(--desktop-radius-lg);
+    font-size: var(--desktop-text-lg);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--desktop-transition);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--desktop-spacing-sm);
+}
+
+.desktop-btn-back:hover {
+    background: var(--desktop-background);
+    border-color: var(--desktop-primary);
+    transform: translateY(-2px);
+}
+
+.desktop-btn-continue {
+    padding: var(--desktop-spacing-lg) var(--desktop-spacing-2xl);
+    background: linear-gradient(135deg, var(--desktop-primary) 0%, var(--desktop-primary-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: var(--desktop-radius-lg);
+    font-size: var(--desktop-text-lg);
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--desktop-shadow-lg);
+    transition: var(--desktop-transition);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--desktop-spacing-sm);
+}
+
+.desktop-btn-continue:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--desktop-shadow-xl);
+}
+
+.desktop-btn-continue:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Desktop Mood Progress */
+.desktop-mood-progress {
+    margin-bottom: var(--desktop-spacing-2xl);
+}
+
+.desktop-mood-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--desktop-border);
+    border-radius: var(--desktop-radius-sm);
+    overflow: hidden;
+}
+
+.desktop-mood-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--desktop-primary), var(--desktop-secondary));
+    border-radius: var(--desktop-radius-sm);
+    transition: width 0.5s ease;
+}
+
+.desktop-mood-progress-text {
+    text-align: center;
+    margin-top: var(--desktop-spacing-sm);
+    font-size: var(--desktop-text-sm);
+    color: var(--desktop-text-secondary);
+    font-weight: 500;
+}
+
+/* Desktop Mood Validation */
+.desktop-mood-error {
+    background: #FEF2F2;
+    border: 2px solid #F87171;
+    border-radius: var(--desktop-radius-md);
+    padding: var(--desktop-spacing-lg);
+    color: #991B1B;
+    font-size: var(--desktop-text-base);
+    font-weight: 500;
+    margin-bottom: var(--desktop-spacing-lg);
+    text-align: center;
+}
+
+.desktop-mood-success {
+    background: #F0FDF4;
+    border: 2px solid #10B981;
+    border-radius: var(--desktop-radius-md);
+    padding: var(--desktop-spacing-lg);
+    color: var(--desktop-primary-dark);
+    font-size: var(--desktop-text-base);
+    font-weight: 500;
+    margin-bottom: var(--desktop-spacing-lg);
+    text-align: center;
+}
+
+/* Desktop Responsive Adjustments */
+@media (max-width: 1200px) {
+    .desktop-mood-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .desktop-mood-combinations-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .desktop-mood-container {
+        padding: var(--desktop-spacing-lg);
+    }
+    
+    .desktop-mood-card {
+        padding: var(--desktop-spacing-2xl);
+        min-height: 250px;
+    }
+    
+    .desktop-mood-combinations-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .desktop-mood-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+

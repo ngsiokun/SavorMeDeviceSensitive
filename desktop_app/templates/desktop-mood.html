@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SavorMe Desktop - Mood Selection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/desktop-main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/desktop-mood.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="desktop-container">
+        <div class="desktop-layout">
+            <!-- Desktop Header -->
+            <header class="desktop-header">
+                <a href="/" class="desktop-logo">🍽️ SavorMe</a>
+                <nav class="desktop-nav">
+                    <a href="/">Home</a>
+                    <a href="/profile">Profile</a>
+                    <a href="/mood" class="active">Mood</a>
+                    <a href="/results">Results</a>
+                </nav>
+            </header>
+
+            <!-- Desktop Mood Content -->
+            <div class="desktop-content">
+                <div class="desktop-mood-container">
+                    <!-- Mood Header -->
+                    <div class="desktop-mood-header">
+                        <h1 class="desktop-mood-title">How are you feeling?</h1>
+                        <p class="desktop-mood-subtitle">
+                            Select 1-3 moods that resonate with you
+                        </p>
+                        <div class="desktop-mood-evidence-banner">
+                            ✨ All moods backed by scientific research
+                        </div>
+                    </div>
+
+                    <!-- Progress Indicator -->
+                    <div class="desktop-mood-progress">
+                        <div class="desktop-mood-progress-bar">
+                            <div class="desktop-mood-progress-fill" style="width: 50%"></div>
+                        </div>
+                        <div class="desktop-mood-progress-text">Step 2 of 4 - Mood Selection</div>
+                    </div>
+
+                    <!-- Desktop Mood Selection Form -->
+                    <form id="desktopMoodForm">
+                        <!-- Primary Mood Selection - 4 Evidence-Based Moods Only -->
+                        <div class="desktop-mood-grid">
+                            <div class="desktop-mood-card">
+                                <input type="checkbox" id="mood-stressed" name="mood_selections" value="stressed">
+                                <div class="desktop-mood-content">
+                                    <div class="desktop-mood-icon">😰</div>
+                                    <h3 class="desktop-mood-name">Stressed / Anxious</h3>
+                                    <p class="desktop-mood-description">
+                                        Feeling overwhelmed, tense, or anxious. Need comforting, calming foods to help you relax.
+                                    </p>
+                                    <div class="desktop-mood-benefits">
+                                        <div class="desktop-mood-benefits-title">Recommended Nutrients</div>
+                                        <ul class="desktop-mood-benefits-list">
+                                            <li>Magnesium (120mg+)</li>
+                                            <li>Omega-3 EPA/DHA (0.3g+)</li>
+                                            <li>Fiber (8g+)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="desktop-mood-card">
+                                <input type="checkbox" id="mood-fatigued" name="mood_selections" value="fatigued">
+                                <div class="desktop-mood-content">
+                                    <div class="desktop-mood-icon">😴</div>
+                                    <h3 class="desktop-mood-name">Fatigued / Low Energy</h3>
+                                    <p class="desktop-mood-description">
+                                        Feeling tired, exhausted, or drained. Need energizing, nourishing foods to boost your vitality.
+                                    </p>
+                                    <div class="desktop-mood-benefits">
+                                        <div class="desktop-mood-benefits-title">Recommended Nutrients</div>
+                                        <ul class="desktop-mood-benefits-list">
+                                            <li>Iron (6mg+)</li>
+                                            <li>Vitamin C (30mg+)</li>
+                                            <li>Complex carbs (30g+)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="desktop-mood-card">
+                                <input type="checkbox" id="mood-sad" name="mood_selections" value="sad">
+                                <div class="desktop-mood-content">
+                                    <div class="desktop-mood-icon">😔</div>
+                                    <h3 class="desktop-mood-name">Low Mood / Sad</h3>
+                                    <p class="desktop-mood-description">
+                                        Feeling down, melancholic, or emotionally drained. Need mood-boosting, nourishing foods.
+                                    </p>
+                                    <div class="desktop-mood-benefits">
+                                        <div class="desktop-mood-benefits-title">Recommended Nutrients</div>
+                                        <ul class="desktop-mood-benefits-list">
+                                            <li>Omega-3 EPA/DHA (0.5g+)</li>
+                                            <li>Folate (100mcg+)</li>
+                                            <li>Vitamin B12 (1mcg+)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="desktop-mood-card">
+                                <input type="checkbox" id="mood-irritable" name="mood_selections" value="irritable">
+                                <div class="desktop-mood-content">
+                                    <div class="desktop-mood-icon">😠</div>
+                                    <h3 class="desktop-mood-name">Irritable / Cranky</h3>
+                                    <p class="desktop-mood-description">
+                                        Feeling irritable, cranky, or snappy. Need grounding, stabilizing foods to help you center yourself.
+                                    </p>
+                                    <div class="desktop-mood-benefits">
+                                        <div class="desktop-mood-benefits-title">Recommended Nutrients</div>
+                                        <ul class="desktop-mood-benefits-list">
+                                            <li>Stable blood sugar</li>
+                                            <li>Magnesium (80mg+)</li>
+                                            <li>Omega-3 (0.3g+)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Mood Intensity -->
+                        <div class="desktop-mood-intensity">
+                            <h2 class="desktop-mood-intensity-title">How intense is this feeling?</h2>
+                            <div class="desktop-mood-intensity-buttons">
+                                <div class="desktop-mood-intensity-option">
+                                    <input type="radio" id="intensity-little" name="mood_intensity" value="little" checked>
+                                    <label for="intensity-little">A little</label>
+                                </div>
+                                <div class="desktop-mood-intensity-option">
+                                    <input type="radio" id="intensity-medium" name="mood_intensity" value="medium">
+                                    <label for="intensity-medium">Medium</label>
+                                </div>
+                                <div class="desktop-mood-intensity-option">
+                                    <input type="radio" id="intensity-very" name="mood_intensity" value="very">
+                                    <label for="intensity-very">Very</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="desktop-mood-actions">
+                            <a href="/profile" class="desktop-btn-back">
+                                <span>←</span>
+                                Back to Profile
+                            </a>
+                            <button type="submit" class="desktop-btn-continue">
+                                <span>🍽️</span>
+                                <span>Get My Recipe Recommendation</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Desktop Mood Form JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('desktopMoodForm');
+            
+            // Make mood cards clickable with max 3 selections
+            const moodCards = document.querySelectorAll('.desktop-mood-card');
+            let selectedCount = 0;
+            const maxSelections = 3;
+            
+            moodCards.forEach(card => {
+                const checkbox = card.querySelector('input[type="checkbox"]');
+                const content = card.querySelector('.desktop-mood-content');
+                
+                // Add click handler to the entire card
+                card.addEventListener('click', function(e) {
+                    // Don't trigger if clicking the checkbox itself
+                    if (e.target.type === 'checkbox') return;
+                    
+                    // Toggle the checkbox
+                    checkbox.checked = !checkbox.checked;
+                    
+                    // Check if we can select this card
+                    if (checkbox.checked && selectedCount >= maxSelections) {
+                        checkbox.checked = false;
+                        alert(`You can select a maximum of ${maxSelections} moods.`);
+                        return;
+                    }
+                    
+                    // Update selection state
+                    updateSelectionState(card, checkbox.checked);
+                });
+                
+                // Handle checkbox changes
+                checkbox.addEventListener('change', function() {
+                    // Check if we can select this card
+                    if (this.checked && selectedCount >= maxSelections) {
+                        this.checked = false;
+                        alert(`You can select a maximum of ${maxSelections} moods.`);
+                        return;
+                    }
+                    
+                    // Update selection state
+                    updateSelectionState(card, this.checked);
+                });
+            });
+            
+            function updateSelectionState(card, isSelected) {
+                if (isSelected) {
+                    selectedCount++;
+                    card.classList.add('selected');
+                    
+                    // Add green tick if not already present
+                    if (!card.querySelector('.mood-selected-tick')) {
+                        const tick = document.createElement('div');
+                        tick.className = 'mood-selected-tick';
+                        tick.innerHTML = '✓';
+                        card.appendChild(tick);
+                    }
+                } else {
+                    selectedCount--;
+                    card.classList.remove('selected');
+                    
+                    // Remove green tick
+                    const tick = card.querySelector('.mood-selected-tick');
+                    if (tick) tick.remove();
+                }
+            }
+            
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get selected moods
+                const selectedMoods = document.querySelectorAll('input[name="mood_selections"]:checked');
+                if (selectedMoods.length === 0) {
+                    alert('Please select at least one mood.');
+                    return;
+                }
+                
+                if (selectedMoods.length > 3) {
+                    alert('You can select a maximum of 3 moods.');
+                    return;
+                }
+                
+                // Get selected intensity
+                const intensity = document.querySelector('input[name="mood_intensity"]:checked');
+                if (!intensity) {
+                    alert('Please select the intensity of your mood.');
+                    return;
+                }
+                
+                // Collect form data
+                const formData = new FormData(form);
+                const moodData = {
+                    mood_selections: Array.from(selectedMoods).map(mood => mood.value),
+                    mood_intensity: intensity.value
+                };
+                
+                // Get profile data from sessionStorage
+                const profileData = JSON.parse(sessionStorage.getItem('desktopProfile') || '{}');
+                
+                // Combine data
+                const requestData = {
+                    ...profileData,
+                    ...moodData
+                };
+                
+                // Store in sessionStorage
+                sessionStorage.setItem('desktopMood', JSON.stringify(moodData));
+                sessionStorage.setItem('desktopRequestData', JSON.stringify(requestData));
+                
+                // Show loading state
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<span>🔄</span> <span>Getting Recommendations...</span>';
+                submitBtn.disabled = true;
+                
+                // Redirect to results page
+                window.location.href = '/results';
+            });
+        });
+    </script>
+</body>
+</html>
+

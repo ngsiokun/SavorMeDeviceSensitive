@@ -23,22 +23,77 @@ This document provides a complete, step-by-step guide for running the SavorMe ap
    - **`FOOD_IMAGE_SYSTEM_GUIDE.md`** - Food image handling and display system documentation
 
 ### ⚠️ **CRITICAL: Use Command Prompt Only**
+```
+██████╗  ██████╗     ███╗   ██╗ ██████╗ ████████╗    ██╗   ██╗███████╗███████╗
+██╔══██╗██╔═══██╗    ████╗  ██║██╔═══██╗╚══██╔══╝    ██║   ██║██╔════╝██╔════╝
+██║  ██║██║   ██║    ██╔██╗ ██║██║   ██║   ██║       ██║   ██║███████╗█████╗  
+██║  ██║██║   ██║    ██║╚██╗██║██║   ██║   ██║       ██║   ██║╚════██║██╔══╝  
+██████╔╝╚██████╔╝    ██║ ╚████║╚██████╔╝   ██║       ╚██████╔╝███████║███████╗
+╚═════╝  ╚═════╝     ╚═╝  ╚═══╝ ╚═════╝    ╚═╝        ╚═════╝ ╚══════╝╚══════╝
+                                                                                
+██████╗  ██████╗ ██╗    ██╗███████╗██████╗ ███████╗██╗  ██╗███████╗██╗     ██╗     
+██╔══██╗██╔═══██╗██║    ██║██╔════╝██╔══██╗██╔════╝██║  ██║██╔════╝██║     ██║     
+██████╔╝██║   ██║██║ █╗ ██║█████╗  ██████╔╝███████╗███████║█████╗  ██║     ██║     
+██╔═══╝ ██║   ██║██║███╗██║██╔══╝  ██╔══██╗╚════██║██╔══██║██╔══╝  ██║     ██║     
+██║     ╚██████╔╝╚███╔███╔╝███████╗██║  ██║███████║██║  ██║███████╗███████╗███████╗
+╚═╝      ╚═════╝  ╚══╝╚══╝ ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝
+
+ALWAYS USE: Command Prompt (cmd.exe)
+NEVER USE: PowerShell
+```
+
 **ALL COMMANDS IN THIS GUIDE MUST BE RUN VIA COMMAND PROMPT (cmd.exe) AND NEVER USE POWERSHELL.** 
 
 🚨 **POWERSHELL WILL CAUSE FAILURES** - PowerShell compatibility issues include:
-- Batch script syntax errors
+- Batch script syntax errors (especially && operator)
 - Environment variable problems  
 - Path resolution issues
 - Virtual environment activation failures
 
 **ALWAYS USE**: Command Prompt (cmd.exe) - Never PowerShell!
 
-### Latest Features (v3.1.3)
-- **✅ AWS S3 Image Validation Fix**: Fixed critical bug where Edamam S3 image URLs were failing validation due to AWS returning `application/xml` content-type for HEAD requests
-- **Trusted Source Validation**: Implemented ChatGPT-recommended solution to trust Edamam's S3 URLs completely (from reputable API source)
-- **Performance Optimization**: Removed unnecessary HEAD requests for S3 URLs, improving response time
-- **Robust Image Display**: All recipe images now display properly without placeholder fallbacks
-- **Enhanced Error Handling**: Better handling of AWS S3 signed URL quirks
+### 🖥️ **Desktop vs Mobile Applications**
+SavorMe now has **TWO SEPARATE** frontend applications:
+
+| Application | Port | Directory | Optimized For |
+|------------|------|-----------|---------------|
+| **Desktop App** | 5001 | `desktop_app/` | Screens 1024px+ |
+| **Mobile App** | 5000 | `demo_app/` | Mobile & responsive |
+
+**⚠️ CRITICAL**: These are **SEPARATE applications**. Do NOT mix files between them!
+
+**Startup Commands**:
+```cmd
+# Desktop App + Backend
+START-BOTH-SERVICES.bat
+
+# Mobile App + Backend (Original)
+start.bat
+
+# Backend Only
+start-backend-only.bat
+
+# Desktop Only
+start-desktop-only.bat
+```
+
+**Cross-References**:
+- `desktop_app/README.md` - Complete desktop documentation
+- `DESKTOP_QUICK_START.md` - Quick start for desktop
+- `MASTER_FILE_ORGANIZATION.md` - Complete file inventory
+
+### Latest Features (v4.0.0 - Desktop Application Release)
+- **✅ Desktop Application**: Separate desktop-optimized version for screens 1024px+ (port 5001)
+- **✅ Mobile/Desktop Separation**: Clear separation between desktop and mobile apps for easier debugging
+- **✅ Medical Disclaimers**: Comprehensive legal disclaimers in 3 locations (landing, results, modal)
+- **✅ Decimal Formatting**: Ingredient amounts show max 2 decimal places (e.g., 0.33 instead of 0.333333)
+- **✅ Filtered Cooking Steps**: Title steps (PREPARATION, COOKING TIPS) removed from step numbering
+- **✅ Enhanced Documentation**: Complete desktop docs, Edamam JSON format reference, API schema
+- **✅ Command Prompt Enforcement**: Clear visual reminders to use cmd.exe, not PowerShell
+- **✅ AWS S3 Image Validation Fix** (v3.1.3): Fixed critical bug where Edamam S3 image URLs were failing validation
+- **✅ Trusted Source Validation**: Trust Edamam's S3 URLs completely (from reputable API source)
+- **✅ Performance Optimization**: Removed unnecessary HEAD requests for S3 URLs, improving response time
+- **✅ Robust Image Display**: All recipe images now display properly without placeholder fallbacks
 - **✅ Secondary Nutrients Fix (v3.1.1)**: Fixed issue where secondary nutrients (magnesium, iron, B12, folate, vitamin D, omega-3, zinc, vitamin C) were showing as 0mg/0g instead of actual calculated values
 - **Enhanced Nutrition Model**: Updated NutritionInfo model to include all secondary nutrients for mood-based scoring
 - **Nutrient Enhancement Pipeline**: Added _enhance_recipe_nutrition() method to properly populate secondary nutrients from canonical data

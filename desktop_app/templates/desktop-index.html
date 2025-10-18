@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SavorMe Desktop - Mood-Based Recipe Recommendations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/desktop-main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/desktop-landing.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="desktop-container">
+        <div class="desktop-layout">
+            <!-- Desktop Header -->
+            <header class="desktop-header">
+                <a href="/" class="desktop-logo">🍽️ SavorMe</a>
+                <nav class="desktop-nav">
+                    <a href="/" class="active">Home</a>
+                    <a href="/profile">Profile</a>
+                    <a href="/mood">Mood</a>
+                    <a href="/results">Results</a>
+                </nav>
+            </header>
+
+            <!-- Desktop Hero Section -->
+            <section class="desktop-hero">
+                <div class="desktop-hero-content">
+                    <div class="desktop-hero-icon">🍽️</div>
+                    <h1 class="desktop-hero-title">SavorMe Desktop</h1>
+                    <p class="desktop-hero-subtitle">Mood-Based Recipe Recommendations</p>
+                    <p class="desktop-hero-description">
+                        Discover personalized recipes based on your emotional state and nutritional needs. 
+                        Our evidence-based system combines mood science with culinary expertise to help you 
+                        find the perfect meal for any moment.
+                    </p>
+                    <div class="desktop-hero-cta">
+                        <a href="/profile" class="desktop-hero-btn">
+                            <span>🚀</span>
+                            Get Started
+                        </a>
+                        <a href="#features" class="desktop-hero-btn desktop-hero-btn-secondary">
+                            <span>📖</span>
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Desktop Features Section -->
+            <section class="desktop-features" id="features">
+                <div class="desktop-features-header">
+                    <h2 class="desktop-features-title">Why Choose SavorMe?</h2>
+                    <p class="desktop-features-subtitle">
+                        Our desktop version is optimized for larger screens with enhanced layouts, 
+                        better navigation, and improved user experience.
+                    </p>
+                </div>
+                <div class="desktop-features-grid">
+                    <div class="desktop-feature-card desktop-hover-lift">
+                        <div class="desktop-feature-icon">🧠</div>
+                        <h3 class="desktop-feature-title">Evidence-Based Nutrition</h3>
+                        <p class="desktop-feature-description">
+                            Our recommendations are backed by scientific research on mood-nutrient relationships, 
+                            ensuring you get the most beneficial foods for your emotional state.
+                        </p>
+                    </div>
+                    <div class="desktop-feature-card desktop-hover-lift">
+                        <div class="desktop-feature-icon">🎯</div>
+                        <h3 class="desktop-feature-title">Personalized Recommendations</h3>
+                        <p class="desktop-feature-description">
+                            Get recipe suggestions tailored to your mood, dietary preferences, allergies, 
+                            and nutritional goals for a truly customized experience.
+                        </p>
+                    </div>
+                    <div class="desktop-feature-card desktop-hover-lift">
+                        <div class="desktop-feature-icon">🍳</div>
+                        <h3 class="desktop-feature-title">Professional Cooking</h3>
+                        <p class="desktop-feature-description">
+                            Access detailed cooking instructions, nutritional analysis, and professional 
+                            chef-level guidance for every recipe recommendation.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Desktop Stats Section -->
+            <section class="desktop-stats">
+                <div class="desktop-stats-grid">
+                    <div class="desktop-stat-item">
+                        <div class="desktop-stat-number">95%</div>
+                        <div class="desktop-stat-label">Recipe Success Rate</div>
+                    </div>
+                    <div class="desktop-stat-item">
+                        <div class="desktop-stat-number">4</div>
+                        <div class="desktop-stat-label">Evidence-Based Moods</div>
+                    </div>
+                    <div class="desktop-stat-item">
+                        <div class="desktop-stat-number">100%</div>
+                        <div class="desktop-stat-label">Image Success Rate</div>
+                    </div>
+                    <div class="desktop-stat-item">
+                        <div class="desktop-stat-number">90%</div>
+                        <div class="desktop-stat-label">Error Reduction</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Desktop Testimonials -->
+            <section class="desktop-testimonials">
+                <div class="desktop-testimonials-header">
+                    <h2 class="desktop-testimonials-title">What Users Say</h2>
+                </div>
+                <div class="desktop-testimonials-grid">
+                    <div class="desktop-testimonial-card">
+                        <p class="desktop-testimonial-quote">
+                            "The desktop version is amazing! The two-column layout makes it so much easier 
+                            to compare recipes and see all the nutritional information at once."
+                        </p>
+                        <div class="desktop-testimonial-author">
+                            <div class="desktop-testimonial-avatar">S</div>
+                            <div class="desktop-testimonial-info">
+                                <div class="desktop-testimonial-name">Sarah Chen</div>
+                                <div class="desktop-testimonial-role">Nutritionist</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="desktop-testimonial-card">
+                        <p class="desktop-testimonial-quote">
+                            "I love how the desktop version shows everything side-by-side. It's like having 
+                            a personal nutritionist and chef right on my screen!"
+                        </p>
+                        <div class="desktop-testimonial-author">
+                            <div class="desktop-testimonial-avatar">M</div>
+                            <div class="desktop-testimonial-info">
+                                <div class="desktop-testimonial-name">Mike Rodriguez</div>
+                                <div class="desktop-testimonial-role">Home Cook</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Desktop CTA Section -->
+            <section class="desktop-cta">
+                <div class="desktop-cta-content">
+                    <h2 class="desktop-cta-title">Ready to Transform Your Cooking?</h2>
+                    <p class="desktop-cta-description">
+                        Join thousands of users who have discovered the perfect recipes for their mood and nutritional needs. 
+                        Start your personalized culinary journey today.
+                    </p>
+                    <div class="desktop-cta-buttons">
+                        <a href="/profile" class="desktop-hero-btn">
+                            <span>🍽️</span>
+                            Create Your Profile
+                        </a>
+                        <a href="/mood" class="desktop-hero-btn desktop-hero-btn-secondary">
+                            <span>😊</span>
+                            Select Your Mood
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Medical Disclaimer Section -->
+            <section style="max-width: 1200px; margin: 60px auto 40px auto; padding: 0 20px;">
+                <div style="padding: 30px; background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border-left: 5px solid #F59E0B; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    <div style="display: flex; align-items: flex-start; gap: 20px;">
+                        <span style="font-size: 32px; flex-shrink: 0;">⚠️</span>
+                        <div>
+                            <h2 style="margin: 0 0 15px 0; font-size: 20px; font-weight: 700; color: #92400E;">Important Medical Disclaimer</h2>
+                            <p style="margin: 0 0 12px 0; font-size: 15px; line-height: 1.7; color: #78350F;">
+                                <strong>SavorMe is designed to support healthy eating habits and promote nutritional wellness. This application is NOT intended for medical purposes, diagnosis, or treatment.</strong>
+                            </p>
+                            <p style="margin: 0 0 12px 0; font-size: 14px; line-height: 1.7; color: #78350F;">
+                                The recipe recommendations provided by SavorMe are based on nutritional guidelines, evidence-based research on mood-food relationships, and dietary science. 
+                                However, these recommendations are <strong>not a substitute for professional medical advice, diagnosis, or treatment</strong> from qualified healthcare providers.
+                            </p>
+                            <p style="margin: 0 0 12px 0; font-size: 14px; line-height: 1.7; color: #78350F;">
+                                <strong>Always seek the advice of your physician, registered dietitian, or other qualified health provider</strong> with any questions you may have regarding:
+                            </p>
+                            <ul style="margin: 0 0 12px 0; padding-left: 24px; font-size: 14px; line-height: 1.8; color: #78350F;">
+                                <li>Medical conditions or symptoms</li>
+                                <li>Dietary restrictions or special nutritional needs</li>
+                                <li>Food allergies or intolerances</li>
+                                <li>Medication interactions with foods or nutrients</li>
+                                <li>Pregnancy, nursing, or childhood nutrition</li>
+                            </ul>
+                            <p style="margin: 0; font-size: 14px; line-height: 1.7; color: #78350F; font-weight: 600;">
+                                Never disregard professional medical advice or delay seeking it because of information provided by this application. 
+                                If you have chronic health conditions, are taking medications, or have concerns about your diet, please consult with a healthcare professional before making significant dietary changes.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Desktop Footer -->
+            <footer class="desktop-footer">
+                <div class="desktop-footer-content">
+                    <p class="desktop-footer-text">
+                        SavorMe Desktop Version - Optimized for desktop screens (1024px+)
+                    </p>
+                    <div class="desktop-footer-links">
+                        <a href="/profile" class="desktop-footer-link">Profile</a>
+                        <a href="/mood" class="desktop-footer-link">Mood Selection</a>
+                        <a href="/results" class="desktop-footer-link">Recipe Results</a>
+                        <a href="http://localhost:5000" class="desktop-footer-link">Mobile Version</a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/desktop-main.js') }}"></script>
+</body>
+</html>
+
+
+
+

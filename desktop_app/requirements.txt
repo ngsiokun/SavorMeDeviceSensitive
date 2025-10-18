@@ -1,0 +1,23 @@
+# SavorMe Desktop Application Requirements
+# 
+# This file lists dependencies for the DESKTOP FRONTEND ONLY
+# For backend dependencies, see: ../requirements.txt
+# For mobile frontend dependencies, see: ../demo_app/requirements.txt
+#
+# Cross-reference: MASTER_FILE_ORGANIZATION.md
+
+# Flask Web Framework
+Flask==2.3.3
+Werkzeug==2.3.7
+
+# HTTP Client (for backend API calls)
+httpx==0.24.1
+
+# Async Support
+asyncio==3.4.3
+
+# Additional utilities (if needed)
+python-dotenv==1.0.0
+
+# Note: Desktop app shares the same backend as mobile app
+# Backend runs on port 8000, desktop frontend on port 5001

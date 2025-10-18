@@ -2,6 +2,7 @@
 API Routes for SavorMe Backend
 """
 from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 import httpx
 import random
@@ -192,13 +193,15 @@ async def search_recipes(
         raise HTTPException(status_code=500, detail=f"Error searching recipes: {str(e)}")
 
 
-@router.post("/recipes/recommend", response_model=RecipeRecommendation)
-async def get_recipe_recommendation(
-    mood_blend: MoodBlend,
-    user_profile: UserProfile,
-    nutrition_targets: Optional[NutritionTargets] = None,
+class RecipeRecommendationRequest(BaseModel):
+    """Request model for recipe recommendation"""
+    mood_blend: MoodBlend
+    user_profile: UserProfile
+    nutrition_targets: Optional[NutritionTargets] = None
     activity_level: str = "moderate"
-):
+
+@router.post("/recipes/recommend", response_model=RecipeRecommendation)
+async def get_recipe_recommendation(request: RecipeRecommendationRequest):
     """
     Get complete recipe recommendation with emotional rationale
     
@@ -220,25 +223,27 @@ async def get_recipe_recommendation(
     """
     try:
         # Calculate nutrition targets
-        if not nutrition_targets:
+        if not request.nutrition_targets:
             nutrition_targets = nutrition_calculator.calculate_nutrition_targets(
-                user_profile, activity_level
+                request.user_profile, request.activity_level
             )
+        else:
+            nutrition_targets = request.nutrition_targets
         
         # Get nutrition engine for evidence-based scoring
         nutrition_engine = get_mood_nutrition_engine()
         
         # Extract mood IDs for nutrient scoring
-        mood_ids = [m.mood if isinstance(m.mood, str) else m.mood.value for m in mood_blend.moods]
+        mood_ids = [m.mood if isinstance(m.mood, str) else m.mood.value for m in request.mood_blend.moods]
         
         # Interpret mood with cuisine preference for better keyword selection
-        cuisine_pref = user_profile.cuisine_preferences[0] if user_profile.cuisine_preferences else None
-        mood_interpretation = fusion_engine.interpret_mood_blend(mood_blend, cuisine_pref)
+        cuisine_pref = request.user_profile.cuisine_preferences[0] if request.user_profile.cuisine_preferences else None
+        mood_interpretation = fusion_engine.interpret_mood_blend(request.mood_blend, cuisine_pref)
         
         # Search recipes
         search_params = edamam_client.build_search_query_from_mood(
             mood_interpretation.flavor_profile.search_keywords,
-            user_profile,
+            request.user_profile,
             nutrition_targets
         )
         
@@ -318,11 +323,11 @@ async def get_recipe_recommendation(
             raise HTTPException(status_code=404, detail="No recipes found matching criteria")
         
         # Apply recipe rotation for variety
-        session_id = recipe_rotation_service.get_session_id(user_profile.dict())
+        session_id = recipe_rotation_service.get_session_id(request.user_profile.dict())
         
         # Convert to Recipe objects for rotation service
         candidate_recipes = []
-        for scored_recipe in scored_recipes[:5]:  # Consider top 5 for variety
+        for scored_recipe in scored_recipes[:8]:  # Consider top 8 for more variety
             recipe_obj = edamam_client._parse_recipe(scored_recipe["recipe_data"])
             candidate_recipes.append(recipe_obj)
         
@@ -333,8 +338,9 @@ async def get_recipe_recommendation(
         
         variety_boosted_recipes = recipe_rotation_service.get_variety_boost(filtered_recipes, session_id)
         
-        # Pick the best recipe from variety-boosted selection
-        selected_recipe = variety_boosted_recipes[0]
+        # Pick a random recipe from top 3 variety-boosted selections for more variety
+        top_candidates = variety_boosted_recipes[:min(3, len(variety_boosted_recipes))]
+        selected_recipe = random.choice(top_candidates) if len(top_candidates) > 1 else top_candidates[0]
         
         # Find the corresponding scored recipe data
         best = None
@@ -413,6 +419,12 @@ async def get_recipe_recommendation(
     except HTTPException:
         raise
     except Exception as e:
+        import traceback
+        print("=" * 80)
+        print("ERROR IN RECIPE RECOMMENDATION:")
+        print("=" * 80)
+        traceback.print_exc()
+        print("=" * 80)
         raise HTTPException(status_code=500, detail=f"Error generating recommendation: {str(e)}")
 
 
