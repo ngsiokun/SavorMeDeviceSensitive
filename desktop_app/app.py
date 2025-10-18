@@ -6,13 +6,14 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 import httpx
 import asyncio
 import json
+import os
 from typing import Dict, Any
 
 app = Flask(__name__)
 
-# Configuration
-BACKEND_URL = "http://127.0.0.1:8000"
-DESKTOP_PORT = 5001
+# Configuration - use environment variable for Cloud Run compatibility
+BACKEND_URL = os.getenv("BACKEND_URL", "http://127.0.0.1:8000")
+DESKTOP_PORT = int(os.getenv("PORT", 5001))
 
 # Helper function to run async functions
 def run_async(coro):
